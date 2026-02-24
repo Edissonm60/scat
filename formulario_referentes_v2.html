@@ -185,10 +185,24 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
       <h1>Registro de Turno</h1>
       <p>Secretaría de Salud · Bogotá D.C.</p>
     </div>
-    <div class="sync-indicator" id="sync-indicator">📡 Conectando...</div>
-    <div class="header-badge">Referentes</div>
+    <button onclick="openUrlSettings()" style="margin-left:auto;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:6px 10px;color:#fff;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;flex-shrink:0">⚙️ URL</button>
   </div>
 </header>
+
+<!-- MODAL URL SETTINGS -->
+<div id="url-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="font-size:1rem;font-weight:800;color:#0F172A;margin-bottom:6px">⚙️ Configurar URL</div>
+    <div style="font-size:0.78rem;color:#475569;margin-bottom:14px;line-height:1.5">Pegue aquí la URL de Google Apps Script para sincronizar con el dashboard.</div>
+    <input type="text" id="url-modal-input" placeholder="https://script.google.com/macros/s/..."
+      style="width:100%;padding:11px 13px;border:1.5px solid #DDE3F0;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#0F172A;margin-bottom:8px;">
+    <div id="url-modal-status" style="font-size:0.72rem;min-height:18px;margin-bottom:14px;font-weight:600;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeUrlSettings()" style="flex:1;padding:12px;border:1.5px solid #DDE3F0;border-radius:10px;background:#fff;color:#475569;font-family:'Outfit',sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;">Cancelar</button>
+      <button onclick="saveUrlFromModal()" style="flex:2;padding:12px;border:none;border-radius:10px;background:#2563EB;color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;">✓ Guardar URL</button>
+    </div>
+  </div>
+</div>
 
 <!-- PROGRESS -->
 <div class="progress-wrap">
@@ -361,6 +375,19 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
       </div>
     </div>
 
+    
+    <!-- PANEL ALERTA DOBLADO -->
+    <div id="doblado-alert" style="display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:14px 16px;margin-top:12px;">
+      <div style="font-weight:800;color:#EA580C;margin-bottom:6px;font-size:0.88rem">⚠️ Personal con turno previo detectado</div>
+      <div id="doblado-detail" style="font-size:0.8rem;color:#9A3412;line-height:1.6"></div>
+      <div style="margin-top:10px;font-size:0.75rem;color:#9A3412">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
+          <input type="checkbox" id="doblado-confirm" style="width:16px;height:16px;accent-color:#F97316">
+          Confirmo que este personal autorizado para doblar turno
+        </label>
+      </div>
+    </div>
+
     <div class="nav-buttons" style="margin-top:16px">
       <button type="button" class="btn-back" onclick="goStep(1)">← Volver</button>
       <button type="button" class="btn-next" onclick="goStep(3)">Siguiente — Referente →</button>
@@ -452,7 +479,8 @@ let currentStep = 1;
 let sheetUrl = '';
 
 window.addEventListener('DOMContentLoaded', () => {
-  sheetUrl = localStorage.getItem(SHEET_URL_KEY) || '';
+  if (!localStorage.getItem(SHEET_URL_KEY)) localStorage.setItem(SHEET_URL_KEY, 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec');
+  sheetUrl = localStorage.getItem(SHEET_URL_KEY) || 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
   const urlInput = document.getElementById('sheet-url-form');
   if (sheetUrl) {
     urlInput.value = sheetUrl;
@@ -546,6 +574,16 @@ function validateStep(step) {
     if (!document.getElementById('con_cedula').value.trim()) { setErr('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
     if (!document.getElementById('aux_nombre').value.trim()) { setErr('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
     if (!document.getElementById('aux_cedula').value.trim()) { setErr('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
+    // Check doblado
+    if (ok) checkDobladoPersonal();
+    // Block if doblado detected and not confirmed
+    const alert = document.getElementById('doblado-alert');
+    const confirm = document.getElementById('doblado-confirm');
+    if (alert.style.display !== 'none' && !confirm.checked) {
+      alert.style.borderColor = '#EF4444';
+      alert.scrollIntoView({behavior:'smooth',block:'center'});
+      ok = false;
+    }
   }
   if (step === 3) {
     clearErr('f-ref-nom');
@@ -666,6 +704,95 @@ document.getElementById('main-form').addEventListener('submit', async function(e
   btn.disabled = false;
   btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR TURNO';
 });
+
+
+// ══════════════════════════════════════════════
+// URL SETTINGS MODAL
+// ══════════════════════════════════════════════
+function openUrlSettings() {
+  const modal = document.getElementById('url-modal');
+  const input = document.getElementById('url-modal-input');
+  input.value = localStorage.getItem('scat_sheet_url') || '';
+  document.getElementById('url-modal-status').textContent = '';
+  document.getElementById('url-modal-status').style.color = '';
+  modal.style.display = 'flex';
+  setTimeout(() => input.focus(), 100);
+}
+function closeUrlSettings() {
+  document.getElementById('url-modal').style.display = 'none';
+}
+function saveUrlFromModal() {
+  const input = document.getElementById('url-modal-input');
+  const statusEl = document.getElementById('url-modal-status');
+  const v = input.value.trim();
+  if (!v) { statusEl.textContent = '⚠ Ingrese la URL'; statusEl.style.color = '#DC2626'; return; }
+  if (!v.includes('script.google.com')) { statusEl.textContent = '⚠ La URL no parece correcta'; statusEl.style.color = '#DC2626'; return; }
+  localStorage.setItem('scat_sheet_url', v);
+  sheetUrl = v;
+  document.getElementById('sync-indicator').textContent = '📡 Conectado';
+  statusEl.textContent = '✓ Guardada correctamente';
+  statusEl.style.color = '#16A34A';
+  setTimeout(() => closeUrlSettings(), 1200);
+}
+// Cerrar modal al tocar fuera
+document.getElementById('url-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeUrlSettings();
+});
+
+// ══════════════════════════════════════════════
+// DETECCIÓN DE PERSONAL DOBLADO
+// ══════════════════════════════════════════════
+async function checkDobladoPersonal() {
+  const conCed = document.getElementById('con_cedula').value.trim();
+  const auxCed = document.getElementById('aux_cedula').value.trim();
+  const medCed = document.getElementById('med_cedula').value.trim();
+
+  // Obtener historial de Google Sheets o localStorage
+  let closedRecords = [];
+  try {
+    const url = localStorage.getItem('scat_sheet_url');
+    if (url) {
+      const res = await fetch(url + '?action=getAll');
+      const json = await res.json();
+      if (json.status === 'ok') closedRecords = json.closed || [];
+    } else {
+      closedRecords = JSON.parse(localStorage.getItem('scat_cerrados_v3') || '[]');
+    }
+  } catch { closedRecords = JSON.parse(localStorage.getItem('scat_cerrados_v3') || '[]'); }
+
+  const cutoff = Date.now() - 48 * 3600000;
+  const recent = closedRecords.filter(r => new Date(r.cierre||r.inicio).getTime() >= cutoff);
+
+  function countTurnos(cedula) {
+    if (!cedula) return 0;
+    return recent.filter(r => r.con_cedula===cedula || r.aux_cedula===cedula || r.med_cedula===cedula).length;
+  }
+
+  const checks = [
+    { cedula: conCed, nombre: document.getElementById('con_nombre').value.trim(), rol: 'Conductor' },
+    { cedula: auxCed, nombre: document.getElementById('aux_nombre').value.trim(), rol: 'Auxiliar' },
+    { cedula: medCed, nombre: document.getElementById('med_nombre').value.trim(), rol: 'Médico' },
+  ].filter(p => p.cedula);
+
+  const doblados = checks.map(p => ({ ...p, prev: countTurnos(p.cedula) })).filter(p => p.prev > 0);
+
+  const alertEl = document.getElementById('doblado-alert');
+  const detailEl = document.getElementById('doblado-detail');
+  const confirmEl = document.getElementById('doblado-confirm');
+
+  if (doblados.length) {
+    alertEl.style.display = 'block';
+    alertEl.style.borderColor = '#F97316';
+    confirmEl.checked = false;
+    detailEl.innerHTML = doblados.map(p => {
+      const turnos = p.prev + 1;
+      const icon = turnos >= 3 ? '🔴' : '🟠';
+      return `${icon} <strong>${p.rol} ${p.nombre}</strong> — Este será su <strong>${turnos}° turno consecutivo</strong> en las últimas 48h`;
+    }).join('<br>');
+  } else {
+    alertEl.style.display = 'none';
+  }
+}
 
 // ══════════════════════════════════════════════
 // OFFLINE SYNC QUEUE
