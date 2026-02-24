@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Registro de Turno · SCAT</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F0F4FF; --white: #FFFFFF; --surface: #F8FAFF;
+  --border: #DDE3F0; --border-focus: #2563EB;
+  --text: #0F172A; --text-sub: #475569; --text-muted: #94A3B8;
+  --accent: #2563EB; --accent-light: #EFF6FF;
+  --green: #16A34A; --green-light: #F0FDF4;
+  --red: #DC2626; --red-light: #FEF2F2;
+  --yellow: #D97706; --yellow-light: #FFFBEB;
+  --radius: 16px; --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:40px; }
+
+/* ── HEADER ── */
+.app-header { background:var(--accent); position:sticky; top:0; z-index:50; box-shadow:0 2px 20px rgba(37,99,235,0.4); }
+.header-inner { max-width:640px; margin:0 auto; padding:16px 20px; display:flex; align-items:center; gap:14px; }
+.header-icon { width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+.header-text h1 { font-size:1rem; font-weight:700; color:#fff; line-height:1.2; }
+.header-text p { font-size:0.72rem; color:rgba(255,255,255,0.75); margin-top:2px; }
+.header-badge { margin-left:auto; flex-shrink:0; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:4px 10px; font-size:0.68rem; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.08em; }
+.sync-indicator { font-size:0.65rem; color:rgba(255,255,255,0.7); margin-left:auto; text-align:right; line-height:1.3; }
+
+/* ── PROGRESS ── */
+.progress-wrap { max-width:640px; margin:0 auto; padding:16px 20px 0; }
+.progress-steps { display:flex; gap:8px; align-items:center; }
+.step-item { display:flex; align-items:center; gap:6px; flex:1; }
+.step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; border:2px solid var(--border); background:var(--white); color:var(--text-muted); transition:all 0.3s; }
+.step-dot.active { border-color:var(--accent); background:var(--accent); color:#fff; box-shadow:0 0 0 4px rgba(37,99,235,0.15); }
+.step-dot.done { border-color:var(--green); background:var(--green); color:#fff; }
+.step-label { font-size:0.65rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap; }
+.step-label.active { color:var(--accent); }
+.step-line { flex:1; height:2px; background:var(--border); border-radius:2px; }
+.step-line.done { background:var(--green); }
+
+/* ── FORM ── */
+.form-container { max-width:640px; margin:0 auto; padding:20px 16px; }
+.section-card { background:var(--white); border-radius:var(--radius); box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:16px; overflow:hidden; border:1px solid var(--border); display:none; }
+.section-card.active { display:block; }
+.section-head { padding:18px 20px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+.section-num { width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800; flex-shrink:0; }
+.section-num.blue { background:var(--accent-light); color:var(--accent); }
+.section-num.green { background:var(--green-light); color:var(--green); }
+.section-num.purple { background:#F3E8FF; color:#7C3AED; }
+.section-title { font-size:0.95rem; font-weight:700; }
+.section-sub { font-size:0.72rem; color:var(--text-muted); margin-top:1px; }
+.section-body { padding:18px 20px; }
+
+/* ── FIELDS ── */
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+.field-row.single { grid-template-columns:1fr; }
+.field { display:flex; flex-direction:column; gap:5px; }
+.field label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-sub); display:flex; align-items:center; gap:4px; }
+.req { color:var(--red); font-size:0.8rem; }
+.field input, .field select, .field textarea {
+  background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:12px 14px; font-family:'Outfit',sans-serif; font-size:0.9rem; color:var(--text);
+  transition:all 0.2s; width:100%; -webkit-appearance:none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline:none; border-color:var(--border-focus); background:var(--white);
+  box-shadow:0 0 0 4px rgba(37,99,235,0.1);
+}
+.field input::placeholder, .field textarea::placeholder { color:var(--text-muted); font-size:0.85rem; }
+.field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+.field textarea { resize:vertical; min-height:70px; }
+
+/* ── TURNO ── */
+.turno-group { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.turno-option { position:relative; }
+.turno-option input[type="radio"] { display:none; }
+.turno-option label { display:flex; flex-direction:column; align-items:center; padding:14px 10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); text-align:center; }
+.turno-icon { font-size:1.6rem; margin-bottom:4px; }
+.turno-name { font-size:0.85rem; font-weight:700; color:var(--text); }
+.turno-time { font-size:0.7rem; color:var(--text-muted); margin-top:2px; }
+.turno-option input:checked + label { border-color:var(--accent); background:var(--accent-light); }
+.turno-option input:checked + label .turno-name { color:var(--accent); }
+
+/* ── TIPO ── */
+.tipo-group { display:grid; grid-template-columns:1fr; gap:8px; }
+.tipo-option { position:relative; }
+.tipo-option input[type="radio"] { display:none; }
+.tipo-option label { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); }
+.tipo-option input:checked + label { border-color:var(--accent); background:var(--accent-light); }
+.tipo-icon { font-size:1.3rem; }
+.tipo-info .tipo-name { font-size:0.85rem; font-weight:700; }
+.tipo-info .tipo-desc { font-size:0.7rem; color:var(--text-muted); margin-top:1px; }
+
+/* ── CREW ── */
+.crew-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; margin-bottom:12px; }
+.crew-card:last-child { margin-bottom:0; }
+.crew-header { padding:12px 16px; display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; background:var(--surface); transition:background 0.2s; }
+.crew-header:hover { background:#f1f5fd; }
+.crew-avatar { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.crew-avatar.med { background:#EFF6FF; }
+.crew-avatar.con { background:var(--green-light); }
+.crew-avatar.aux { background:#F3E8FF; }
+.crew-info { flex:1; }
+.crew-role { font-size:0.8rem; font-weight:700; color:var(--text); }
+.crew-note { font-size:0.68rem; color:var(--text-muted); margin-top:1px; }
+.crew-chevron { font-size:0.8rem; color:var(--text-muted); transition:transform 0.3s; }
+.crew-card.open .crew-chevron { transform:rotate(180deg); }
+.crew-body { padding:16px; border-top:1px solid var(--border); display:none; background:var(--white); }
+.crew-card.open .crew-body { display:block; }
+
+/* ── FILE UPLOAD ── */
+.file-upload-area { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:18px 14px; text-align:center; cursor:pointer; transition:all 0.2s; background:var(--surface); position:relative; overflow:hidden; }
+.file-upload-area:hover, .file-upload-area.has-file { border-color:var(--accent); background:var(--accent-light); }
+.file-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.upload-icon { font-size:1.8rem; margin-bottom:6px; }
+.upload-text { font-size:0.78rem; color:var(--text-sub); font-weight:500; }
+.upload-text strong { color:var(--accent); }
+.upload-hint { font-size:0.68rem; color:var(--text-muted); margin-top:3px; }
+.upload-preview { font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--green); font-weight:600; margin-top:6px; display:none; }
+
+/* ── BUTTONS ── */
+.nav-buttons { display:flex; gap:10px; margin-top:4px; }
+.btn-back { flex:0 0 auto; padding:14px 20px; border-radius:var(--radius-sm); border:1.5px solid var(--border); background:var(--white); color:var(--text-sub); font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-back:hover { border-color:var(--accent); color:var(--accent); }
+.btn-next { flex:1; padding:14px 20px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.92rem; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-next:hover { background:#1D4ED8; transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.35); }
+.btn-submit-final { width:100%; padding:16px; border-radius:var(--radius-sm); border:none; background:var(--green); color:#fff; font-family:'Outfit',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(22,163,74,0.3); display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-submit-final:hover { background:#15803D; }
+.btn-submit-final:disabled { background:#6B7280; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* ── RESUMEN ── */
+.resumen-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:14px; }
+.resumen-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:10px; }
+.resumen-row { display:flex; justify-content:space-between; align-items:flex-start; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
+.resumen-row:last-child { border-bottom:none; }
+.resumen-key { color:var(--text-muted); font-weight:500; }
+.resumen-val { font-weight:600; color:var(--text); text-align:right; max-width:65%; }
+
+/* ── SHEET URL SETUP ── */
+.setup-banner { background:var(--yellow-light); border:1.5px solid #FCD34D; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:16px; font-size:0.8rem; line-height:1.5; color:#92400E; }
+.setup-banner strong { display:block; margin-bottom:6px; }
+.setup-input { width:100%; padding:10px 12px; border:1.5px solid #FCD34D; border-radius:8px; font-size:0.78rem; font-family:'JetBrains Mono',monospace; background:#fff; color:var(--text); margin-top:8px; }
+.setup-input:focus { outline:none; border-color:var(--accent); }
+.setup-status { margin-top:8px; font-size:0.72rem; font-weight:600; }
+.setup-status.ok { color:var(--green); }
+.setup-status.err { color:var(--red); }
+
+/* ── SUCCESS ── */
+.success-screen { display:none; position:fixed; inset:0; background:#fff; z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; }
+.success-screen.show { display:flex; }
+.success-circle { width:90px; height:90px; border-radius:50%; background:var(--green-light); border:3px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin-bottom:1.5rem; animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.1s both; }
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.success-title { font-size:1.8rem; font-weight:800; color:var(--text); margin-bottom:8px; }
+.success-sub { font-size:0.9rem; color:var(--text-sub); max-width:300px; line-height:1.5; }
+.success-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 20px; margin:1.5rem 0; width:100%; max-width:400px; font-size:0.82rem; color:var(--text-sub); line-height:1.6; }
+.success-detail strong { color:var(--text); display:block; margin-bottom:4px; font-size:0.9rem; }
+.success-sync { font-size:0.72rem; margin-top:8px; font-family:'JetBrains Mono',monospace; }
+.success-sync.ok { color:var(--green); }
+.success-sync.err { color:var(--yellow); }
+.btn-nuevo { padding:14px 32px; background:var(--accent); border:none; border-radius:var(--radius-sm); color:#fff; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
+
+/* ── VALIDATION ── */
+.field-error { font-size:0.7rem; color:var(--red); font-weight:600; display:none; margin-top:2px; }
+.field.has-error input, .field.has-error select, .field.has-error textarea { border-color:var(--red); box-shadow:0 0 0 3px rgba(220,38,38,0.1); }
+.field.has-error .field-error { display:block; }
+
+/* ── SPINNER ── */
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@media (max-width:400px) {
+  .field-row { grid-template-columns:1fr; }
+  .header-badge, .sync-indicator { display:none; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-icon">🚑</div>
+    <div class="header-text">
+      <h1>Registro de Turno</h1>
+      <p>Secretaría de Salud · Bogotá D.C.</p>
+    </div>
+    <div class="sync-indicator" id="sync-indicator">📡 Conectando...</div>
+    <div class="header-badge">Referentes</div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-steps">
+    <div class="step-item">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-label active" id="lbl-1">Móvil</div>
+    </div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-item">
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-label" id="lbl-2">Personal</div>
+    </div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-item">
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-label" id="lbl-3">Referente</div>
+    </div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-item">
+      <div class="step-dot" id="dot-4">4</div>
+      <div class="step-label" id="lbl-4">Confirmar</div>
+    </div>
+  </div>
+</div>
+
+<div class="form-container">
+<form id="main-form" novalidate>
+
+<!-- ══ PASO 1 ══ -->
+<div class="section-card active" id="step-1">
+  <div class="section-head">
+    <div class="section-num blue">01</div>
+    <div><div class="section-title">Identificación de la Móvil</div><div class="section-sub">Datos del vehículo que inicia turno</div></div>
+  </div>
+  <div class="section-body">
+    <!-- SETUP BANNER (shown if no sheet URL) -->
+    <div class="setup-banner" id="setup-banner" style="display:none">
+      <strong>⚙️ Configure la URL de sincronización</strong>
+      Pegue aquí la URL de su Google Apps Script para guardar los datos en Google Sheets. Si no la tiene, los registros se guardarán localmente en este dispositivo.
+      <input class="setup-input" type="text" id="sheet-url-form" placeholder="https://script.google.com/macros/s/..." oninput="saveUrlNow(this.value)" onpaste="setTimeout(()=>saveUrlNow(this.value),50)" onchange="saveUrlNow(this.value)">
+      <div id="url-ok-msg" style="font-size:0.72rem;color:var(--green);margin-top:6px;font-weight:600;display:none">✓ URL guardada correctamente</div>
+      <div class="setup-status" id="setup-status"></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-subred">
+        <label>Subred <span class="req">*</span></label>
+        <select name="subred" id="subred">
+          <option value="">Seleccionar…</option>
+          <option>Norte</option><option>Sur</option>
+          <option>Sur Occidente</option><option>Centro Oriente</option>
+        </select>
+        <div class="field-error">Seleccione la subred</div>
+      </div>
+      <div class="field" id="f-placa">
+        <label>Placa / Número <span class="req">*</span></label>
+        <input type="text" name="placa" id="placa" placeholder="Ej: AMB-001" autocomplete="off" style="text-transform:uppercase">
+        <div class="field-error">Ingrese el número de móvil</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="field" style="margin-bottom:8px"><label>Tipo de Móvil <span class="req">*</span></label></div>
+      <div class="tipo-group">
+        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-med" value="Medicalizada"><label for="tipo-med"><span class="tipo-icon">🏥</span><div class="tipo-info"><div class="tipo-name">Medicalizada</div><div class="tipo-desc">Médico + Conductor + Auxiliar</div></div></label></div>
+        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-bas" value="Básica"><label for="tipo-bas"><span class="tipo-icon">🚑</span><div class="tipo-info"><div class="tipo-name">Básica</div><div class="tipo-desc">Conductor + Auxiliar</div></div></label></div>
+        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-med2" value="MED"><label for="tipo-med2"><span class="tipo-icon">⚕️</span><div class="tipo-info"><div class="tipo-name">MED</div><div class="tipo-desc">Médico + Auxiliar/Conductor</div></div></label></div>
+      </div>
+      <div class="field-error" id="err-tipo" style="display:none">Seleccione el tipo de móvil</div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="field" style="margin-bottom:8px"><label>Tipo de Turno <span class="req">*</span></label></div>
+      <div class="turno-group">
+        <div class="turno-option"><input type="radio" name="turno" id="turno-dia" value="Día (7am–7pm)"><label for="turno-dia"><div class="turno-icon">☀️</div><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></label></div>
+        <div class="turno-option"><input type="radio" name="turno" id="turno-noche" value="Noche (7pm–7am)"><label for="turno-noche"><div class="turno-icon">🌙</div><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></label></div>
+      </div>
+      <div class="field-error" id="err-turno" style="display:none">Seleccione el tipo de turno</div>
+    </div>
+
+    <div class="field-row single">
+      <div class="field" id="f-inicio">
+        <label>Fecha y hora exacta de inicio <span class="req">*</span></label>
+        <input type="datetime-local" name="inicio" id="inicio">
+        <div class="field-error">Ingrese la fecha y hora de inicio</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn-next" onclick="goStep(2)">Siguiente — Personal →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PASO 2 ══ -->
+<div class="section-card" id="step-2">
+  <div class="section-head">
+    <div class="section-num green">02</div>
+    <div><div class="section-title">Personal del Turno</div><div class="section-sub">Datos de cada tripulante</div></div>
+  </div>
+  <div class="section-body">
+
+    <!-- MÉDICO -->
+    <div class="crew-card" id="crew-medico">
+      <div class="crew-header" onclick="toggleCrew('crew-medico')">
+        <div class="crew-avatar med">👨‍⚕️</div>
+        <div class="crew-info">
+          <div class="crew-role">Médico <span id="med-req-badge" style="font-size:0.65rem;color:var(--text-muted);font-weight:400">(si aplica)</span></div>
+          <div class="crew-note" id="med-status">Toca para ingresar datos</div>
+        </div>
+        <div class="crew-chevron">▼</div>
+      </div>
+      <div class="crew-body">
+        <div class="field-row">
+          <div class="field" id="f-med-nom"><label>Nombre completo</label><input type="text" name="med_nombre" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
+          <div class="field" id="f-med-ced"><label>Número de cédula</label><input type="text" name="med_cedula" id="med_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+        </div>
+        <div class="field-row single">
+          <div class="field"><label>Foto de la cédula (frente)</label>
+            <div class="file-upload-area" id="upload-med-area"><input type="file" name="med_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-med-area','preview-med')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-med"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDUCTOR -->
+    <div class="crew-card open" id="crew-conductor">
+      <div class="crew-header" onclick="toggleCrew('crew-conductor')">
+        <div class="crew-avatar con">🚘</div>
+        <div class="crew-info">
+          <div class="crew-role">Conductor <span class="req">*</span></div>
+          <div class="crew-note" id="con-status">Toca para ingresar datos</div>
+        </div>
+        <div class="crew-chevron">▼</div>
+      </div>
+      <div class="crew-body">
+        <div class="field-row">
+          <div class="field" id="f-con-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="con_nombre" id="con_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
+          <div class="field" id="f-con-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="con_cedula" id="con_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+        </div>
+        <div class="field-row single">
+          <div class="field"><label>Foto de la cédula (frente) <span class="req">*</span></label>
+            <div class="file-upload-area" id="upload-con-area"><input type="file" name="con_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-con-area','preview-con')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-con"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUXILIAR -->
+    <div class="crew-card" id="crew-auxiliar">
+      <div class="crew-header" onclick="toggleCrew('crew-auxiliar')">
+        <div class="crew-avatar aux">🩺</div>
+        <div class="crew-info">
+          <div class="crew-role">Auxiliar <span class="req">*</span></div>
+          <div class="crew-note" id="aux-status">Toca para ingresar datos</div>
+        </div>
+        <div class="crew-chevron">▼</div>
+      </div>
+      <div class="crew-body">
+        <div class="field-row">
+          <div class="field" id="f-aux-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="aux_nombre" id="aux_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
+          <div class="field" id="f-aux-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="aux_cedula" id="aux_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+        </div>
+        <div class="field-row single">
+          <div class="field"><label>Foto de la cédula (frente) <span class="req">*</span></label>
+            <div class="file-upload-area" id="upload-aux-area"><input type="file" name="aux_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-aux-area','preview-aux')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-aux"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:16px">
+      <button type="button" class="btn-back" onclick="goStep(1)">← Volver</button>
+      <button type="button" class="btn-next" onclick="goStep(3)">Siguiente — Referente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PASO 3 ══ -->
+<div class="section-card" id="step-3">
+  <div class="section-head">
+    <div class="section-num purple">03</div>
+    <div><div class="section-title">Profesional que Registra</div><div class="section-sub">Usted es responsable de la veracidad de los datos</div></div>
+  </div>
+  <div class="section-body">
+    <div class="field-row">
+      <div class="field" id="f-ref-nom">
+        <label>Su nombre completo <span class="req">*</span></label>
+        <input type="text" name="referente" id="referente" placeholder="Apellidos y nombres">
+        <div class="field-error">Ingrese su nombre</div>
+      </div>
+      <div class="field">
+        <label>Su subred asignada</label>
+        <select name="ref_subred" id="ref_subred">
+          <option value="">Seleccionar…</option>
+          <option>Norte</option><option>Sur</option>
+          <option>Sur Occidente</option><option>Centro Oriente</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row single">
+      <div class="field">
+        <label>Observaciones <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label>
+        <textarea name="observaciones" id="observaciones" placeholder="Novedad, cambio de personal, etc."></textarea>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button type="button" class="btn-back" onclick="goStep(2)">← Volver</button>
+      <button type="button" class="btn-next" onclick="goStep(4)">Revisar y Confirmar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PASO 4 ══ -->
+<div class="section-card" id="step-4">
+  <div class="section-head">
+    <div class="section-num blue">04</div>
+    <div><div class="section-title">Confirmar Registro</div><div class="section-sub">Verifique los datos antes de enviar</div></div>
+  </div>
+  <div class="section-body">
+    <div id="resumen-content"></div>
+    <div style="background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;font-size:0.78rem;color:#92400E;line-height:1.5">
+      ⚠️ <strong>Al enviar</strong>, confirma que los datos son verídicos. El sistema registrará la hora exacta de envío.
+    </div>
+    <div id="sync-warning" style="display:none;background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:0.75rem;color:#92400E">
+      📡 Sin conexión a Google Sheets. El registro se guardará localmente y se sincronizará cuando haya conexión.
+    </div>
+    <button type="submit" class="btn-submit-final" id="submit-btn">✓ CONFIRMAR Y REGISTRAR TURNO</button>
+    <div class="nav-buttons" style="margin-top:10px">
+      <button type="button" class="btn-back" style="flex:1" onclick="goStep(3)">← Editar datos</button>
+    </div>
+  </div>
+</div>
+
+</form>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="success-screen">
+  <div class="success-circle">✓</div>
+  <div class="success-title">¡Turno Registrado!</div>
+  <div class="success-sub">Los datos han sido enviados correctamente.</div>
+  <div class="success-detail" id="success-detail-text"></div>
+  <div class="success-sync" id="success-sync-msg"></div>
+  <button class="btn-nuevo" onclick="resetForm()" style="margin-top:1.5rem">+ Registrar otro turno</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const LOCAL_KEY   = 'scat_registros_v3';
+const SHEET_URL_KEY = 'scat_sheet_url';
+const PENDING_KEY = 'scat_pending_sync'; // offline queue
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+let currentStep = 1;
+let sheetUrl = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+  sheetUrl = localStorage.getItem(SHEET_URL_KEY) || '';
+  const urlInput = document.getElementById('sheet-url-form');
+  if (sheetUrl) {
+    urlInput.value = sheetUrl;
+    document.getElementById('sync-indicator').textContent = '📡 Conectado';
+    document.getElementById('sync-indicator').style.color = 'rgba(255,255,255,0.9)';
+  } else {
+    document.getElementById('setup-banner').style.display = 'block';
+    document.getElementById('sync-indicator').textContent = '📁 Local';
+  }
+
+  function saveUrlNow(v) {
+    const clean = v.trim();
+    if (!clean) return;
+    sheetUrl = clean;
+    localStorage.setItem(SHEET_URL_KEY, clean);
+    const msg = document.getElementById("url-ok-msg");
+    if (msg) { msg.style.display = "block"; setTimeout(() => msg.style.display = "none", 2500); }
+    document.getElementById("sync-indicator").textContent = "📡 Conectado";
+    document.getElementById("sync-indicator").style.color = "rgba(255,255,255,0.9)";
+    document.getElementById("setup-status").textContent = "";
+  }
+
+  urlInput.addEventListener("input", () => {
+    saveUrlNow(urlInput.value);
+  });
+  urlInput.addEventListener("change", () => saveUrlNow(urlInput.value));
+  urlInput.addEventListener("paste",  () => setTimeout(() => saveUrlNow(urlInput.value), 50));
+
+
+
+  // Set default datetime
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('inicio').value = now.toISOString().slice(0,16);
+
+  // Attempt to sync any pending offline records
+  syncPendingRecords();
+});
+
+// ══════════════════════════════════════════════
+// STEP NAV
+// ══════════════════════════════════════════════
+function goStep(n) {
+  if (n > currentStep && !validateStep(currentStep)) return;
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  document.getElementById('step-' + n).classList.add('active');
+  currentStep = n;
+  updateProgress(n);
+  if (n === 4) { buildResumen(); checkSyncStatus(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(n) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-' + i);
+    const lbl = document.getElementById('lbl-' + i);
+    dot.className = 'step-dot' + (i<n?' done':i===n?' active':'');
+    dot.textContent = i < n ? '✓' : i;
+    if (lbl) lbl.className = 'step-label' + (i===n?' active':'');
+    const line = document.getElementById('line-' + i);
+    if (line) line.className = 'step-line' + (i<n?' done':'');
+  }
+}
+
+function checkSyncStatus() {
+  const warn = document.getElementById('sync-warning');
+  warn.style.display = sheetUrl ? 'none' : 'block';
+}
+
+// ══════════════════════════════════════════════
+// VALIDATION
+// ══════════════════════════════════════════════
+function validateStep(step) {
+  let ok = true;
+  const clearErr = id => { const f=document.getElementById(id); if(f) f.classList.remove('has-error'); };
+  const setErr   = id => { const f=document.getElementById(id); if(f) f.classList.add('has-error'); ok=false; };
+
+  if (step === 1) {
+    clearErr('f-subred'); clearErr('f-placa'); clearErr('f-inicio');
+    document.getElementById('err-tipo').style.display = 'none';
+    document.getElementById('err-turno').style.display = 'none';
+    if (!document.getElementById('subred').value) setErr('f-subred');
+    if (!document.getElementById('placa').value.trim()) setErr('f-placa');
+    if (!document.querySelector('input[name="tipo"]:checked')) { document.getElementById('err-tipo').style.display='block'; ok=false; }
+    if (!document.querySelector('input[name="turno"]:checked')) { document.getElementById('err-turno').style.display='block'; ok=false; }
+    if (!document.getElementById('inicio').value) setErr('f-inicio');
+  }
+  if (step === 2) {
+    clearErr('f-con-nom'); clearErr('f-con-ced'); clearErr('f-aux-nom'); clearErr('f-aux-ced');
+    if (!document.getElementById('con_nombre').value.trim()) { setErr('f-con-nom'); document.getElementById('crew-conductor').classList.add('open'); }
+    if (!document.getElementById('con_cedula').value.trim()) { setErr('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
+    if (!document.getElementById('aux_nombre').value.trim()) { setErr('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
+    if (!document.getElementById('aux_cedula').value.trim()) { setErr('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
+  }
+  if (step === 3) {
+    clearErr('f-ref-nom');
+    if (!document.getElementById('referente').value.trim()) setErr('f-ref-nom');
+  }
+  if (!ok) {
+    const firstErr = document.querySelector('.has-error');
+    if (firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+  return ok;
+}
+
+// ══════════════════════════════════════════════
+// CREW
+// ══════════════════════════════════════════════
+function toggleCrew(id) { document.getElementById(id).classList.toggle('open'); }
+function handleFile(input, areaId, previewId) {
+  const area = document.getElementById(areaId);
+  const preview = document.getElementById(previewId);
+  if (input.files[0]) {
+    area.classList.add('has-file');
+    preview.style.display = 'block';
+    preview.textContent = '✓ ' + input.files[0].name;
+    area.querySelector('.upload-icon').textContent = '✅';
+  }
+}
+
+// ══════════════════════════════════════════════
+// RESUMEN
+// ══════════════════════════════════════════════
+function buildResumen() {
+  const v = n => document.getElementById(n)?.value || '';
+  const r = (key, val) => val ? `<div class="resumen-row"><span class="resumen-key">${key}</span><span class="resumen-val">${val}</span></div>` : '';
+  const tipo   = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const turno  = document.querySelector('input[name="turno"]:checked')?.value || '';
+  const inicio = v('inicio');
+  const inicioFmt = inicio ? new Date(inicio).toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+
+  document.getElementById('resumen-content').innerHTML = `
+    <div class="resumen-card">
+      <div class="resumen-title">🚑 Móvil</div>
+      ${r('Subred', v('subred'))}${r('Placa', v('placa').toUpperCase())}${r('Tipo', tipo)}${r('Turno', turno)}${r('Inicio', inicioFmt)}
+    </div>
+    ${v('med_nombre')?`<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}</div>`:''}
+    <div class="resumen-card"><div class="resumen-title">🚘 Conductor</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}</div>
+    <div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}</div>
+    <div class="resumen-card"><div class="resumen-title">📋 Referente</div>${r('Nombre',v('referente'))}${r('Observaciones',v('observaciones'))}</div>`;
+}
+
+// ══════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════
+document.getElementById('main-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+
+  const v = n => document.getElementById(n)?.value?.trim() || '';
+  const obj = {
+    id: Date.now(),
+    ts: Date.now(),
+    subred: v('subred'), placa: v('placa').toUpperCase(),
+    tipo: document.querySelector('input[name="tipo"]:checked')?.value || '',
+    turno: document.querySelector('input[name="turno"]:checked')?.value || '',
+    inicio: v('inicio'),
+    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'),
+    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'),
+    aux_nombre: v('aux_nombre'), aux_cedula: v('aux_cedula'),
+    referente: v('referente'), ref_subred: v('ref_subred'),
+    observaciones: v('observaciones'), estado: 'activo'
+  };
+
+  // Save to localStorage immediately
+  const db = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+  db.push(obj);
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
+
+  let synced = false;
+  // Sync to Google Sheets
+  if (sheetUrl) {
+    try {
+      btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
+      const res = await fetch(sheetUrl, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'register', record: obj }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const json = await res.json();
+      synced = json.status === 'ok';
+    } catch(err) {
+      // Queue for later
+      const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+      pending.push(obj);
+      localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+    }
+  }
+
+  // Show success
+  document.getElementById('success-detail-text').innerHTML =
+    `<strong>${obj.placa} · Subred ${obj.subred} · ${obj.tipo}</strong>
+    Conductor: ${obj.con_nombre}<br>
+    Auxiliar: ${obj.aux_nombre}<br>
+    ${obj.med_nombre?'Médico: '+obj.med_nombre+'<br>':''}
+    Registrado por: ${obj.referente}<br>
+    Hora: ${new Date().toLocaleTimeString('es-CO',{hour12:false})}`;
+
+  const syncEl = document.getElementById('success-sync-msg');
+  if (sheetUrl) {
+    syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente — se sincronizará luego';
+    syncEl.className = 'success-sync ' + (synced ? 'ok' : 'err');
+  } else {
+    syncEl.textContent = '📁 Guardado localmente en este dispositivo';
+    syncEl.className = 'success-sync err';
+  }
+
+  document.getElementById('success-screen').classList.add('show');
+  btn.disabled = false;
+  btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR TURNO';
+});
+
+// ══════════════════════════════════════════════
+// OFFLINE SYNC QUEUE
+// ══════════════════════════════════════════════
+async function syncPendingRecords() {
+  const url = localStorage.getItem(SHEET_URL_KEY);
+  if (!url) return;
+  const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+  if (!pending.length) return;
+  try {
+    for (const rec of pending) {
+      await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'register', record: rec }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    localStorage.removeItem(PENDING_KEY);
+  } catch(e) { /* still offline */ }
+}
+
+// ══════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════
+function resetForm() {
+  document.getElementById('main-form').reset();
+  document.getElementById('success-screen').classList.remove('show');
+  document.querySelectorAll('.upload-preview').forEach(el => { el.style.display='none'; el.textContent=''; });
+  document.querySelectorAll('.file-upload-area').forEach(el => { el.classList.remove('has-file'); const ic=el.querySelector('.upload-icon'); if(ic) ic.textContent='📷'; });
+  document.querySelectorAll('.has-error').forEach(el => el.classList.remove('has-error'));
+  document.querySelectorAll('#err-tipo,#err-turno').forEach(el => el.style.display='none');
+  const now = new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+  document.getElementById('inicio').value = now.toISOString().slice(0,16);
+  goStep(1);
+}
+
+// Live crew status
+document.querySelectorAll('input[type="text"]').forEach(inp => {
+  inp.addEventListener('input', () => {
+    ['med_nombre','con_nombre','aux_nombre'].forEach(id => {
+      const v = document.getElementById(id)?.value.trim();
+      const statusEl = document.getElementById(id.replace('_nombre','')+'-status');
+      if (statusEl) statusEl.textContent = v || 'Toca para ingresar datos';
+    });
+  });
+});
+</script>
+</body>
+</html>
