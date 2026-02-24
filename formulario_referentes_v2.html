@@ -484,11 +484,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const urlInput = document.getElementById('sheet-url-form');
   if (sheetUrl) {
     urlInput.value = sheetUrl;
-    document.getElementById('sync-indicator').textContent = '📡 Conectado';
-    document.getElementById('sync-indicator').style.color = 'rgba(255,255,255,0.9)';
+    const si1 = document.getElementById('sync-indicator');
+    if (si1) { si1.textContent = '📡 Conectado'; si1.style.color = 'rgba(255,255,255,0.9)'; }
   } else {
-    document.getElementById('setup-banner').style.display = 'block';
-    document.getElementById('sync-indicator').textContent = '📁 Local';
+    const sb = document.getElementById('setup-banner');
+    if (sb) sb.style.display = 'block';
+    const si2 = document.getElementById('sync-indicator');
+    if (si2) si2.textContent = '📁 Local';
   }
 
   function saveUrlNow(v) {
@@ -498,9 +500,10 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(SHEET_URL_KEY, clean);
     const msg = document.getElementById("url-ok-msg");
     if (msg) { msg.style.display = "block"; setTimeout(() => msg.style.display = "none", 2500); }
-    document.getElementById("sync-indicator").textContent = "📡 Conectado";
-    document.getElementById("sync-indicator").style.color = "rgba(255,255,255,0.9)";
-    document.getElementById("setup-status").textContent = "";
+    const si3 = document.getElementById("sync-indicator");
+    if (si3) { si3.textContent = "📡 Conectado"; si3.style.color = "rgba(255,255,255,0.9)"; }
+    const ss = document.getElementById("setup-status");
+    if (ss) ss.textContent = "";
   }
 
   urlInput.addEventListener("input", () => {
@@ -670,7 +673,7 @@ document.getElementById('main-form').addEventListener('submit', async function(e
       const res = await fetch(sheetUrl, {
         method: 'POST',
         body: JSON.stringify({ action: 'register', record: obj }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'text/plain' }
       });
       const json = await res.json();
       synced = json.status === 'ok';
@@ -729,7 +732,7 @@ function saveUrlFromModal() {
   if (!v.includes('script.google.com')) { statusEl.textContent = '⚠ La URL no parece correcta'; statusEl.style.color = '#DC2626'; return; }
   localStorage.setItem('scat_sheet_url', v);
   sheetUrl = v;
-  document.getElementById('sync-indicator').textContent = '📡 Conectado';
+  const si4 = document.getElementById('sync-indicator'); if (si4) si4.textContent = '📡 Conectado';
   statusEl.textContent = '✓ Guardada correctamente';
   statusEl.style.color = '#16A34A';
   setTimeout(() => closeUrlSettings(), 1200);
@@ -807,7 +810,7 @@ async function syncPendingRecords() {
       await fetch(url, {
         method: 'POST',
         body: JSON.stringify({ action: 'register', record: rec }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'text/plain' }
       });
     }
     localStorage.removeItem(PENDING_KEY);
