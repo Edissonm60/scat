@@ -681,7 +681,7 @@ document.getElementById('main-form').addEventListener('submit', async function(e
       const json = await res.json();
       synced = json.status === 'ok';
     } catch(err) {
-      // Queue for later
+      alert('ERROR SYNC: ' + err.message + ' | URL: ' + sheetUrl);
       const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
       pending.push(obj);
       localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
