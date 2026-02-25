@@ -678,7 +678,9 @@ document.getElementById('main-form').addEventListener('submit', async function(e
       const res = await fetch(sheetUrl + '?' + params.toString(), {
         method: 'GET'
       });
-      const json = await res.json();
+      const text = await res.text();
+      alert('RESPUESTA: ' + text);
+      const json = JSON.parse(text);
       synced = json.status === 'ok';
     } catch(err) {
       alert('ERROR SYNC: ' + err.message + ' | URL: ' + sheetUrl);
