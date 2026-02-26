@@ -622,45 +622,37 @@ async function submitForm() {
     doblado: document.getElementById('doblado-alert').style.display!=='none'?'si':'no'
   };
 
+  // 1. Guardar local inmediatamente
   const db = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
   db.push(obj); localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
 
-  let synced = false;
-  btn.innerHTML='<span class="spinner"></span> Enviando...';
+  // 2. Enviar a Google Sheets SIN ESPERAR (fire and forget)
+  const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
+  const sendUrl = SHEET_URL+'?'+params.toString();
+  
+  // Dispara las 3 formas a la vez sin await — ninguna bloquea
+  fetch(sendUrl, {mode:'no-cors'}).catch(()=>{});
+  
+  const img = new Image();
+  img.src = sendUrl + '&t=' + Date.now();
+  
+  const sc = document.createElement('script');
+  const cb = '_r_'+Date.now();
+  window[cb] = ()=>{ delete window[cb]; sc.remove(); };
+  sc.onerror = ()=>{ delete window[cb]; sc.remove(); };
+  params.set('callback', cb);
+  sc.src = SHEET_URL+'?'+params.toString();
+  setTimeout(()=>{ delete window[cb]; sc.remove(); }, 5000);
+  document.head.appendChild(sc);
 
-  // JSONP - timeout corto para no bloquear
-  try {
-    const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
-    const result = await new Promise((resolve) => {
-      const cbName = '_scatReg_'+Date.now();
-      const script = document.createElement('script');
-      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
-      script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
-      params.set('callback', cbName);
-      script.src = SHEET_URL+'?'+params.toString();
-      setTimeout(()=>resolve(null), 6000);
-      document.head.appendChild(script);
-    });
-    if (result && result.status==='ok') synced=true;
-  } catch{}
+  // 3. Subir fotos en segundo plano
+  setTimeout(() => {
+    if (photoFiles.med) uploadPhotoBackground('med', obj.id);
+    if (photoFiles.con) uploadPhotoBackground('con', obj.id);
+    if (photoFiles.aux) uploadPhotoBackground('aux', obj.id);
+  }, 1000);
 
-  // Fallback fetch no-cors si JSONP falló
-  if (!synced) {
-    try {
-      const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
-      fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
-      synced=true; // asumimos que llegó
-    } catch{}
-  }
-
-  // Subir fotos EN SEGUNDO PLANO — no bloquea el éxito
-  if (photoFiles.con || photoFiles.aux || photoFiles.med) {
-    setTimeout(() => {
-      if (photoFiles.med) uploadPhotoBackground('med', obj.id);
-      if (photoFiles.con) uploadPhotoBackground('con', obj.id);
-      if (photoFiles.aux) uploadPhotoBackground('aux', obj.id);
-    }, 500);
-  }
+  const synced = true; // siempre mostramos éxito — el dato está guardado local
 
   document.getElementById('success-detail-text').innerHTML =
     `<strong>${obj.placa} · ${obj.subred} · ${tipo}</strong><br>
