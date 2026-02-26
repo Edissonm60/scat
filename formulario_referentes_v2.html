@@ -367,6 +367,7 @@ const LOCAL_KEY = 'scat_registros_v3';
 let currentStep = 1;
 let tipoActual = '';
 let photoUrls = { med: '', con: '', aux: '' };
+let photoFiles = { med: null, con: null, aux: null };
 
 window.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
@@ -382,6 +383,7 @@ function onTipoChange() {
   const badge   = document.getElementById('medcon-badge');
   const sub     = document.getElementById('personal-sub');
   photoUrls = { med: '', con: '', aux: '' };
+  photoFiles = { med: null, con: null, aux: null };
 
   if (tipoActual === 'Medicalizada') {
     medCard.classList.remove('hidden-crew'); auxCard.classList.remove('hidden-crew');
@@ -399,71 +401,53 @@ function onTipoChange() {
   }
 }
 
-// ── FOTO UPLOAD ──
-async function handlePhoto(input, role) {
+// ── FOTO: solo marca el archivo localmente, sube después del envío ──
+function handlePhoto(input, role) {
   if (!input.files[0]) return;
-  const file = input.files[0];
-  const area = document.getElementById('up-' + role);
-  const status = document.getElementById('ps-' + role);
+  const file  = input.files[0];
+  const area  = document.getElementById('up-' + role);
+  const status= document.getElementById('ps-' + role);
 
-  area.classList.add('uploading');
-  status.className = 'photo-status uploading';
-  status.textContent = '⏳ Subiendo foto...';
+  // Guardar referencia al archivo para subir después
+  photoFiles[role] = file;
+  photoUrls[role]  = '__pending__'; // marca que hay foto pendiente
 
-  try {
-    const base64 = await fileToBase64(file);
-    const filename = `SCAT_${role}_${Date.now()}.jpg`;
-
-    // Upload via JSONP
-    const result = await new Promise((resolve) => {
-      const cbName = '_scatPhoto_' + Date.now();
-      const script = document.createElement('script');
-      window[cbName] = (data) => { delete window[cbName]; script.remove(); resolve(data); };
-      script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
-      // Send via POST since base64 is large
-      fetch(SHEET_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'uploadPhoto', base64: base64.split(',')[1], mimeType: file.type, filename }),
-        headers: { 'Content-Type': 'text/plain' }
-      }).then(r => r.json()).then(d => resolve(d)).catch(() => resolve(null));
-      setTimeout(() => resolve(null), 20000);
-      // Cancel JSONP approach for photos - use fetch directly above
-      delete window[cbName];
-      script.remove();
-    });
-
-    if (result && result.status === 'ok') {
-      photoUrls[role] = result.url;
-      area.classList.remove('uploading');
-      area.classList.add('has-file');
-      status.className = 'photo-status ok';
-      status.textContent = '✓ Foto subida a Drive';
-      document.getElementById('err-' + role + '-foto').style.display = 'none';
-    } else {
-      throw new Error('Upload failed');
-    }
-  } catch(e) {
-    // Save locally if upload fails
-    const reader = new FileReader();
-    reader.onload = () => {
-      photoUrls[role] = reader.result; // store as dataURL as fallback
-      area.classList.remove('uploading');
-      area.classList.add('has-file');
-      status.className = 'photo-status ok';
-      status.textContent = '✓ ' + file.name;
-      document.getElementById('err-' + role + '-foto').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  }
+  area.classList.add('has-file');
+  status.className = 'photo-status ok';
+  status.textContent = '✓ ' + file.name + ' (se subirá al enviar)';
+  const errEl = document.getElementById('err-' + role + '-foto');
+  if (errEl) errEl.style.display = 'none';
 }
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
-    r.onload = () => resolve(r.result);
+    r.onload  = () => resolve(r.result);
     r.onerror = reject;
     r.readAsDataURL(file);
   });
+}
+
+// Sube una foto a Drive en segundo plano (no bloquea)
+async function uploadPhotoBackground(role, recordId) {
+  const file = photoFiles[role];
+  if (!file) return;
+  try {
+    const b64      = await fileToBase64(file);
+    const filename = `SCAT_${role}_${recordId}.jpg`;
+    const res = await fetch(SHEET_URL, {
+      method : 'POST',
+      body   : JSON.stringify({ action:'uploadPhoto', base64: b64.split(',')[1], mimeType: file.type, filename, recordId: String(recordId), role }),
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      photoUrls[role] = data.url;
+      console.log('Foto ' + role + ' subida:', data.url);
+    }
+  } catch(e) {
+    console.warn('Foto ' + role + ' no pudo subirse:', e);
+  }
 }
 
 // ── NAVEGACIÓN ──
@@ -642,9 +626,9 @@ async function submitForm() {
   db.push(obj); localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
 
   let synced = false;
-  btn.innerHTML='<span class="spinner"></span> Sincronizando...';
+  btn.innerHTML='<span class="spinner"></span> Enviando...';
 
-  // JSONP
+  // JSONP - timeout corto para no bloquear
   try {
     const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
     const result = await new Promise((resolve) => {
@@ -654,20 +638,28 @@ async function submitForm() {
       script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
       params.set('callback', cbName);
       script.src = SHEET_URL+'?'+params.toString();
-      setTimeout(()=>resolve(null), 8000);
+      setTimeout(()=>resolve(null), 6000);
       document.head.appendChild(script);
     });
     if (result && result.status==='ok') synced=true;
   } catch{}
 
-  // Fallback fetch no-cors
+  // Fallback fetch no-cors si JSONP falló
   if (!synced) {
     try {
       const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
-      await fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'});
-      await new Promise(r=>setTimeout(r,1500));
-      synced=true;
+      fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
+      synced=true; // asumimos que llegó
     } catch{}
+  }
+
+  // Subir fotos EN SEGUNDO PLANO — no bloquea el éxito
+  if (photoFiles.con || photoFiles.aux || photoFiles.med) {
+    setTimeout(() => {
+      if (photoFiles.med) uploadPhotoBackground('med', obj.id);
+      if (photoFiles.con) uploadPhotoBackground('con', obj.id);
+      if (photoFiles.aux) uploadPhotoBackground('aux', obj.id);
+    }, 500);
   }
 
   document.getElementById('success-detail-text').innerHTML =
@@ -696,6 +688,7 @@ function resetForm() {
   document.getElementById('crew-auxiliar').classList.add('hidden-crew');
   document.getElementById('doblado-alert').style.display='none';
   photoUrls={med:'',con:'',aux:''};
+  photoFiles={med:null,con:null,aux:null};
   tipoActual='';
   const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
   document.getElementById('inicio').value=now.toISOString().slice(0,16);
