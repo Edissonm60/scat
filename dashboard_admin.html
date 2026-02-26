@@ -506,8 +506,17 @@ async function loadData(silent=false) {
   const url = getSheetUrl();
   if (url) {
     try {
-      const res  = await fetch(url + '?action=getAll');
-      const json = await res.json();
+      // Usar XMLHttpRequest que maneja mejor las redirecciones de Google Apps Script
+      const json = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url + '?action=getAll', true);
+        xhr.onload = () => {
+          try { resolve(JSON.parse(xhr.responseText)); }
+          catch(e) { reject(e); }
+        };
+        xhr.onerror = () => reject(new Error('XHR error'));
+        xhr.send();
+      });
       if (json.status === 'ok') {
         activeData = json.active || [];
         closedData = json.closed || [];
