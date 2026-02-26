@@ -506,16 +506,19 @@ async function loadData(silent=false) {
   const url = getSheetUrl();
   if (url) {
     try {
-      // Usar XMLHttpRequest que maneja mejor las redirecciones de Google Apps Script
+      // Usar script tag dinámico para evitar CORS (JSONP style)
       const json = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url + '?action=getAll', true);
-        xhr.onload = () => {
-          try { resolve(JSON.parse(xhr.responseText)); }
-          catch(e) { reject(e); }
+        const script = document.createElement('script');
+        const cbName = '_scatCb_' + Date.now();
+        window[cbName] = (data) => {
+          delete window[cbName];
+          script.remove();
+          resolve(data);
         };
-        xhr.onerror = () => reject(new Error('XHR error'));
-        xhr.send();
+        script.onerror = () => reject(new Error('Script error'));
+        script.src = url + '?action=getAll&callback=' + cbName;
+        setTimeout(() => reject(new Error('Timeout')), 8000);
+        document.head.appendChild(script);
       });
       if (json.status === 'ok') {
         activeData = json.active || [];
