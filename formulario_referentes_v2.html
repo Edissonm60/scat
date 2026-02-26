@@ -616,7 +616,7 @@ async function submitForm() {
     con_nombre: v('con_nombre'), con_cedula: v('con_cedula'), con_foto_url: photoUrls.con||'',
     aux_nombre: tipo==='MED'?v('con_nombre'):v('aux_nombre'),
     aux_cedula: tipo==='MED'?v('con_cedula'):v('aux_cedula'),
-    aux_foto_url: tipo==='MED'?photoUrls.con:photoUrls.aux||'',
+    aux_foto_url: tipo==='MED' ? ((photoUrls.con && photoUrls.con !== '__pending__') ? photoUrls.con : '') : ((photoUrls.aux && photoUrls.aux !== '__pending__') ? photoUrls.aux : ''),
     referente: v('referente'), ref_subred: v('ref_subred'),
     observaciones: v('observaciones'), estado: 'activo',
     doblado: document.getElementById('doblado-alert').style.display!=='none'?'si':'no'
@@ -626,24 +626,9 @@ async function submitForm() {
   const db = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
   db.push(obj); localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
 
-  // 2. Enviar a Google Sheets SIN ESPERAR (fire and forget)
+  // 2. Enviar a Google Sheets — UN solo método, sin esperar
   const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
-  const sendUrl = SHEET_URL+'?'+params.toString();
-  
-  // Dispara las 3 formas a la vez sin await — ninguna bloquea
-  fetch(sendUrl, {mode:'no-cors'}).catch(()=>{});
-  
-  const img = new Image();
-  img.src = sendUrl + '&t=' + Date.now();
-  
-  const sc = document.createElement('script');
-  const cb = '_r_'+Date.now();
-  window[cb] = ()=>{ delete window[cb]; sc.remove(); };
-  sc.onerror = ()=>{ delete window[cb]; sc.remove(); };
-  params.set('callback', cb);
-  sc.src = SHEET_URL+'?'+params.toString();
-  setTimeout(()=>{ delete window[cb]; sc.remove(); }, 5000);
-  document.head.appendChild(sc);
+  fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
 
   // 3. Subir fotos en segundo plano
   setTimeout(() => {
