@@ -18,7 +18,8 @@
   --norte:#60A5FA; --sur:#4ADE80; --suroc:#FCD34D; --co:#C084FC;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;width:100%;}
+.app{width:100%;}
 
 /* PIN */
 .pin-screen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
@@ -48,7 +49,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .pin-hint strong{color:var(--text-sub);}
 
 /* APP */
-.app{display:none;}
+.app{display:none;width:100%;}
 .app.visible{display:block;}
 
 /* TOPBAR */
@@ -70,7 +71,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .sync-tag{font-size:0.68rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
 
 /* VIEWS */
-.view{display:none;padding:1.5rem;}
+.view{display:none;padding:1.5rem;max-width:100%;min-height:calc(100vh - 58px);}
 .view.active{display:block;}
 
 /* ALERT BANNERS */
@@ -122,8 +123,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .btn-export:hover{border-color:var(--accent);color:var(--accent);}
 
 /* TABLE */
-.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);width:100%;}
+table{width:100%;border-collapse:collapse;font-size:0.8rem;min-width:900px;}
 thead th{background:var(--surface2);padding:10px 12px;text-align:left;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);white-space:nowrap;border-bottom:1px solid var(--border);}
 tbody tr{border-bottom:1px solid rgba(30,48,80,0.5);transition:background 0.15s;}
 tbody tr:hover{background:rgba(255,255,255,0.02);}
@@ -521,8 +522,19 @@ async function loadData(silent=false) {
         document.head.appendChild(script);
       });
       if (json.status === 'ok') {
-        activeData = json.active || [];
-        closedData = json.closed || [];
+        // Get IDs that were closed locally but may still appear as active on server
+        const localClosed = JSON.parse(localStorage.getItem(CLOSED_KEY) || '[]');
+        const closedIds = new Set(localClosed.map(r => String(r.id)));
+        
+        // Filter out any records already closed locally
+        activeData = (json.active || []).filter(r => !closedIds.has(String(r.id)));
+        
+        // Merge server closed with local closed (deduplicate by id)
+        const serverClosed = json.closed || [];
+        const serverClosedIds = new Set(serverClosed.map(r => String(r.id)));
+        const localOnlyClosed = localClosed.filter(r => !serverClosedIds.has(String(r.id)));
+        closedData = [...serverClosed, ...localOnlyClosed];
+        
         localStorage.setItem(LOCAL_KEY,   JSON.stringify(activeData));
         localStorage.setItem(CLOSED_KEY,  JSON.stringify(closedData));
         const now = new Date();
