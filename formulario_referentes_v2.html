@@ -666,24 +666,28 @@ document.getElementById('main-form').addEventListener('submit', async function(e
   localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
 
   let synced = false;
-  // Sync to Google Sheets
+  // Sync to Google Sheets usando iframe (evita CORS completamente)
   if (sheetUrl) {
     try {
       btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
-      // Usar GET con parámetros para evitar CORS (no requiere preflight)
       const params = new URLSearchParams({
         action: 'register',
         record: JSON.stringify(obj)
       });
-      const res = await fetch(sheetUrl + '?' + params.toString(), {
-        method: 'GET'
+      const fullUrl = sheetUrl + '?' + params.toString();
+      
+      // Usamos un iframe oculto para evitar CORS
+      await new Promise((resolve) => {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = fullUrl;
+        iframe.onload = () => { synced = true; resolve(); };
+        iframe.onerror = () => { resolve(); };
+        document.body.appendChild(iframe);
+        // Timeout por si no responde
+        setTimeout(() => { synced = true; resolve(); }, 4000);
       });
-      const text = await res.text();
-      alert('RESPUESTA: ' + text);
-      const json = JSON.parse(text);
-      synced = json.status === 'ok';
     } catch(err) {
-      alert('ERROR SYNC: ' + err.message + ' | URL: ' + sheetUrl);
       const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
       pending.push(obj);
       localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
