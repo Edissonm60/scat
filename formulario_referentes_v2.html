@@ -18,17 +18,11 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:40px; }
-
-/* ── HEADER ── */
 .app-header { background:var(--accent); position:sticky; top:0; z-index:50; box-shadow:0 2px 20px rgba(37,99,235,0.4); }
 .header-inner { max-width:640px; margin:0 auto; padding:16px 20px; display:flex; align-items:center; gap:14px; }
 .header-icon { width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
 .header-text h1 { font-size:1rem; font-weight:700; color:#fff; line-height:1.2; }
 .header-text p { font-size:0.72rem; color:rgba(255,255,255,0.75); margin-top:2px; }
-.header-badge { margin-left:auto; flex-shrink:0; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:4px 10px; font-size:0.68rem; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.08em; }
-.sync-indicator { font-size:0.65rem; color:rgba(255,255,255,0.7); margin-left:auto; text-align:right; line-height:1.3; }
-
-/* ── PROGRESS ── */
 .progress-wrap { max-width:640px; margin:0 auto; padding:16px 20px 0; }
 .progress-steps { display:flex; gap:8px; align-items:center; }
 .step-item { display:flex; align-items:center; gap:6px; flex:1; }
@@ -39,8 +33,6 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 .step-label.active { color:var(--accent); }
 .step-line { flex:1; height:2px; background:var(--border); border-radius:2px; }
 .step-line.done { background:var(--green); }
-
-/* ── FORM ── */
 .form-container { max-width:640px; margin:0 auto; padding:20px 16px; }
 .section-card { background:var(--white); border-radius:var(--radius); box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:16px; overflow:hidden; border:1px solid var(--border); display:none; }
 .section-card.active { display:block; }
@@ -49,162 +41,101 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 .section-num.blue { background:var(--accent-light); color:var(--accent); }
 .section-num.green { background:var(--green-light); color:var(--green); }
 .section-num.purple { background:#F3E8FF; color:#7C3AED; }
-.section-title { font-size:0.95rem; font-weight:700; }
-.section-sub { font-size:0.72rem; color:var(--text-muted); margin-top:1px; }
-.section-body { padding:18px 20px; }
-
-/* ── FIELDS ── */
+.section-title { font-size:1rem; font-weight:700; }
+.section-sub { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
+.section-body { padding:20px; }
+.field { display:flex; flex-direction:column; gap:6px; }
+.field label { font-size:0.8rem; font-weight:600; color:var(--text-sub); }
+.field input, .field select, .field textarea { padding:12px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Outfit',sans-serif; font-size:0.92rem; color:var(--text); background:var(--white); transition:border-color 0.2s; outline:none; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.field textarea { resize:none; height:72px; }
 .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
 .field-row.single { grid-template-columns:1fr; }
-.field { display:flex; flex-direction:column; gap:5px; }
-.field label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-sub); display:flex; align-items:center; gap:4px; }
-.req { color:var(--red); font-size:0.8rem; }
-.field input, .field select, .field textarea {
-  background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm);
-  padding:12px 14px; font-family:'Outfit',sans-serif; font-size:0.9rem; color:var(--text);
-  transition:all 0.2s; width:100%; -webkit-appearance:none;
-}
-.field input:focus, .field select:focus, .field textarea:focus {
-  outline:none; border-color:var(--border-focus); background:var(--white);
-  box-shadow:0 0 0 4px rgba(37,99,235,0.1);
-}
-.field input::placeholder, .field textarea::placeholder { color:var(--text-muted); font-size:0.85rem; }
-.field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
-.field textarea { resize:vertical; min-height:70px; }
-
-/* ── TURNO ── */
-.turno-group { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.turno-option { position:relative; }
-.turno-option input[type="radio"] { display:none; }
-.turno-option label { display:flex; flex-direction:column; align-items:center; padding:14px 10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); text-align:center; }
-.turno-icon { font-size:1.6rem; margin-bottom:4px; }
-.turno-name { font-size:0.85rem; font-weight:700; color:var(--text); }
-.turno-time { font-size:0.7rem; color:var(--text-muted); margin-top:2px; }
-.turno-option input:checked + label { border-color:var(--accent); background:var(--accent-light); }
-.turno-option input:checked + label .turno-name { color:var(--accent); }
-
-/* ── TIPO ── */
-.tipo-group { display:grid; grid-template-columns:1fr; gap:8px; }
-.tipo-option { position:relative; }
-.tipo-option input[type="radio"] { display:none; }
-.tipo-option label { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); }
-.tipo-option input:checked + label { border-color:var(--accent); background:var(--accent-light); }
-.tipo-icon { font-size:1.3rem; }
-.tipo-info .tipo-name { font-size:0.85rem; font-weight:700; }
-.tipo-info .tipo-desc { font-size:0.7rem; color:var(--text-muted); margin-top:1px; }
-
-/* ── CREW ── */
-.crew-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; margin-bottom:12px; }
-.crew-card:last-child { margin-bottom:0; }
-.crew-header { padding:12px 16px; display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; background:var(--surface); transition:background 0.2s; }
-.crew-header:hover { background:#f1f5fd; }
-.crew-avatar { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.field-error { font-size:0.72rem; color:var(--red); display:none; }
+.has-error input, .has-error select { border-color:var(--red) !important; }
+.has-error .field-error { display:block; }
+.req { color:var(--red); }
+.tipo-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+.tipo-card { position:relative; cursor:pointer; }
+.tipo-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+.tipo-card label { display:flex; flex-direction:column; align-items:center; gap:6px; padding:14px 8px; border:2px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; text-align:center; background:var(--surface); }
+.tipo-card label .tipo-icon { font-size:1.5rem; }
+.tipo-card label .tipo-name { font-size:0.8rem; font-weight:700; color:var(--text); }
+.tipo-card label .tipo-desc { font-size:0.65rem; color:var(--text-muted); line-height:1.3; }
+.tipo-card input:checked + label { border-color:var(--accent); background:var(--accent-light); box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
+.tipo-card input:checked + label .tipo-name { color:var(--accent); }
+.turno-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.turno-card { position:relative; cursor:pointer; }
+.turno-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+.turno-card label { display:flex; align-items:center; gap:10px; padding:14px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); }
+.turno-card label .turno-icon { font-size:1.4rem; }
+.turno-card label .turno-info .turno-name { font-size:0.88rem; font-weight:700; }
+.turno-card label .turno-info .turno-time { font-size:0.7rem; color:var(--text-muted); }
+.turno-card input:checked + label { border-color:var(--accent); background:var(--accent-light); }
+.err-msg { font-size:0.75rem; color:var(--red); display:none; margin-top:-8px; margin-bottom:8px; }
+.crew-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px; overflow:hidden; transition:all 0.2s; }
+.crew-card.hidden-crew { display:none; }
+.crew-header { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; background:var(--surface); }
+.crew-avatar { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
 .crew-avatar.med { background:#EFF6FF; }
-.crew-avatar.con { background:var(--green-light); }
-.crew-avatar.aux { background:#F3E8FF; }
+.crew-avatar.con { background:#F0FDF4; }
+.crew-avatar.aux { background:#FFF7ED; }
 .crew-info { flex:1; }
-.crew-role { font-size:0.8rem; font-weight:700; color:var(--text); }
-.crew-note { font-size:0.68rem; color:var(--text-muted); margin-top:1px; }
-.crew-chevron { font-size:0.8rem; color:var(--text-muted); transition:transform 0.3s; }
-.crew-card.open .crew-chevron { transform:rotate(180deg); }
-.crew-body { padding:16px; border-top:1px solid var(--border); display:none; background:var(--white); }
+.crew-role { font-size:0.85rem; font-weight:700; }
+.crew-note { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
+.crew-chevron { color:var(--text-muted); font-size:0.7rem; transition:transform 0.2s; }
+.crew-body { display:none; padding:16px; border-top:1px solid var(--border); }
 .crew-card.open .crew-body { display:block; }
-
-/* ── FILE UPLOAD ── */
-.file-upload-area { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:18px 14px; text-align:center; cursor:pointer; transition:all 0.2s; background:var(--surface); position:relative; overflow:hidden; }
-.file-upload-area:hover, .file-upload-area.has-file { border-color:var(--accent); background:var(--accent-light); }
-.file-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-.upload-icon { font-size:1.8rem; margin-bottom:6px; }
-.upload-text { font-size:0.78rem; color:var(--text-sub); font-weight:500; }
-.upload-text strong { color:var(--accent); }
-.upload-hint { font-size:0.68rem; color:var(--text-muted); margin-top:3px; }
-.upload-preview { font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--green); font-weight:600; margin-top:6px; display:none; }
-
-/* ── BUTTONS ── */
-.nav-buttons { display:flex; gap:10px; margin-top:4px; }
-.btn-back { flex:0 0 auto; padding:14px 20px; border-radius:var(--radius-sm); border:1.5px solid var(--border); background:var(--white); color:var(--text-sub); font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
-.btn-back:hover { border-color:var(--accent); color:var(--accent); }
-.btn-next { flex:1; padding:14px 20px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.92rem; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
-.btn-next:hover { background:#1D4ED8; transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.35); }
+.crew-card.open .crew-chevron { transform:rotate(180deg); }
+.file-upload-area { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:16px; text-align:center; cursor:pointer; position:relative; transition:all 0.2s; background:var(--surface); }
+.file-upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.file-upload-area:hover { border-color:var(--accent); background:var(--accent-light); }
+.file-upload-area.has-file { border-color:var(--green); background:var(--green-light); border-style:solid; }
+.upload-icon { font-size:1.5rem; margin-bottom:4px; }
+.upload-text { font-size:0.8rem; color:var(--text-sub); }
+.upload-hint { font-size:0.68rem; color:var(--text-muted); margin-top:2px; }
+.upload-preview { font-size:0.75rem; color:var(--green); font-weight:600; margin-top:6px; display:none; font-family:'JetBrains Mono',monospace; }
+.nav-buttons { display:flex; gap:10px; }
+.btn-back { flex:0 0 auto; padding:12px 18px; border:1.5px solid var(--border); border-radius:var(--radius-sm); background:var(--white); color:var(--text-sub); font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; }
+.btn-next { flex:1; padding:12px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.btn-next:hover { background:#1D4ED8; }
 .btn-submit-final { width:100%; padding:16px; border-radius:var(--radius-sm); border:none; background:var(--green); color:#fff; font-family:'Outfit',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(22,163,74,0.3); display:flex; align-items:center; justify-content:center; gap:8px; }
 .btn-submit-final:hover { background:#15803D; }
-.btn-submit-final:disabled { background:#6B7280; cursor:not-allowed; transform:none; box-shadow:none; }
-
-/* ── RESUMEN ── */
-.resumen-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:14px; }
-.resumen-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:10px; }
-.resumen-row { display:flex; justify-content:space-between; align-items:flex-start; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
+.btn-submit-final:disabled { background:#6B7280; cursor:not-allowed; }
+.resumen-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; }
+.resumen-title { font-size:0.8rem; font-weight:800; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em; }
+.resumen-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
 .resumen-row:last-child { border-bottom:none; }
 .resumen-key { color:var(--text-muted); font-weight:500; }
-.resumen-val { font-weight:600; color:var(--text); text-align:right; max-width:65%; }
-
-/* ── SHEET URL SETUP ── */
-.setup-banner { background:var(--yellow-light); border:1.5px solid #FCD34D; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:16px; font-size:0.8rem; line-height:1.5; color:#92400E; }
-.setup-banner strong { display:block; margin-bottom:6px; }
-.setup-input { width:100%; padding:10px 12px; border:1.5px solid #FCD34D; border-radius:8px; font-size:0.78rem; font-family:'JetBrains Mono',monospace; background:#fff; color:var(--text); margin-top:8px; }
-.setup-input:focus { outline:none; border-color:var(--accent); }
-.setup-status { margin-top:8px; font-size:0.72rem; font-weight:600; }
-.setup-status.ok { color:var(--green); }
-.setup-status.err { color:var(--red); }
-
-/* ── SUCCESS ── */
-.success-screen { display:none; position:fixed; inset:0; background:#fff; z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; }
+.resumen-val { font-weight:600; text-align:right; }
+.spinner { width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.success-screen { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; padding:40px 20px; text-align:center; }
 .success-screen.show { display:flex; }
-.success-circle { width:90px; height:90px; border-radius:50%; background:var(--green-light); border:3px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin-bottom:1.5rem; animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.1s both; }
-@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
-.success-title { font-size:1.8rem; font-weight:800; color:var(--text); margin-bottom:8px; }
-.success-sub { font-size:0.9rem; color:var(--text-sub); max-width:300px; line-height:1.5; }
-.success-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 20px; margin:1.5rem 0; width:100%; max-width:400px; font-size:0.82rem; color:var(--text-sub); line-height:1.6; }
-.success-detail strong { color:var(--text); display:block; margin-bottom:4px; font-size:0.9rem; }
+.success-circle { width:80px; height:80px; border-radius:50%; border:3px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--green); margin-bottom:20px; background:var(--green-light); }
+.success-title { font-size:1.6rem; font-weight:800; margin-bottom:8px; }
+.success-sub { font-size:0.9rem; color:var(--text-muted); margin-bottom:20px; }
+.success-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px 20px; font-size:0.85rem; line-height:1.8; max-width:400px; width:100%; }
 .success-sync { font-size:0.72rem; margin-top:8px; font-family:'JetBrains Mono',monospace; }
 .success-sync.ok { color:var(--green); }
 .success-sync.err { color:var(--yellow); }
-.btn-nuevo { padding:14px 32px; background:var(--accent); border:none; border-radius:var(--radius-sm); color:#fff; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
-
-/* ── VALIDATION ── */
-.field-error { font-size:0.7rem; color:var(--red); font-weight:600; display:none; margin-top:2px; }
-.field.has-error input, .field.has-error select, .field.has-error textarea { border-color:var(--red); box-shadow:0 0 0 3px rgba(220,38,38,0.1); }
-.field.has-error .field-error { display:block; }
-
-/* ── SPINNER ── */
-.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-
-@media (max-width:400px) {
-  .field-row { grid-template-columns:1fr; }
-  .header-badge, .sync-indicator { display:none; }
-}
+.btn-nuevo { padding:14px 28px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; }
+/* MED-CONDUCTOR badge */
+.med-con-badge { display:inline-block; background:#F3E8FF; color:#7C3AED; font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; vertical-align:middle; }
 </style>
 </head>
 <body>
 
-<header class="app-header">
+<div class="app-header">
   <div class="header-inner">
     <div class="header-icon">🚑</div>
     <div class="header-text">
       <h1>Registro de Turno</h1>
       <p>Secretaría de Salud · Bogotá D.C.</p>
     </div>
-    <button onclick="openUrlSettings()" style="margin-left:auto;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:6px 10px;color:#fff;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;flex-shrink:0">⚙️ URL</button>
-  </div>
-</header>
-
-<!-- MODAL URL SETTINGS -->
-<div id="url-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-    <div style="font-size:1rem;font-weight:800;color:#0F172A;margin-bottom:6px">⚙️ Configurar URL</div>
-    <div style="font-size:0.78rem;color:#475569;margin-bottom:14px;line-height:1.5">Pegue aquí la URL de Google Apps Script para sincronizar con el dashboard.</div>
-    <input type="text" id="url-modal-input" placeholder="https://script.google.com/macros/s/..."
-      style="width:100%;padding:11px 13px;border:1.5px solid #DDE3F0;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#0F172A;margin-bottom:8px;">
-    <div id="url-modal-status" style="font-size:0.72rem;min-height:18px;margin-bottom:14px;font-weight:600;"></div>
-    <div style="display:flex;gap:10px;">
-      <button onclick="closeUrlSettings()" style="flex:1;padding:12px;border:1.5px solid #DDE3F0;border-radius:10px;background:#fff;color:#475569;font-family:'Outfit',sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;">Cancelar</button>
-      <button onclick="saveUrlFromModal()" style="flex:2;padding:12px;border:none;border-radius:10px;background:#2563EB;color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;">✓ Guardar URL</button>
-    </div>
   </div>
 </div>
 
-<!-- PROGRESS -->
 <div class="progress-wrap">
   <div class="progress-steps">
     <div class="step-item">
@@ -230,24 +161,15 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 </div>
 
 <div class="form-container">
-<form id="main-form" novalidate>
+<form id="main-form" onsubmit="return false;">
 
-<!-- ══ PASO 1 ══ -->
+<!-- PASO 1 -->
 <div class="section-card active" id="step-1">
   <div class="section-head">
     <div class="section-num blue">01</div>
     <div><div class="section-title">Identificación de la Móvil</div><div class="section-sub">Datos del vehículo que inicia turno</div></div>
   </div>
   <div class="section-body">
-    <!-- SETUP BANNER (shown if no sheet URL) -->
-    <div class="setup-banner" id="setup-banner" style="display:none">
-      <strong>⚙️ Configure la URL de sincronización</strong>
-      Pegue aquí la URL de su Google Apps Script para guardar los datos en Google Sheets. Si no la tiene, los registros se guardarán localmente en este dispositivo.
-      <input class="setup-input" type="text" id="sheet-url-form" placeholder="https://script.google.com/macros/s/..." oninput="saveUrlNow(this.value)" onpaste="setTimeout(()=>saveUrlNow(this.value),50)" onchange="saveUrlNow(this.value)">
-      <div id="url-ok-msg" style="font-size:0.72rem;color:var(--green);margin-top:6px;font-weight:600;display:none">✓ URL guardada correctamente</div>
-      <div class="setup-status" id="setup-status"></div>
-    </div>
-
     <div class="field-row">
       <div class="field" id="f-subred">
         <label>Subred <span class="req">*</span></label>
@@ -260,31 +182,60 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
       </div>
       <div class="field" id="f-placa">
         <label>Placa / Número <span class="req">*</span></label>
-        <input type="text" name="placa" id="placa" placeholder="Ej: AMB-001" autocomplete="off" style="text-transform:uppercase">
+        <input type="text" name="placa" id="placa" placeholder="EJ: AMB-001" style="text-transform:uppercase">
         <div class="field-error">Ingrese el número de móvil</div>
       </div>
     </div>
 
-    <div style="margin-bottom:14px">
-      <div class="field" style="margin-bottom:8px"><label>Tipo de Móvil <span class="req">*</span></label></div>
-      <div class="tipo-group">
-        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-med" value="Medicalizada"><label for="tipo-med"><span class="tipo-icon">🏥</span><div class="tipo-info"><div class="tipo-name">Medicalizada</div><div class="tipo-desc">Médico + Conductor + Auxiliar</div></div></label></div>
-        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-bas" value="Básica"><label for="tipo-bas"><span class="tipo-icon">🚑</span><div class="tipo-info"><div class="tipo-name">Básica</div><div class="tipo-desc">Conductor + Auxiliar</div></div></label></div>
-        <div class="tipo-option"><input type="radio" name="tipo" id="tipo-med2" value="MED"><label for="tipo-med2"><span class="tipo-icon">⚕️</span><div class="tipo-info"><div class="tipo-name">MED</div><div class="tipo-desc">Médico + Auxiliar/Conductor</div></div></label></div>
+    <label style="font-size:0.8rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Móvil <span class="req">*</span></label>
+    <div class="tipo-grid">
+      <div class="tipo-card">
+        <input type="radio" name="tipo" id="tipo-med" value="Medicalizada" onchange="onTipoChange()">
+        <label for="tipo-med">
+          <div class="tipo-icon">🏥</div>
+          <div class="tipo-name">Medicalizada</div>
+          <div class="tipo-desc">Médico + Conductor + Auxiliar</div>
+        </label>
       </div>
-      <div class="field-error" id="err-tipo" style="display:none">Seleccione el tipo de móvil</div>
-    </div>
-
-    <div style="margin-bottom:14px">
-      <div class="field" style="margin-bottom:8px"><label>Tipo de Turno <span class="req">*</span></label></div>
-      <div class="turno-group">
-        <div class="turno-option"><input type="radio" name="turno" id="turno-dia" value="Día (7am–7pm)"><label for="turno-dia"><div class="turno-icon">☀️</div><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></label></div>
-        <div class="turno-option"><input type="radio" name="turno" id="turno-noche" value="Noche (7pm–7am)"><label for="turno-noche"><div class="turno-icon">🌙</div><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></label></div>
+      <div class="tipo-card">
+        <input type="radio" name="tipo" id="tipo-bas" value="Básica" onchange="onTipoChange()">
+        <label for="tipo-bas">
+          <div class="tipo-icon">🚑</div>
+          <div class="tipo-name">Básica</div>
+          <div class="tipo-desc">Conductor + Auxiliar</div>
+        </label>
       </div>
-      <div class="field-error" id="err-turno" style="display:none">Seleccione el tipo de turno</div>
+      <div class="tipo-card">
+        <input type="radio" name="tipo" id="tipo-mec" value="MED" onchange="onTipoChange()">
+        <label for="tipo-mec">
+          <div class="tipo-icon">⚕️</div>
+          <div class="tipo-name">MED</div>
+          <div class="tipo-desc">Médico + Auxiliar/Conductor</div>
+        </label>
+      </div>
     </div>
+    <div class="err-msg" id="err-tipo">⚠ Seleccione el tipo de móvil</div>
 
-    <div class="field-row single">
+    <label style="font-size:0.8rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Turno <span class="req">*</span></label>
+    <div class="turno-grid">
+      <div class="turno-card">
+        <input type="radio" name="turno" id="turno-dia" value="Día (7am-7pm)">
+        <label for="turno-dia">
+          <div class="turno-icon">☀️</div>
+          <div class="turno-info"><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></div>
+        </label>
+      </div>
+      <div class="turno-card">
+        <input type="radio" name="turno" id="turno-noc" value="Noche (7pm-7am)">
+        <label for="turno-noc">
+          <div class="turno-icon">🌙</div>
+          <div class="turno-info"><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></div>
+        </label>
+      </div>
+    </div>
+    <div class="err-msg" id="err-turno">⚠ Seleccione el tipo de turno</div>
+
+    <div class="field-row single" style="margin-top:4px">
       <div class="field" id="f-inicio">
         <label>Fecha y hora exacta de inicio <span class="req">*</span></label>
         <input type="datetime-local" name="inicio" id="inicio">
@@ -292,38 +243,39 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
       </div>
     </div>
 
-    <div class="nav-buttons">
-      <button type="button" class="btn-next" onclick="goStep(2)">Siguiente — Personal →</button>
+    <div class="nav-buttons" style="margin-top:8px">
+      <button type="button" class="btn-next" style="width:100%" onclick="goStep(2)">Siguiente — Personal →</button>
     </div>
   </div>
 </div>
 
-<!-- ══ PASO 2 ══ -->
+<!-- PASO 2 -->
 <div class="section-card" id="step-2">
   <div class="section-head">
     <div class="section-num green">02</div>
-    <div><div class="section-title">Personal del Turno</div><div class="section-sub">Datos de cada tripulante</div></div>
+    <div><div class="section-title">Personal del Turno</div><div class="section-sub" id="personal-sub">Datos de cada tripulante</div></div>
   </div>
   <div class="section-body">
 
-    <!-- MÉDICO -->
+    <!-- MÉDICO (solo Medicalizada y MED) -->
     <div class="crew-card" id="crew-medico">
       <div class="crew-header" onclick="toggleCrew('crew-medico')">
         <div class="crew-avatar med">👨‍⚕️</div>
         <div class="crew-info">
-          <div class="crew-role">Médico <span id="med-req-badge" style="font-size:0.65rem;color:var(--text-muted);font-weight:400">(si aplica)</span></div>
+          <div class="crew-role">Médico <span class="req" id="med-req">*</span></div>
           <div class="crew-note" id="med-status">Toca para ingresar datos</div>
         </div>
         <div class="crew-chevron">▼</div>
       </div>
       <div class="crew-body">
         <div class="field-row">
-          <div class="field" id="f-med-nom"><label>Nombre completo</label><input type="text" name="med_nombre" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
-          <div class="field" id="f-med-ced"><label>Número de cédula</label><input type="text" name="med_cedula" id="med_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+          <div class="field" id="f-med-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="med_nombre" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
+          <div class="field" id="f-med-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="med_cedula" id="med_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
         </div>
         <div class="field-row single">
-          <div class="field"><label>Foto de la cédula (frente)</label>
-            <div class="file-upload-area" id="upload-med-area"><input type="file" name="med_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-med-area','preview-med')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-med"></div></div>
+          <div class="field" id="f-med-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
+            <div class="file-upload-area" id="upload-med-area"><input type="file" name="med_foto" id="med_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-med-area','preview-med')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-med"></div></div>
+            <div class="field-error" id="err-med-foto">Se requiere foto de cédula</div>
           </div>
         </div>
       </div>
@@ -334,7 +286,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
       <div class="crew-header" onclick="toggleCrew('crew-conductor')">
         <div class="crew-avatar con">🚘</div>
         <div class="crew-info">
-          <div class="crew-role">Conductor <span class="req">*</span></div>
+          <div class="crew-role">Conductor <span class="req">*</span> <span class="med-con-badge" id="medcon-badge" style="display:none">También Auxiliar</span></div>
           <div class="crew-note" id="con-status">Toca para ingresar datos</div>
         </div>
         <div class="crew-chevron">▼</div>
@@ -345,14 +297,15 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
           <div class="field" id="f-con-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="con_cedula" id="con_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
         </div>
         <div class="field-row single">
-          <div class="field"><label>Foto de la cédula (frente) <span class="req">*</span></label>
-            <div class="file-upload-area" id="upload-con-area"><input type="file" name="con_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-con-area','preview-con')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-con"></div></div>
+          <div class="field" id="f-con-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
+            <div class="file-upload-area" id="upload-con-area"><input type="file" name="con_foto" id="con_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-con-area','preview-con')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-con"></div></div>
+            <div class="field-error" id="err-con-foto">Se requiere foto de cédula</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- AUXILIAR -->
+    <!-- AUXILIAR (oculto en MED, donde conductor hace ambos roles) -->
     <div class="crew-card" id="crew-auxiliar">
       <div class="crew-header" onclick="toggleCrew('crew-auxiliar')">
         <div class="crew-avatar aux">🩺</div>
@@ -368,22 +321,22 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
           <div class="field" id="f-aux-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="aux_cedula" id="aux_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
         </div>
         <div class="field-row single">
-          <div class="field"><label>Foto de la cédula (frente) <span class="req">*</span></label>
-            <div class="file-upload-area" id="upload-aux-area"><input type="file" name="aux_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-aux-area','preview-aux')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-aux"></div></div>
+          <div class="field" id="f-aux-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
+            <div class="file-upload-area" id="upload-aux-area"><input type="file" name="aux_foto" id="aux_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-aux-area','preview-aux')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-aux"></div></div>
+            <div class="field-error" id="err-aux-foto">Se requiere foto de cédula</div>
           </div>
         </div>
       </div>
     </div>
 
-    
-    <!-- PANEL ALERTA DOBLADO -->
+    <!-- ALERTA DOBLADO -->
     <div id="doblado-alert" style="display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:14px 16px;margin-top:12px;">
       <div style="font-weight:800;color:#EA580C;margin-bottom:6px;font-size:0.88rem">⚠️ Personal con turno previo detectado</div>
-      <div id="doblado-detail" style="font-size:0.8rem;color:#9A3412;line-height:1.6"></div>
+      <div id="doblado-detail" style="font-size:0.8rem;color:#9A3412;line-height:1.8"></div>
       <div style="margin-top:10px;font-size:0.75rem;color:#9A3412">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
           <input type="checkbox" id="doblado-confirm" style="width:16px;height:16px;accent-color:#F97316">
-          Confirmo que este personal autorizado para doblar turno
+          Confirmo que este personal está autorizado para doblar turno
         </label>
       </div>
     </div>
@@ -395,7 +348,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   </div>
 </div>
 
-<!-- ══ PASO 3 ══ -->
+<!-- PASO 3 -->
 <div class="section-card" id="step-3">
   <div class="section-head">
     <div class="section-num purple">03</div>
@@ -430,7 +383,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   </div>
 </div>
 
-<!-- ══ PASO 4 ══ -->
+<!-- PASO 4 -->
 <div class="section-card" id="step-4">
   <div class="section-head">
     <div class="section-num blue">04</div>
@@ -441,10 +394,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
     <div style="background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;font-size:0.78rem;color:#92400E;line-height:1.5">
       ⚠️ <strong>Al enviar</strong>, confirma que los datos son verídicos. El sistema registrará la hora exacta de envío.
     </div>
-    <div id="sync-warning" style="display:none;background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:0.75rem;color:#92400E">
-      📡 Sin conexión a Google Sheets. El registro se guardará localmente y se sincronizará cuando haya conexión.
-    </div>
-    <button type="submit" class="btn-submit-final" id="submit-btn">✓ CONFIRMAR Y REGISTRAR TURNO</button>
+    <button type="button" class="btn-submit-final" id="submit-btn" onclick="submitForm()">✓ CONFIRMAR Y REGISTRAR TURNO</button>
     <div class="nav-buttons" style="margin-top:10px">
       <button type="button" class="btn-back" style="flex:1" onclick="goStep(3)">← Editar datos</button>
     </div>
@@ -465,74 +415,60 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════
-const LOCAL_KEY   = 'scat_registros_v3';
-const SHEET_URL_KEY = 'scat_sheet_url';
-const PENDING_KEY = 'scat_pending_sync'; // offline queue
-
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
+const LOCAL_KEY = 'scat_registros_v3';
 let currentStep = 1;
-let sheetUrl = '';
+let tipoActual = ''; // 'Medicalizada' | 'Básica' | 'MED'
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem(SHEET_URL_KEY)) localStorage.setItem(SHEET_URL_KEY, 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec');
-  sheetUrl = localStorage.getItem(SHEET_URL_KEY) || 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
-  const urlInput = document.getElementById('sheet-url-form');
-  if (sheetUrl) {
-    urlInput.value = sheetUrl;
-    const si1 = document.getElementById('sync-indicator');
-    if (si1) { si1.textContent = '📡 Conectado'; si1.style.color = 'rgba(255,255,255,0.9)'; }
-  } else {
-    const sb = document.getElementById('setup-banner');
-    if (sb) sb.style.display = 'block';
-    const si2 = document.getElementById('sync-indicator');
-    if (si2) si2.textContent = '📁 Local';
-  }
-
-  function saveUrlNow(v) {
-    const clean = v.trim();
-    if (!clean) return;
-    sheetUrl = clean;
-    localStorage.setItem(SHEET_URL_KEY, clean);
-    const msg = document.getElementById("url-ok-msg");
-    if (msg) { msg.style.display = "block"; setTimeout(() => msg.style.display = "none", 2500); }
-    const si3 = document.getElementById("sync-indicator");
-    if (si3) { si3.textContent = "📡 Conectado"; si3.style.color = "rgba(255,255,255,0.9)"; }
-    const ss = document.getElementById("setup-status");
-    if (ss) ss.textContent = "";
-  }
-
-  urlInput.addEventListener("input", () => {
-    saveUrlNow(urlInput.value);
-  });
-  urlInput.addEventListener("change", () => saveUrlNow(urlInput.value));
-  urlInput.addEventListener("paste",  () => setTimeout(() => saveUrlNow(urlInput.value), 50));
-
-
-
-  // Set default datetime
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('inicio').value = now.toISOString().slice(0,16);
-
-  // Attempt to sync any pending offline records
-  syncPendingRecords();
 });
 
-// ══════════════════════════════════════════════
-// STEP NAV
-// ══════════════════════════════════════════════
+// ── TIPO DE MÓVIL → muestra/oculta personal ──
+function onTipoChange() {
+  tipoActual = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const medCard = document.getElementById('crew-medico');
+  const auxCard = document.getElementById('crew-auxiliar');
+  const medconBadge = document.getElementById('medcon-badge');
+  const personalSub = document.getElementById('personal-sub');
+
+  if (tipoActual === 'Medicalizada') {
+    // Médico + Conductor + Auxiliar (3 personas)
+    medCard.classList.remove('hidden-crew');
+    auxCard.classList.remove('hidden-crew');
+    medconBadge.style.display = 'none';
+    personalSub.textContent = 'Médico + Conductor + Auxiliar';
+  } else if (tipoActual === 'Básica') {
+    // Conductor + Auxiliar (2 personas, sin médico)
+    medCard.classList.add('hidden-crew');
+    auxCard.classList.remove('hidden-crew');
+    medconBadge.style.display = 'none';
+    personalSub.textContent = 'Conductor + Auxiliar';
+    // Limpiar médico
+    document.getElementById('med_nombre').value = '';
+    document.getElementById('med_cedula').value = '';
+  } else if (tipoActual === 'MED') {
+    // Médico + Auxiliar/Conductor (conductor hace ambos roles)
+    medCard.classList.remove('hidden-crew');
+    auxCard.classList.add('hidden-crew');
+    medconBadge.style.display = 'inline-block';
+    personalSub.textContent = 'Médico + Auxiliar-Conductor (un solo perfil)';
+    // Limpiar auxiliar separado
+    document.getElementById('aux_nombre').value = '';
+    document.getElementById('aux_cedula').value = '';
+  }
+}
+
+// ── NAVEGACIÓN ──
 function goStep(n) {
   if (n > currentStep && !validateStep(currentStep)) return;
   document.getElementById('step-' + currentStep).classList.remove('active');
   document.getElementById('step-' + n).classList.add('active');
   currentStep = n;
   updateProgress(n);
-  if (n === 4) { buildResumen(); checkSyncStatus(); }
+  if (n === 4) buildResumen();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -548,14 +484,7 @@ function updateProgress(n) {
   }
 }
 
-function checkSyncStatus() {
-  const warn = document.getElementById('sync-warning');
-  warn.style.display = sheetUrl ? 'none' : 'block';
-}
-
-// ══════════════════════════════════════════════
-// VALIDATION
-// ══════════════════════════════════════════════
+// ── VALIDACIÓN ──
 function validateStep(step) {
   let ok = true;
   const clearErr = id => { const f=document.getElementById(id); if(f) f.classList.remove('has-error'); };
@@ -571,27 +500,47 @@ function validateStep(step) {
     if (!document.querySelector('input[name="turno"]:checked')) { document.getElementById('err-turno').style.display='block'; ok=false; }
     if (!document.getElementById('inicio').value) setErr('f-inicio');
   }
+
   if (step === 2) {
-    clearErr('f-con-nom'); clearErr('f-con-ced'); clearErr('f-aux-nom'); clearErr('f-aux-ced');
+    clearErr('f-con-nom'); clearErr('f-con-ced'); clearErr('f-con-foto');
+    clearErr('f-aux-nom'); clearErr('f-aux-ced'); clearErr('f-aux-foto');
+    clearErr('f-med-nom'); clearErr('f-med-ced'); clearErr('f-med-foto');
+
+    // Conductor siempre requerido
     if (!document.getElementById('con_nombre').value.trim()) { setErr('f-con-nom'); document.getElementById('crew-conductor').classList.add('open'); }
     if (!document.getElementById('con_cedula').value.trim()) { setErr('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
-    if (!document.getElementById('aux_nombre').value.trim()) { setErr('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
-    if (!document.getElementById('aux_cedula').value.trim()) { setErr('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
-    // Check doblado
+    if (!document.getElementById('con_foto').files.length) { document.getElementById('f-con-foto').classList.add('has-error'); document.getElementById('err-con-foto').style.display='block'; document.getElementById('crew-conductor').classList.add('open'); ok=false; }
+
+    // Auxiliar requerido en Medicalizada y Básica (no en MED)
+    if (tipoActual !== 'MED') {
+      if (!document.getElementById('aux_nombre').value.trim()) { setErr('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
+      if (!document.getElementById('aux_cedula').value.trim()) { setErr('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
+      if (!document.getElementById('aux_foto').files.length) { document.getElementById('f-aux-foto').classList.add('has-error'); document.getElementById('err-aux-foto').style.display='block'; document.getElementById('crew-auxiliar').classList.add('open'); ok=false; }
+    }
+
+    // Médico requerido en Medicalizada y MED
+    if (tipoActual === 'Medicalizada' || tipoActual === 'MED') {
+      if (!document.getElementById('med_nombre').value.trim()) { setErr('f-med-nom'); document.getElementById('crew-medico').classList.add('open'); }
+      if (!document.getElementById('med_cedula').value.trim()) { setErr('f-med-ced'); document.getElementById('crew-medico').classList.add('open'); }
+      if (!document.getElementById('med_foto').files.length) { document.getElementById('f-med-foto').classList.add('has-error'); document.getElementById('err-med-foto').style.display='block'; document.getElementById('crew-medico').classList.add('open'); ok=false; }
+    }
+
+    // Check personal doblado
     if (ok) checkDobladoPersonal();
-    // Block if doblado detected and not confirmed
-    const alert = document.getElementById('doblado-alert');
-    const confirm = document.getElementById('doblado-confirm');
-    if (alert.style.display !== 'none' && !confirm.checked) {
-      alert.style.borderColor = '#EF4444';
-      alert.scrollIntoView({behavior:'smooth',block:'center'});
+    const alertEl = document.getElementById('doblado-alert');
+    const confirmEl = document.getElementById('doblado-confirm');
+    if (alertEl.style.display !== 'none' && !confirmEl.checked) {
+      alertEl.style.borderColor = '#EF4444';
+      alertEl.scrollIntoView({behavior:'smooth',block:'center'});
       ok = false;
     }
   }
+
   if (step === 3) {
     clearErr('f-ref-nom');
     if (!document.getElementById('referente').value.trim()) setErr('f-ref-nom');
   }
+
   if (!ok) {
     const firstErr = document.querySelector('.has-error');
     if (firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -599,9 +548,7 @@ function validateStep(step) {
   return ok;
 }
 
-// ══════════════════════════════════════════════
-// CREW
-// ══════════════════════════════════════════════
+// ── CREW TOGGLE ──
 function toggleCrew(id) { document.getElementById(id).classList.toggle('open'); }
 function handleFile(input, areaId, previewId) {
   const area = document.getElementById(areaId);
@@ -611,173 +558,68 @@ function handleFile(input, areaId, previewId) {
     preview.style.display = 'block';
     preview.textContent = '✓ ' + input.files[0].name;
     area.querySelector('.upload-icon').textContent = '✅';
+    // Clear error
+    area.parentElement.classList.remove('has-error');
+    const errId = 'err-' + areaId.replace('upload-','').replace('-area','-foto');
+    const errEl = document.getElementById(errId);
+    if (errEl) errEl.style.display = 'none';
   }
 }
 
-// ══════════════════════════════════════════════
-// RESUMEN
-// ══════════════════════════════════════════════
+// ── RESUMEN ──
 function buildResumen() {
   const v = n => document.getElementById(n)?.value || '';
   const r = (key, val) => val ? `<div class="resumen-row"><span class="resumen-key">${key}</span><span class="resumen-val">${val}</span></div>` : '';
-  const tipo   = document.querySelector('input[name="tipo"]:checked')?.value || '';
-  const turno  = document.querySelector('input[name="turno"]:checked')?.value || '';
+  const tipo  = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const turno = document.querySelector('input[name="turno"]:checked')?.value || '';
   const inicio = v('inicio');
   const inicioFmt = inicio ? new Date(inicio).toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+
+  const medHtml = (tipo === 'Medicalizada' || tipo === 'MED') && v('med_nombre') ?
+    `<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}</div>` : '';
+
+  const conLabel = tipo === 'MED' ? '🚘 Conductor / Auxiliar' : '🚘 Conductor';
+  const auxHtml = tipo !== 'MED' && v('aux_nombre') ?
+    `<div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}</div>` : '';
 
   document.getElementById('resumen-content').innerHTML = `
     <div class="resumen-card">
       <div class="resumen-title">🚑 Móvil</div>
       ${r('Subred', v('subred'))}${r('Placa', v('placa').toUpperCase())}${r('Tipo', tipo)}${r('Turno', turno)}${r('Inicio', inicioFmt)}
     </div>
-    ${v('med_nombre')?`<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}</div>`:''}
-    <div class="resumen-card"><div class="resumen-title">🚘 Conductor</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}</div>
-    <div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}</div>
+    ${medHtml}
+    <div class="resumen-card"><div class="resumen-title">${conLabel}</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}</div>
+    ${auxHtml}
     <div class="resumen-card"><div class="resumen-title">📋 Referente</div>${r('Nombre',v('referente'))}${r('Observaciones',v('observaciones'))}</div>`;
 }
 
-// ══════════════════════════════════════════════
-// SUBMIT
-// ══════════════════════════════════════════════
-document.getElementById('main-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Guardando...';
-
-  const v = n => document.getElementById(n)?.value?.trim() || '';
-  const obj = {
-    id: Date.now(),
-    ts: Date.now(),
-    subred: v('subred'), placa: v('placa').toUpperCase(),
-    tipo: document.querySelector('input[name="tipo"]:checked')?.value || '',
-    turno: document.querySelector('input[name="turno"]:checked')?.value || '',
-    inicio: v('inicio'),
-    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'),
-    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'),
-    aux_nombre: v('aux_nombre'), aux_cedula: v('aux_cedula'),
-    referente: v('referente'), ref_subred: v('ref_subred'),
-    observaciones: v('observaciones'), estado: 'activo'
-  };
-
-  // Save to localStorage immediately
-  const db = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
-  db.push(obj);
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
-
-  let synced = false;
-  // Sync to Google Sheets usando iframe (evita CORS completamente)
-  if (sheetUrl) {
-    try {
-      btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
-      const params = new URLSearchParams({
-        action: 'register',
-        record: JSON.stringify(obj)
-      });
-      const fullUrl = sheetUrl + '?' + params.toString();
-      
-      // Usamos un iframe oculto para evitar CORS
-      await new Promise((resolve) => {
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = fullUrl;
-        iframe.onload = () => { synced = true; resolve(); };
-        iframe.onerror = () => { resolve(); };
-        document.body.appendChild(iframe);
-        // Timeout por si no responde
-        setTimeout(() => { synced = true; resolve(); }, 4000);
-      });
-    } catch(err) {
-      const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
-      pending.push(obj);
-      localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
-    }
-  }
-
-  // Show success
-  document.getElementById('success-detail-text').innerHTML =
-    `<strong>${obj.placa} · Subred ${obj.subred} · ${obj.tipo}</strong>
-    Conductor: ${obj.con_nombre}<br>
-    Auxiliar: ${obj.aux_nombre}<br>
-    ${obj.med_nombre?'Médico: '+obj.med_nombre+'<br>':''}
-    Registrado por: ${obj.referente}<br>
-    Hora: ${new Date().toLocaleTimeString('es-CO',{hour12:false})}`;
-
-  const syncEl = document.getElementById('success-sync-msg');
-  if (sheetUrl) {
-    syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente — se sincronizará luego';
-    syncEl.className = 'success-sync ' + (synced ? 'ok' : 'err');
-  } else {
-    syncEl.textContent = '📁 Guardado localmente en este dispositivo';
-    syncEl.className = 'success-sync err';
-  }
-
-  document.getElementById('success-screen').classList.add('show');
-  btn.disabled = false;
-  btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR TURNO';
-});
-
-
-// ══════════════════════════════════════════════
-// URL SETTINGS MODAL
-// ══════════════════════════════════════════════
-function openUrlSettings() {
-  const modal = document.getElementById('url-modal');
-  const input = document.getElementById('url-modal-input');
-  input.value = localStorage.getItem('scat_sheet_url') || '';
-  document.getElementById('url-modal-status').textContent = '';
-  document.getElementById('url-modal-status').style.color = '';
-  modal.style.display = 'flex';
-  setTimeout(() => input.focus(), 100);
-}
-function closeUrlSettings() {
-  document.getElementById('url-modal').style.display = 'none';
-}
-function saveUrlFromModal() {
-  const input = document.getElementById('url-modal-input');
-  const statusEl = document.getElementById('url-modal-status');
-  const v = input.value.trim();
-  if (!v) { statusEl.textContent = '⚠ Ingrese la URL'; statusEl.style.color = '#DC2626'; return; }
-  if (!v.includes('script.google.com')) { statusEl.textContent = '⚠ La URL no parece correcta'; statusEl.style.color = '#DC2626'; return; }
-  localStorage.setItem('scat_sheet_url', v);
-  sheetUrl = v;
-  const si4 = document.getElementById('sync-indicator'); if (si4) si4.textContent = '📡 Conectado';
-  statusEl.textContent = '✓ Guardada correctamente';
-  statusEl.style.color = '#16A34A';
-  setTimeout(() => closeUrlSettings(), 1200);
-}
-// Cerrar modal al tocar fuera
-document.getElementById('url-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeUrlSettings();
-});
-
-// ══════════════════════════════════════════════
-// DETECCIÓN DE PERSONAL DOBLADO
-// ══════════════════════════════════════════════
+// ── DETECCIÓN DOBLADO ──
 async function checkDobladoPersonal() {
   const conCed = document.getElementById('con_cedula').value.trim();
   const auxCed = document.getElementById('aux_cedula').value.trim();
   const medCed = document.getElementById('med_cedula').value.trim();
 
-  // Obtener historial de Google Sheets o localStorage
-  let closedRecords = [];
+  let activeRecords = [];
   try {
-    const url = localStorage.getItem('scat_sheet_url');
-    if (url) {
-      const res = await fetch(url + '?action=getAll');
-      const json = await res.json();
-      if (json.status === 'ok') closedRecords = json.closed || [];
-    } else {
-      closedRecords = JSON.parse(localStorage.getItem('scat_cerrados_v3') || '[]');
-    }
-  } catch { closedRecords = JSON.parse(localStorage.getItem('scat_cerrados_v3') || '[]'); }
+    const cbName = '_scatCbDob_' + Date.now();
+    const data = await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
+      script.onerror = () => reject();
+      script.src = SHEET_URL + '?action=getAll&callback=' + cbName;
+      setTimeout(() => reject(), 5000);
+      document.head.appendChild(script);
+    });
+    if (data.status === 'ok') activeRecords = (data.active || []);
+  } catch { activeRecords = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); }
 
-  const cutoff = Date.now() - 48 * 3600000;
-  const recent = closedRecords.filter(r => new Date(r.cierre||r.inicio).getTime() >= cutoff);
+  // Verificar en turnos activos del DÍA actual
+  const hoy = new Date().toDateString();
+  const hoyRecords = activeRecords.filter(r => new Date(r.inicio).toDateString() === hoy);
 
-  function countTurnos(cedula) {
-    if (!cedula) return 0;
-    return recent.filter(r => r.con_cedula===cedula || r.aux_cedula===cedula || r.med_cedula===cedula).length;
+  function yaEnTurno(cedula) {
+    if (!cedula) return null;
+    return hoyRecords.find(r => r.con_cedula===cedula || r.aux_cedula===cedula || r.med_cedula===cedula);
   }
 
   const checks = [
@@ -786,7 +628,7 @@ async function checkDobladoPersonal() {
     { cedula: medCed, nombre: document.getElementById('med_nombre').value.trim(), rol: 'Médico' },
   ].filter(p => p.cedula);
 
-  const doblados = checks.map(p => ({ ...p, prev: countTurnos(p.cedula) })).filter(p => p.prev > 0);
+  const doblados = checks.map(p => ({ ...p, turno: yaEnTurno(p.cedula) })).filter(p => p.turno);
 
   const alertEl = document.getElementById('doblado-alert');
   const detailEl = document.getElementById('doblado-detail');
@@ -796,46 +638,89 @@ async function checkDobladoPersonal() {
     alertEl.style.display = 'block';
     alertEl.style.borderColor = '#F97316';
     confirmEl.checked = false;
-    detailEl.innerHTML = doblados.map(p => {
-      const turnos = p.prev + 1;
-      const icon = turnos >= 3 ? '🔴' : '🟠';
-      return `${icon} <strong>${p.rol} ${p.nombre}</strong> — Este será su <strong>${turnos}° turno consecutivo</strong> en las últimas 48h`;
-    }).join('<br>');
+    detailEl.innerHTML = doblados.map(p =>
+      `🟠 <strong>${p.rol} ${p.nombre}</strong> — Ya registrado en móvil <strong>${p.turno.placa}</strong> (${p.turno.turno})`
+    ).join('<br>');
   } else {
     alertEl.style.display = 'none';
   }
 }
 
-// ══════════════════════════════════════════════
-// OFFLINE SYNC QUEUE
-// ══════════════════════════════════════════════
-async function syncPendingRecords() {
-  const url = localStorage.getItem(SHEET_URL_KEY);
-  if (!url) return;
-  const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
-  if (!pending.length) return;
+// ── SUBMIT ──
+async function submitForm() {
+  if (!validateStep(3)) { goStep(3); return; }
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+
+  const v = n => document.getElementById(n)?.value?.trim() || '';
+  const tipo = document.querySelector('input[name="tipo"]:checked')?.value || '';
+
+  const obj = {
+    id: Date.now(), ts: Date.now(),
+    subred: v('subred'), placa: v('placa').toUpperCase(),
+    tipo, turno: document.querySelector('input[name="turno"]:checked')?.value || '',
+    inicio: v('inicio'),
+    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'),
+    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'),
+    aux_nombre: tipo === 'MED' ? v('con_nombre') : v('aux_nombre'),
+    aux_cedula: tipo === 'MED' ? v('con_cedula') : v('aux_cedula'),
+    referente: v('referente'), ref_subred: v('ref_subred'),
+    observaciones: v('observaciones'), estado: 'activo',
+    doblado: document.getElementById('doblado-alert').style.display !== 'none' ? 'si' : 'no'
+  };
+
+  // Guardar local
+  const db = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+  db.push(obj);
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
+
+  // Enviar via iframe (sin CORS)
+  let synced = false;
   try {
-    for (const rec of pending) {
-      await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'register', record: rec }),
-        headers: { 'Content-Type': 'text/plain' }
-      });
-    }
-    localStorage.removeItem(PENDING_KEY);
-  } catch(e) { /* still offline */ }
+    btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
+    const params = new URLSearchParams({ action: 'register', record: JSON.stringify(obj) });
+    await new Promise((resolve) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = SHEET_URL + '?' + params.toString();
+      iframe.onload = () => { synced = true; resolve(); };
+      iframe.onerror = () => resolve();
+      document.body.appendChild(iframe);
+      setTimeout(() => { synced = true; resolve(); }, 5000);
+    });
+  } catch(e) { /* offline */ }
+
+  const turnoLabel = tipo === 'MED' ? `${obj.con_nombre} (Cond/Aux)` : obj.con_nombre;
+  document.getElementById('success-detail-text').innerHTML =
+    `<strong>${obj.placa} · Subred ${obj.subred} · ${tipo}</strong><br>
+    ${obj.med_nombre ? 'Médico: '+obj.med_nombre+'<br>' : ''}
+    Conductor: ${turnoLabel}<br>
+    ${tipo !== 'MED' ? 'Auxiliar: '+obj.aux_nombre+'<br>' : ''}
+    Registrado por: ${obj.referente}<br>
+    Hora: ${new Date().toLocaleTimeString('es-CO',{hour12:false})}`;
+
+  const syncEl = document.getElementById('success-sync-msg');
+  syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente — se sincronizará luego';
+  syncEl.className = 'success-sync ' + (synced ? 'ok' : 'err');
+
+  document.getElementById('success-screen').classList.add('show');
+  btn.disabled = false;
+  btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR TURNO';
 }
 
-// ══════════════════════════════════════════════
-// RESET
-// ══════════════════════════════════════════════
+// ── RESET ──
 function resetForm() {
   document.getElementById('main-form').reset();
   document.getElementById('success-screen').classList.remove('show');
   document.querySelectorAll('.upload-preview').forEach(el => { el.style.display='none'; el.textContent=''; });
   document.querySelectorAll('.file-upload-area').forEach(el => { el.classList.remove('has-file'); const ic=el.querySelector('.upload-icon'); if(ic) ic.textContent='📷'; });
   document.querySelectorAll('.has-error').forEach(el => el.classList.remove('has-error'));
-  document.querySelectorAll('#err-tipo,#err-turno').forEach(el => el.style.display='none');
+  document.querySelectorAll('#err-tipo,#err-turno,#err-med-foto,#err-con-foto,#err-aux-foto').forEach(el => el.style.display='none');
+  document.getElementById('crew-medico').classList.add('hidden-crew');
+  document.getElementById('crew-auxiliar').classList.add('hidden-crew');
+  document.getElementById('doblado-alert').style.display='none';
+  tipoActual = '';
   const now = new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
   document.getElementById('inicio').value = now.toISOString().slice(0,16);
   goStep(1);
@@ -844,10 +729,10 @@ function resetForm() {
 // Live crew status
 document.querySelectorAll('input[type="text"]').forEach(inp => {
   inp.addEventListener('input', () => {
-    ['med_nombre','con_nombre','aux_nombre'].forEach(id => {
-      const v = document.getElementById(id)?.value.trim();
-      const statusEl = document.getElementById(id.replace('_nombre','')+'-status');
-      if (statusEl) statusEl.textContent = v || 'Toca para ingresar datos';
+    ['med','con','aux'].forEach(p => {
+      const val = document.getElementById(p+'_nombre')?.value.trim();
+      const el = document.getElementById(p+'-status');
+      if (el) el.textContent = val || 'Toca para ingresar datos';
     });
   });
 });

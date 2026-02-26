@@ -544,16 +544,23 @@ async function loadData(silent=false) {
 }
 
 async function closeRecord(id, action, record) {
-  const entry = { ...record, cierre: new Date().toISOString(), accion: action, cerrado_por: 'Admin Dashboard' };
+  const entry = { ...record, cierre: new Date().toISOString(), accion: action, cerrado_por: 'Admin Dashboard', estado: 'cerrado' };
+  // Remove from active immediately and permanently
   activeData = activeData.filter(r => String(r.id) !== String(id));
   closedData.push(entry);
   localStorage.setItem(LOCAL_KEY,  JSON.stringify(activeData));
   localStorage.setItem(CLOSED_KEY, JSON.stringify(closedData));
   renderAll();
+  // Sync close to Google Sheets via iframe (avoid CORS)
   const url = getSheetUrl();
   if (url) {
     try {
-      await fetch(url, { method:'POST', body:JSON.stringify({ action:'close', id, closedEntry:entry }), headers:{'Content-Type':'text/plain'} });
+      const params = new URLSearchParams({ action: 'close', id: String(id), entry: JSON.stringify(entry) });
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url + '?' + params.toString();
+      document.body.appendChild(iframe);
+      setTimeout(() => iframe.remove(), 5000);
     } catch {}
   }
 }
