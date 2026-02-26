@@ -50,6 +50,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
 .field textarea { resize:none; height:72px; }
 .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+@media(max-width:480px){ .field-row { grid-template-columns:1fr; } .tipo-grid { grid-template-columns:1fr; } }
 .field-row.single { grid-template-columns:1fr; }
 .field-error { font-size:0.72rem; color:var(--red); display:none; }
 .has-error input, .has-error select { border-color:var(--red) !important; }

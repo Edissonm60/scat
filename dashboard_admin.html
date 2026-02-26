@@ -557,22 +557,28 @@ async function loadData(silent=false) {
 
 async function closeRecord(id, action, record) {
   const entry = { ...record, cierre: new Date().toISOString(), accion: action, cerrado_por: 'Admin Dashboard', estado: 'cerrado' };
-  // Remove from active immediately and permanently
+  
+  // 1. Remove from active and save locally IMMEDIATELY
   activeData = activeData.filter(r => String(r.id) !== String(id));
   closedData.push(entry);
   localStorage.setItem(LOCAL_KEY,  JSON.stringify(activeData));
   localStorage.setItem(CLOSED_KEY, JSON.stringify(closedData));
   renderAll();
-  // Sync close to Google Sheets via iframe (avoid CORS)
+
+  // 2. Send close to Google Sheets via JSONP (confirms receipt)
   const url = getSheetUrl();
   if (url) {
     try {
-      const params = new URLSearchParams({ action: 'close', id: String(id), entry: JSON.stringify(entry) });
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url + '?' + params.toString();
-      document.body.appendChild(iframe);
-      setTimeout(() => iframe.remove(), 5000);
+      await new Promise((resolve) => {
+        const cbName = '_scatClose_' + Date.now();
+        const script = document.createElement('script');
+        window[cbName] = () => { delete window[cbName]; script.remove(); resolve(); };
+        script.onerror = () => { script.remove(); resolve(); };
+        const params = new URLSearchParams({ action: 'close', id: String(id), entry: JSON.stringify(entry), callback: cbName });
+        script.src = url + '?' + params.toString();
+        setTimeout(() => resolve(), 6000);
+        document.head.appendChild(script);
+      });
     } catch {}
   }
 }
