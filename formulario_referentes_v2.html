@@ -7,122 +7,133 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F0F4FF; --white: #FFFFFF; --surface: #F8FAFF;
-  --border: #DDE3F0; --border-focus: #2563EB;
-  --text: #0F172A; --text-sub: #475569; --text-muted: #94A3B8;
-  --accent: #2563EB; --accent-light: #EFF6FF;
-  --green: #16A34A; --green-light: #F0FDF4;
-  --red: #DC2626; --red-light: #FEF2F2;
-  --yellow: #D97706; --yellow-light: #FFFBEB;
-  --radius: 16px; --radius-sm: 10px;
+  --bg:#F0F4FF;--white:#FFFFFF;--surface:#F8FAFF;
+  --border:#DDE3F0;--border-focus:#2563EB;
+  --text:#0F172A;--text-sub:#475569;--text-muted:#94A3B8;
+  --accent:#2563EB;--accent-light:#EFF6FF;
+  --green:#16A34A;--green-light:#F0FDF4;
+  --red:#DC2626;--red-light:#FEF2F2;
+  --yellow:#D97706;--yellow-light:#FFFBEB;
+  --radius:16px;--radius-sm:10px;
 }
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:40px; }
-.app-header { background:var(--accent); position:sticky; top:0; z-index:50; box-shadow:0 2px 20px rgba(37,99,235,0.4); }
-.header-inner { max-width:640px; margin:0 auto; padding:16px 20px; display:flex; align-items:center; gap:14px; }
-.header-icon { width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
-.header-text h1 { font-size:1rem; font-weight:700; color:#fff; line-height:1.2; }
-.header-text p { font-size:0.72rem; color:rgba(255,255,255,0.75); margin-top:2px; }
-.progress-wrap { max-width:640px; margin:0 auto; padding:16px 20px 0; }
-.progress-steps { display:flex; gap:8px; align-items:center; }
-.step-item { display:flex; align-items:center; gap:6px; flex:1; }
-.step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; border:2px solid var(--border); background:var(--white); color:var(--text-muted); transition:all 0.3s; }
-.step-dot.active { border-color:var(--accent); background:var(--accent); color:#fff; box-shadow:0 0 0 4px rgba(37,99,235,0.15); }
-.step-dot.done { border-color:var(--green); background:var(--green); color:#fff; }
-.step-label { font-size:0.65rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap; }
-.step-label.active { color:var(--accent); }
-.step-line { flex:1; height:2px; background:var(--border); border-radius:2px; }
-.step-line.done { background:var(--green); }
-.form-container { max-width:640px; margin:0 auto; padding:20px 16px; }
-.section-card { background:var(--white); border-radius:var(--radius); box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:16px; overflow:hidden; border:1px solid var(--border); display:none; }
-.section-card.active { display:block; }
-.section-head { padding:18px 20px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
-.section-num { width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800; flex-shrink:0; }
-.section-num.blue { background:var(--accent-light); color:var(--accent); }
-.section-num.green { background:var(--green-light); color:var(--green); }
-.section-num.purple { background:#F3E8FF; color:#7C3AED; }
-.section-title { font-size:1rem; font-weight:700; }
-.section-sub { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
-.section-body { padding:20px; }
-.field { display:flex; flex-direction:column; gap:6px; }
-.field label { font-size:0.8rem; font-weight:600; color:var(--text-sub); }
-.field input, .field select, .field textarea { padding:12px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Outfit',sans-serif; font-size:0.92rem; color:var(--text); background:var(--white); transition:border-color 0.2s; outline:none; }
-.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
-.field textarea { resize:none; height:72px; }
-.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-@media(max-width:480px){ .field-row { grid-template-columns:1fr; } }
-.field-row.single { grid-template-columns:1fr; }
-.field-error { font-size:0.72rem; color:var(--red); display:none; }
-.has-error input, .has-error select { border-color:var(--red) !important; }
-.has-error .field-error { display:block; }
-.req { color:var(--red); }
-.tipo-grid { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
-.tipo-card { position:relative; cursor:pointer; }
-.tipo-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
-.tipo-card label { display:flex; flex-direction:row; align-items:center; gap:14px; padding:14px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); }
-.tipo-card label .tipo-icon { font-size:1.6rem; flex-shrink:0; }
-.tipo-card label .tipo-name { font-size:0.8rem; font-weight:700; color:var(--text); }
-.tipo-card label .tipo-desc { font-size:0.72rem; color:var(--text-muted); line-height:1.3; margin-top:2px; }
-.tipo-card input:checked + label { border-color:var(--accent); background:var(--accent-light); box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
-.tipo-card input:checked + label .tipo-name { color:var(--accent); }
-.turno-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-.turno-card { position:relative; cursor:pointer; }
-.turno-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
-.turno-card label { display:flex; align-items:center; gap:10px; padding:14px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; background:var(--surface); }
-.turno-card label .turno-icon { font-size:1.4rem; }
-.turno-card label .turno-info .turno-name { font-size:0.88rem; font-weight:700; }
-.turno-card label .turno-info .turno-time { font-size:0.7rem; color:var(--text-muted); }
-.turno-card input:checked + label { border-color:var(--accent); background:var(--accent-light); }
-.err-msg { font-size:0.75rem; color:var(--red); display:none; margin-top:-8px; margin-bottom:8px; }
-.crew-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px; overflow:hidden; transition:all 0.2s; }
-.crew-card.hidden-crew { display:none; }
-.crew-header { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; background:var(--surface); }
-.crew-avatar { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-.crew-avatar.med { background:#EFF6FF; }
-.crew-avatar.con { background:#F0FDF4; }
-.crew-avatar.aux { background:#FFF7ED; }
-.crew-info { flex:1; }
-.crew-role { font-size:0.85rem; font-weight:700; }
-.crew-note { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
-.crew-chevron { color:var(--text-muted); font-size:0.7rem; transition:transform 0.2s; }
-.crew-body { display:none; padding:16px; border-top:1px solid var(--border); }
-.crew-card.open .crew-body { display:block; }
-.crew-card.open .crew-chevron { transform:rotate(180deg); }
-.file-upload-area { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:16px; text-align:center; cursor:pointer; position:relative; transition:all 0.2s; background:var(--surface); }
-.file-upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-.file-upload-area:hover { border-color:var(--accent); background:var(--accent-light); }
-.file-upload-area.has-file { border-color:var(--green); background:var(--green-light); border-style:solid; }
-.upload-icon { font-size:1.5rem; margin-bottom:4px; }
-.upload-text { font-size:0.8rem; color:var(--text-sub); }
-.upload-hint { font-size:0.68rem; color:var(--text-muted); margin-top:2px; }
-.upload-preview { font-size:0.75rem; color:var(--green); font-weight:600; margin-top:6px; display:none; font-family:'JetBrains Mono',monospace; }
-.nav-buttons { display:flex; gap:10px; }
-.btn-back { flex:0 0 auto; padding:12px 18px; border:1.5px solid var(--border); border-radius:var(--radius-sm); background:var(--white); color:var(--text-sub); font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; }
-.btn-next { flex:1; padding:12px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
-.btn-next:hover { background:#1D4ED8; }
-.btn-submit-final { width:100%; padding:16px; border-radius:var(--radius-sm); border:none; background:var(--green); color:#fff; font-family:'Outfit',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(22,163,74,0.3); display:flex; align-items:center; justify-content:center; gap:8px; }
-.btn-submit-final:hover { background:#15803D; }
-.btn-submit-final:disabled { background:#6B7280; cursor:not-allowed; }
-.resumen-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; }
-.resumen-title { font-size:0.8rem; font-weight:800; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em; }
-.resumen-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
-.resumen-row:last-child { border-bottom:none; }
-.resumen-key { color:var(--text-muted); font-weight:500; }
-.resumen-val { font-weight:600; text-align:right; }
-.spinner { width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.success-screen { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; padding:40px 20px; text-align:center; }
-.success-screen.show { display:flex; }
-.success-circle { width:80px; height:80px; border-radius:50%; border:3px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--green); margin-bottom:20px; background:var(--green-light); }
-.success-title { font-size:1.6rem; font-weight:800; margin-bottom:8px; }
-.success-sub { font-size:0.9rem; color:var(--text-muted); margin-bottom:20px; }
-.success-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px 20px; font-size:0.85rem; line-height:1.8; max-width:400px; width:100%; }
-.success-sync { font-size:0.72rem; margin-top:8px; font-family:'JetBrains Mono',monospace; }
-.success-sync.ok { color:var(--green); }
-.success-sync.err { color:var(--yellow); }
-.btn-nuevo { padding:14px 28px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-family:'Outfit',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; }
-/* MED-CONDUCTOR badge */
-.med-con-badge { display:inline-block; background:#F3E8FF; color:#7C3AED; font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; vertical-align:middle; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px;}
+.app-header{background:var(--accent);position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(37,99,235,0.4);}
+.header-inner{max-width:640px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;}
+.header-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.header-text h1{font-size:0.95rem;font-weight:700;color:#fff;line-height:1.2;}
+.header-text p{font-size:0.68rem;color:rgba(255,255,255,0.75);margin-top:1px;}
+.progress-wrap{max-width:640px;margin:0 auto;padding:14px 20px 0;}
+.progress-steps{display:flex;gap:6px;align-items:center;}
+.step-item{display:flex;align-items:center;gap:5px;flex:1;}
+.step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;border:2px solid var(--border);background:var(--white);color:var(--text-muted);transition:all 0.3s;}
+.step-dot.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(37,99,235,0.15);}
+.step-dot.done{border-color:var(--green);background:var(--green);color:#fff;}
+.step-label{font-size:0.6rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;}
+.step-label.active{color:var(--accent);}
+.step-line{flex:1;height:2px;background:var(--border);border-radius:2px;}
+.step-line.done{background:var(--green);}
+.form-container{max-width:640px;margin:0 auto;padding:16px;}
+.section-card{background:var(--white);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden;border:1px solid var(--border);display:none;}
+.section-card.active{display:block;}
+.section-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.section-num{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;flex-shrink:0;}
+.section-num.blue{background:var(--accent-light);color:var(--accent);}
+.section-num.green{background:var(--green-light);color:var(--green);}
+.section-num.purple{background:#F3E8FF;color:#7C3AED;}
+.section-title{font-size:0.95rem;font-weight:700;}
+.section-sub{font-size:0.68rem;color:var(--text-muted);margin-top:2px;}
+.section-body{padding:18px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:0.78rem;font-weight:600;color:var(--text-sub);}
+.field input,.field select,.field textarea{padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text);background:var(--white);transition:border-color 0.2s;outline:none;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.field textarea{resize:none;height:68px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.field-row.single{grid-template-columns:1fr;}
+@media(max-width:500px){.field-row{grid-template-columns:1fr;}}
+.field-error{font-size:0.7rem;color:var(--red);display:none;}
+.has-error input,.has-error select{border-color:var(--red)!important;}
+.has-error .field-error{display:block;}
+.req{color:var(--red);}
+/* TIPO */
+.tipo-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.tipo-card{position:relative;}
+.tipo-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+.tipo-card label{display:flex;align-items:center;gap:14px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;background:var(--surface);}
+.tipo-card label .tipo-icon{font-size:1.5rem;flex-shrink:0;}
+.tipo-card label .tipo-name{font-size:0.88rem;font-weight:700;}
+.tipo-card label .tipo-desc{font-size:0.7rem;color:var(--text-muted);margin-top:2px;}
+.tipo-card input:checked+label{border-color:var(--accent);background:var(--accent-light);}
+.tipo-card input:checked+label .tipo-name{color:var(--accent);}
+/* TURNO */
+.turno-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.turno-card{position:relative;}
+.turno-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+.turno-card label{display:flex;align-items:center;gap:10px;padding:13px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;background:var(--surface);}
+.turno-card input:checked+label{border-color:var(--accent);background:var(--accent-light);}
+.turno-name{font-size:0.85rem;font-weight:700;}
+.turno-time{font-size:0.68rem;color:var(--text-muted);}
+.err-msg{font-size:0.72rem;color:var(--red);display:none;margin-top:-6px;margin-bottom:8px;}
+/* CREW */
+.crew-card{border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;}
+.crew-card.hidden-crew{display:none;}
+.crew-header{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;background:var(--surface);}
+.crew-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.crew-avatar.med{background:#EFF6FF;}
+.crew-avatar.con{background:#F0FDF4;}
+.crew-avatar.aux{background:#FFF7ED;}
+.crew-info{flex:1;}
+.crew-role{font-size:0.83rem;font-weight:700;}
+.crew-note{font-size:0.68rem;color:var(--text-muted);margin-top:1px;}
+.crew-chevron{color:var(--text-muted);font-size:0.7rem;transition:transform 0.2s;}
+.crew-body{display:none;padding:14px;border-top:1px solid var(--border);}
+.crew-card.open .crew-body{display:block;}
+.crew-card.open .crew-chevron{transform:rotate(180deg);}
+/* PHOTO UPLOAD */
+.photo-upload{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;position:relative;transition:all 0.2s;background:var(--surface);margin-top:4px;}
+.photo-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.photo-upload:hover{border-color:var(--accent);background:var(--accent-light);}
+.photo-upload.has-file{border-color:var(--green);background:var(--green-light);border-style:solid;}
+.photo-upload.uploading{border-color:var(--accent);background:var(--accent-light);border-style:solid;}
+.photo-icon{font-size:1.4rem;margin-bottom:3px;}
+.photo-text{font-size:0.78rem;color:var(--text-sub);}
+.photo-hint{font-size:0.65rem;color:var(--text-muted);margin-top:2px;}
+.photo-status{font-size:0.72rem;font-weight:600;margin-top:5px;display:none;font-family:'JetBrains Mono',monospace;}
+.photo-status.ok{color:var(--green);display:block;}
+.photo-status.uploading{color:var(--accent);display:block;}
+.photo-status.err{color:var(--red);display:block;}
+/* DOBLADO */
+.doblado-alert{display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:13px 15px;margin-top:10px;}
+/* NAV */
+.nav-buttons{display:flex;gap:10px;margin-top:14px;}
+.btn-back{flex:0 0 auto;padding:11px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text-sub);font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;}
+.btn-next{flex:1;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;}
+.btn-submit-final{width:100%;padding:15px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-submit-final:disabled{background:#6B7280;cursor:not-allowed;}
+/* RESUMEN */
+.resumen-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:10px;}
+.resumen-title{font-size:0.75rem;font-weight:800;color:var(--accent);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.05em;}
+.resumen-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
+.resumen-row:last-child{border-bottom:none;}
+.resumen-key{color:var(--text-muted);font-weight:500;}
+.resumen-val{font-weight:600;text-align:right;max-width:60%;}
+/* SUCCESS */
+.success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;text-align:center;}
+.success-screen.show{display:flex;}
+.success-circle{width:76px;height:76px;border-radius:50%;border:3px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--green);margin-bottom:18px;background:var(--green-light);}
+.success-title{font-size:1.5rem;font-weight:800;margin-bottom:6px;}
+.success-sub{font-size:0.88rem;color:var(--text-muted);margin-bottom:18px;}
+.success-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;font-size:0.83rem;line-height:1.8;max-width:400px;width:100%;}
+.success-sync{font-size:0.7rem;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+.success-sync.ok{color:var(--green);}
+.success-sync.err{color:var(--yellow);}
+.btn-nuevo{padding:13px 26px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;margin-top:1.2rem;}
+.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* FOOTER */
+.footer-credit{text-align:center;padding:20px;font-size:0.65rem;color:var(--text-muted);}
+.footer-credit strong{color:var(--accent);}
 </style>
 </head>
 <body>
@@ -131,7 +142,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   <div class="header-inner">
     <div class="header-icon">🚑</div>
     <div class="header-text">
-      <h1>Registro de Turno</h1>
+      <h1>Registro de Turno · SCAT</h1>
       <p>Secretaría de Salud · Bogotá D.C.</p>
     </div>
   </div>
@@ -139,25 +150,13 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 
 <div class="progress-wrap">
   <div class="progress-steps">
-    <div class="step-item">
-      <div class="step-dot active" id="dot-1">1</div>
-      <div class="step-label active" id="lbl-1">Móvil</div>
-    </div>
+    <div class="step-item"><div class="step-dot active" id="dot-1">1</div><div class="step-label active" id="lbl-1">Móvil</div></div>
     <div class="step-line" id="line-1"></div>
-    <div class="step-item">
-      <div class="step-dot" id="dot-2">2</div>
-      <div class="step-label" id="lbl-2">Personal</div>
-    </div>
+    <div class="step-item"><div class="step-dot" id="dot-2">2</div><div class="step-label" id="lbl-2">Personal</div></div>
     <div class="step-line" id="line-2"></div>
-    <div class="step-item">
-      <div class="step-dot" id="dot-3">3</div>
-      <div class="step-label" id="lbl-3">Referente</div>
-    </div>
+    <div class="step-item"><div class="step-dot" id="dot-3">3</div><div class="step-label" id="lbl-3">Referente</div></div>
     <div class="step-line" id="line-3"></div>
-    <div class="step-item">
-      <div class="step-dot" id="dot-4">4</div>
-      <div class="step-label" id="lbl-4">Confirmar</div>
-    </div>
+    <div class="step-item"><div class="step-dot" id="dot-4">4</div><div class="step-label" id="lbl-4">Confirmar</div></div>
   </div>
 </div>
 
@@ -187,66 +186,42 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
         <div class="field-error">Ingrese el número de móvil</div>
       </div>
     </div>
-
-    <label style="font-size:0.8rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Móvil <span class="req">*</span></label>
-    <div class="tipo-grid">
+    <label style="font-size:0.78rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Móvil <span class="req">*</span></label>
+    <div class="tipo-list">
       <div class="tipo-card">
         <input type="radio" name="tipo" id="tipo-med" value="Medicalizada" onchange="onTipoChange()">
-        <label for="tipo-med">
-          <div class="tipo-icon">🏥</div>
-          <div class="tipo-name">Medicalizada</div>
-          <div class="tipo-desc">Médico + Conductor + Auxiliar</div>
-        </label>
+        <label for="tipo-med"><div class="tipo-icon">🏥</div><div><div class="tipo-name">Medicalizada</div><div class="tipo-desc">Médico + Conductor + Auxiliar</div></div></label>
       </div>
       <div class="tipo-card">
         <input type="radio" name="tipo" id="tipo-bas" value="Básica" onchange="onTipoChange()">
-        <label for="tipo-bas">
-          <div class="tipo-icon">🚑</div>
-          <div class="tipo-name">Básica</div>
-          <div class="tipo-desc">Conductor + Auxiliar</div>
-        </label>
+        <label for="tipo-bas"><div class="tipo-icon">🚑</div><div><div class="tipo-name">Básica</div><div class="tipo-desc">Conductor + Auxiliar</div></div></label>
       </div>
       <div class="tipo-card">
         <input type="radio" name="tipo" id="tipo-mec" value="MED" onchange="onTipoChange()">
-        <label for="tipo-mec">
-          <div class="tipo-icon">⚕️</div>
-          <div class="tipo-name">MED</div>
-          <div class="tipo-desc">Médico + Auxiliar/Conductor</div>
-        </label>
+        <label for="tipo-mec"><div class="tipo-icon">⚕️</div><div><div class="tipo-name">MED</div><div class="tipo-desc">Médico + Auxiliar/Conductor</div></div></label>
       </div>
     </div>
     <div class="err-msg" id="err-tipo">⚠ Seleccione el tipo de móvil</div>
-
-    <label style="font-size:0.8rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Turno <span class="req">*</span></label>
+    <label style="font-size:0.78rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Turno <span class="req">*</span></label>
     <div class="turno-grid">
       <div class="turno-card">
         <input type="radio" name="turno" id="turno-dia" value="Día (7am-7pm)">
-        <label for="turno-dia">
-          <div class="turno-icon">☀️</div>
-          <div class="turno-info"><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></div>
-        </label>
+        <label for="turno-dia"><span style="font-size:1.3rem">☀️</span><div><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></div></label>
       </div>
       <div class="turno-card">
         <input type="radio" name="turno" id="turno-noc" value="Noche (7pm-7am)">
-        <label for="turno-noc">
-          <div class="turno-icon">🌙</div>
-          <div class="turno-info"><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></div>
-        </label>
+        <label for="turno-noc"><span style="font-size:1.3rem">🌙</span><div><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></div></label>
       </div>
     </div>
     <div class="err-msg" id="err-turno">⚠ Seleccione el tipo de turno</div>
-
     <div class="field-row single" style="margin-top:4px">
       <div class="field" id="f-inicio">
-        <label>Fecha y hora exacta de inicio <span class="req">*</span></label>
+        <label>Fecha y hora de inicio <span class="req">*</span></label>
         <input type="datetime-local" name="inicio" id="inicio">
-        <div class="field-error">Ingrese la fecha y hora de inicio</div>
+        <div class="field-error">Ingrese la fecha y hora</div>
       </div>
     </div>
-
-    <div class="nav-buttons" style="margin-top:8px">
-      <button type="button" class="btn-next" style="width:100%" onclick="goStep(2)">Siguiente — Personal →</button>
-    </div>
+    <div class="nav-buttons"><button type="button" class="btn-next" style="width:100%" onclick="goStep(2)">Siguiente — Personal →</button></div>
   </div>
 </div>
 
@@ -258,26 +233,21 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   </div>
   <div class="section-body">
 
-    <!-- MÉDICO (solo Medicalizada y MED) -->
-    <div class="crew-card" id="crew-medico">
+    <!-- MÉDICO -->
+    <div class="crew-card hidden-crew" id="crew-medico">
       <div class="crew-header" onclick="toggleCrew('crew-medico')">
         <div class="crew-avatar med">👨‍⚕️</div>
-        <div class="crew-info">
-          <div class="crew-role">Médico <span class="req" id="med-req">*</span></div>
-          <div class="crew-note" id="med-status">Toca para ingresar datos</div>
-        </div>
+        <div class="crew-info"><div class="crew-role">Médico <span class="req">*</span></div><div class="crew-note" id="med-status">Toca para ingresar datos</div></div>
         <div class="crew-chevron">▼</div>
       </div>
       <div class="crew-body">
         <div class="field-row">
-          <div class="field" id="f-med-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="med_nombre" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
-          <div class="field" id="f-med-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="med_cedula" id="med_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+          <div class="field" id="f-med-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
+          <div class="field" id="f-med-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="med_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
         </div>
-        <div class="field-row single">
-          <div class="field" id="f-med-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
-            <div class="file-upload-area" id="upload-med-area"><input type="file" name="med_foto" id="med_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-med-area','preview-med')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-med"></div></div>
-            <div class="field-error" id="err-med-foto">Se requiere foto de cédula</div>
-          </div>
+        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
+          <div class="photo-upload" id="up-med"><input type="file" id="foto_med" accept="image/*" capture="environment" onchange="handlePhoto(this,'med')"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-med"></div></div>
+          <div class="field-error" id="err-med-foto" style="display:none">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
@@ -286,65 +256,55 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
     <div class="crew-card open" id="crew-conductor">
       <div class="crew-header" onclick="toggleCrew('crew-conductor')">
         <div class="crew-avatar con">🚘</div>
-        <div class="crew-info">
-          <div class="crew-role">Conductor <span class="req">*</span> <span class="med-con-badge" id="medcon-badge" style="display:none">También Auxiliar</span></div>
-          <div class="crew-note" id="con-status">Toca para ingresar datos</div>
-        </div>
+        <div class="crew-info"><div class="crew-role">Conductor <span class="req">*</span> <span id="medcon-badge" style="display:none;background:#F3E8FF;color:#7C3AED;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:4px">También Auxiliar</span></div><div class="crew-note" id="con-status">Toca para ingresar datos</div></div>
         <div class="crew-chevron">▼</div>
       </div>
       <div class="crew-body">
         <div class="field-row">
-          <div class="field" id="f-con-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="con_nombre" id="con_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
-          <div class="field" id="f-con-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="con_cedula" id="con_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+          <div class="field" id="f-con-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="con_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
+          <div class="field" id="f-con-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="con_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
         </div>
-        <div class="field-row single">
-          <div class="field" id="f-con-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
-            <div class="file-upload-area" id="upload-con-area"><input type="file" name="con_foto" id="con_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-con-area','preview-con')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-con"></div></div>
-            <div class="field-error" id="err-con-foto">Se requiere foto de cédula</div>
-          </div>
+        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
+          <div class="photo-upload" id="up-con"><input type="file" id="foto_con" accept="image/*" capture="environment" onchange="handlePhoto(this,'con')"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-con"></div></div>
+          <div class="field-error" id="err-con-foto" style="display:none">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
 
-    <!-- AUXILIAR (oculto en MED, donde conductor hace ambos roles) -->
-    <div class="crew-card" id="crew-auxiliar">
+    <!-- AUXILIAR -->
+    <div class="crew-card hidden-crew" id="crew-auxiliar">
       <div class="crew-header" onclick="toggleCrew('crew-auxiliar')">
         <div class="crew-avatar aux">🩺</div>
-        <div class="crew-info">
-          <div class="crew-role">Auxiliar <span class="req">*</span></div>
-          <div class="crew-note" id="aux-status">Toca para ingresar datos</div>
-        </div>
+        <div class="crew-info"><div class="crew-role">Auxiliar <span class="req">*</span></div><div class="crew-note" id="aux-status">Toca para ingresar datos</div></div>
         <div class="crew-chevron">▼</div>
       </div>
       <div class="crew-body">
         <div class="field-row">
-          <div class="field" id="f-aux-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" name="aux_nombre" id="aux_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre completo</div></div>
-          <div class="field" id="f-aux-ced"><label>Número de cédula <span class="req">*</span></label><input type="text" name="aux_cedula" id="aux_cedula" placeholder="Sin puntos ni guiones" inputmode="numeric"><div class="field-error">Ingrese número de cédula</div></div>
+          <div class="field" id="f-aux-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="aux_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
+          <div class="field" id="f-aux-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="aux_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
         </div>
-        <div class="field-row single">
-          <div class="field" id="f-aux-foto"><label>Foto de la cédula (frente) <span class="req">*</span></label>
-            <div class="file-upload-area" id="upload-aux-area"><input type="file" name="aux_foto" id="aux_foto" accept="image/*" capture="environment" onchange="handleFile(this,'upload-aux-area','preview-aux')"><div class="upload-icon">📷</div><div class="upload-text">Toca para <strong>tomar o subir foto</strong></div><div class="upload-hint">JPG, PNG — cédula frente visible</div><div class="upload-preview" id="preview-aux"></div></div>
-            <div class="field-error" id="err-aux-foto">Se requiere foto de cédula</div>
-          </div>
+        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
+          <div class="photo-upload" id="up-aux"><input type="file" id="foto_aux" accept="image/*" capture="environment" onchange="handlePhoto(this,'aux')"><div class="photo-upload" id="up-aux-inner"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-aux"></div></div></div>
+          <div class="field-error" id="err-aux-foto" style="display:none">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
 
-    <!-- ALERTA DOBLADO -->
-    <div id="doblado-alert" style="display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:14px 16px;margin-top:12px;">
-      <div style="font-weight:800;color:#EA580C;margin-bottom:6px;font-size:0.88rem">⚠️ Personal con turno previo detectado</div>
-      <div id="doblado-detail" style="font-size:0.8rem;color:#9A3412;line-height:1.8"></div>
-      <div style="margin-top:10px;font-size:0.75rem;color:#9A3412">
+    <!-- DOBLADO -->
+    <div class="doblado-alert" id="doblado-alert">
+      <div style="font-weight:800;color:#EA580C;margin-bottom:6px;font-size:0.85rem">⚠️ Personal con turno previo detectado</div>
+      <div id="doblado-detail" style="font-size:0.78rem;color:#9A3412;line-height:1.8"></div>
+      <div style="margin-top:8px;font-size:0.73rem;color:#9A3412">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
-          <input type="checkbox" id="doblado-confirm" style="width:16px;height:16px;accent-color:#F97316">
+          <input type="checkbox" id="doblado-confirm" style="width:15px;height:15px;accent-color:#F97316">
           Confirmo que este personal está autorizado para doblar turno
         </label>
       </div>
     </div>
 
-    <div class="nav-buttons" style="margin-top:16px">
+    <div class="nav-buttons">
       <button type="button" class="btn-back" onclick="goStep(1)">← Volver</button>
-      <button type="button" class="btn-next" onclick="goStep(3)">Siguiente — Referente →</button>
+      <button type="button" class="btn-next" onclick="goStep(3)">Siguiente →</button>
     </div>
   </div>
 </div>
@@ -353,33 +313,19 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 <div class="section-card" id="step-3">
   <div class="section-head">
     <div class="section-num purple">03</div>
-    <div><div class="section-title">Profesional que Registra</div><div class="section-sub">Usted es responsable de la veracidad de los datos</div></div>
+    <div><div class="section-title">Profesional que Registra</div><div class="section-sub">Responsable de la veracidad de los datos</div></div>
   </div>
   <div class="section-body">
     <div class="field-row">
-      <div class="field" id="f-ref-nom">
-        <label>Su nombre completo <span class="req">*</span></label>
-        <input type="text" name="referente" id="referente" placeholder="Apellidos y nombres">
-        <div class="field-error">Ingrese su nombre</div>
-      </div>
-      <div class="field">
-        <label>Su subred asignada</label>
-        <select name="ref_subred" id="ref_subred">
-          <option value="">Seleccionar…</option>
-          <option>Norte</option><option>Sur</option>
-          <option>Sur Occidente</option><option>Centro Oriente</option>
-        </select>
-      </div>
+      <div class="field" id="f-ref-nom"><label>Su nombre completo <span class="req">*</span></label><input type="text" id="referente" placeholder="Apellidos y nombres"><div class="field-error">Ingrese su nombre</div></div>
+      <div class="field"><label>Su subred</label><select id="ref_subred"><option value="">Seleccionar…</option><option>Norte</option><option>Sur</option><option>Sur Occidente</option><option>Centro Oriente</option></select></div>
     </div>
     <div class="field-row single">
-      <div class="field">
-        <label>Observaciones <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label>
-        <textarea name="observaciones" id="observaciones" placeholder="Novedad, cambio de personal, etc."></textarea>
-      </div>
+      <div class="field"><label>Observaciones <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label><textarea id="observaciones" placeholder="Novedad, cambio de personal, etc."></textarea></div>
     </div>
     <div class="nav-buttons">
       <button type="button" class="btn-back" onclick="goStep(2)">← Volver</button>
-      <button type="button" class="btn-next" onclick="goStep(4)">Revisar y Confirmar →</button>
+      <button type="button" class="btn-next" onclick="goStep(4)">Revisar →</button>
     </div>
   </div>
 </div>
@@ -392,13 +338,11 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   </div>
   <div class="section-body">
     <div id="resumen-content"></div>
-    <div style="background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;font-size:0.78rem;color:#92400E;line-height:1.5">
-      ⚠️ <strong>Al enviar</strong>, confirma que los datos son verídicos. El sistema registrará la hora exacta de envío.
+    <div style="background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;font-size:0.75rem;color:#92400E;line-height:1.5">
+      ⚠️ <strong>Al enviar</strong>, confirma que los datos son verídicos.
     </div>
     <button type="button" class="btn-submit-final" id="submit-btn" onclick="submitForm()">✓ CONFIRMAR Y REGISTRAR TURNO</button>
-    <div class="nav-buttons" style="margin-top:10px">
-      <button type="button" class="btn-back" style="flex:1" onclick="goStep(3)">← Editar datos</button>
-    </div>
+    <div class="nav-buttons" style="margin-top:10px"><button type="button" class="btn-back" style="flex:1" onclick="goStep(3)">← Editar datos</button></div>
   </div>
 </div>
 
@@ -412,14 +356,17 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
   <div class="success-sub">Los datos han sido enviados correctamente.</div>
   <div class="success-detail" id="success-detail-text"></div>
   <div class="success-sync" id="success-sync-msg"></div>
-  <button class="btn-nuevo" onclick="resetForm()" style="margin-top:1.5rem">+ Registrar otro turno</button>
+  <button class="btn-nuevo" onclick="resetForm()">+ Registrar otro turno</button>
 </div>
+
+<div class="footer-credit">Sistema SCAT · Desarrollado por <strong>Ing. Edisson Macías</strong> · Secretaría de Salud Bogotá</div>
 
 <script>
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
 const LOCAL_KEY = 'scat_registros_v3';
 let currentStep = 1;
-let tipoActual = ''; // 'Medicalizada' | 'Básica' | 'MED'
+let tipoActual = '';
+let photoUrls = { med: '', con: '', aux: '' };
 
 window.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
@@ -427,39 +374,96 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inicio').value = now.toISOString().slice(0,16);
 });
 
-// ── TIPO DE MÓVIL → muestra/oculta personal ──
+// ── TIPO ──
 function onTipoChange() {
   tipoActual = document.querySelector('input[name="tipo"]:checked')?.value || '';
   const medCard = document.getElementById('crew-medico');
   const auxCard = document.getElementById('crew-auxiliar');
-  const medconBadge = document.getElementById('medcon-badge');
-  const personalSub = document.getElementById('personal-sub');
+  const badge   = document.getElementById('medcon-badge');
+  const sub     = document.getElementById('personal-sub');
+  photoUrls = { med: '', con: '', aux: '' };
 
   if (tipoActual === 'Medicalizada') {
-    // Médico + Conductor + Auxiliar (3 personas)
-    medCard.classList.remove('hidden-crew');
-    auxCard.classList.remove('hidden-crew');
-    medconBadge.style.display = 'none';
-    personalSub.textContent = 'Médico + Conductor + Auxiliar';
+    medCard.classList.remove('hidden-crew'); auxCard.classList.remove('hidden-crew');
+    badge.style.display = 'none'; sub.textContent = 'Médico + Conductor + Auxiliar';
   } else if (tipoActual === 'Básica') {
-    // Conductor + Auxiliar (2 personas, sin médico)
-    medCard.classList.add('hidden-crew');
-    auxCard.classList.remove('hidden-crew');
-    medconBadge.style.display = 'none';
-    personalSub.textContent = 'Conductor + Auxiliar';
-    // Limpiar médico
+    medCard.classList.add('hidden-crew'); auxCard.classList.remove('hidden-crew');
+    badge.style.display = 'none'; sub.textContent = 'Conductor + Auxiliar';
     document.getElementById('med_nombre').value = '';
     document.getElementById('med_cedula').value = '';
   } else if (tipoActual === 'MED') {
-    // Médico + Auxiliar/Conductor (conductor hace ambos roles)
-    medCard.classList.remove('hidden-crew');
-    auxCard.classList.add('hidden-crew');
-    medconBadge.style.display = 'inline-block';
-    personalSub.textContent = 'Médico + Auxiliar-Conductor (un solo perfil)';
-    // Limpiar auxiliar separado
+    medCard.classList.remove('hidden-crew'); auxCard.classList.add('hidden-crew');
+    badge.style.display = 'inline'; sub.textContent = 'Médico + Auxiliar-Conductor';
     document.getElementById('aux_nombre').value = '';
     document.getElementById('aux_cedula').value = '';
   }
+}
+
+// ── FOTO UPLOAD ──
+async function handlePhoto(input, role) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const area = document.getElementById('up-' + role);
+  const status = document.getElementById('ps-' + role);
+
+  area.classList.add('uploading');
+  status.className = 'photo-status uploading';
+  status.textContent = '⏳ Subiendo foto...';
+
+  try {
+    const base64 = await fileToBase64(file);
+    const filename = `SCAT_${role}_${Date.now()}.jpg`;
+
+    // Upload via JSONP
+    const result = await new Promise((resolve) => {
+      const cbName = '_scatPhoto_' + Date.now();
+      const script = document.createElement('script');
+      window[cbName] = (data) => { delete window[cbName]; script.remove(); resolve(data); };
+      script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
+      // Send via POST since base64 is large
+      fetch(SHEET_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'uploadPhoto', base64: base64.split(',')[1], mimeType: file.type, filename }),
+        headers: { 'Content-Type': 'text/plain' }
+      }).then(r => r.json()).then(d => resolve(d)).catch(() => resolve(null));
+      setTimeout(() => resolve(null), 20000);
+      // Cancel JSONP approach for photos - use fetch directly above
+      delete window[cbName];
+      script.remove();
+    });
+
+    if (result && result.status === 'ok') {
+      photoUrls[role] = result.url;
+      area.classList.remove('uploading');
+      area.classList.add('has-file');
+      status.className = 'photo-status ok';
+      status.textContent = '✓ Foto subida a Drive';
+      document.getElementById('err-' + role + '-foto').style.display = 'none';
+    } else {
+      throw new Error('Upload failed');
+    }
+  } catch(e) {
+    // Save locally if upload fails
+    const reader = new FileReader();
+    reader.onload = () => {
+      photoUrls[role] = reader.result; // store as dataURL as fallback
+      area.classList.remove('uploading');
+      area.classList.add('has-file');
+      status.className = 'photo-status ok';
+      status.textContent = '✓ ' + file.name;
+      document.getElementById('err-' + role + '-foto').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
 }
 
 // ── NAVEGACIÓN ──
@@ -470,300 +474,240 @@ function goStep(n) {
   currentStep = n;
   updateProgress(n);
   if (n === 4) buildResumen();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function updateProgress(n) {
-  for (let i = 1; i <= 4; i++) {
-    const dot = document.getElementById('dot-' + i);
-    const lbl = document.getElementById('lbl-' + i);
-    dot.className = 'step-dot' + (i<n?' done':i===n?' active':'');
-    dot.textContent = i < n ? '✓' : i;
-    if (lbl) lbl.className = 'step-label' + (i===n?' active':'');
-    const line = document.getElementById('line-' + i);
-    if (line) line.className = 'step-line' + (i<n?' done':'');
+  for (let i=1; i<=4; i++) {
+    const dot = document.getElementById('dot-'+i);
+    const lbl = document.getElementById('lbl-'+i);
+    dot.className = 'step-dot'+(i<n?' done':i===n?' active':'');
+    dot.textContent = i<n?'✓':i;
+    if (lbl) lbl.className = 'step-label'+(i===n?' active':'');
+    const line = document.getElementById('line-'+i);
+    if (line) line.className = 'step-line'+(i<n?' done':'');
   }
 }
 
 // ── VALIDACIÓN ──
 function validateStep(step) {
   let ok = true;
-  const clearErr = id => { const f=document.getElementById(id); if(f) f.classList.remove('has-error'); };
-  const setErr   = id => { const f=document.getElementById(id); if(f) f.classList.add('has-error'); ok=false; };
+  const clr = id => { const f=document.getElementById(id); if(f) f.classList.remove('has-error'); };
+  const err = id => { const f=document.getElementById(id); if(f) f.classList.add('has-error'); ok=false; };
 
-  if (step === 1) {
-    clearErr('f-subred'); clearErr('f-placa'); clearErr('f-inicio');
-    document.getElementById('err-tipo').style.display = 'none';
-    document.getElementById('err-turno').style.display = 'none';
-    if (!document.getElementById('subred').value) setErr('f-subred');
-    if (!document.getElementById('placa').value.trim()) setErr('f-placa');
+  if (step===1) {
+    clr('f-subred'); clr('f-placa'); clr('f-inicio');
+    document.getElementById('err-tipo').style.display='none';
+    document.getElementById('err-turno').style.display='none';
+    if (!document.getElementById('subred').value) err('f-subred');
+    if (!document.getElementById('placa').value.trim()) err('f-placa');
     if (!document.querySelector('input[name="tipo"]:checked')) { document.getElementById('err-tipo').style.display='block'; ok=false; }
     if (!document.querySelector('input[name="turno"]:checked')) { document.getElementById('err-turno').style.display='block'; ok=false; }
-    if (!document.getElementById('inicio').value) setErr('f-inicio');
+    if (!document.getElementById('inicio').value) err('f-inicio');
   }
 
-  if (step === 2) {
-    clearErr('f-con-nom'); clearErr('f-con-ced'); clearErr('f-con-foto');
-    clearErr('f-aux-nom'); clearErr('f-aux-ced'); clearErr('f-aux-foto');
-    clearErr('f-med-nom'); clearErr('f-med-ced'); clearErr('f-med-foto');
+  if (step===2) {
+    clr('f-con-nom'); clr('f-con-ced'); clr('f-med-nom'); clr('f-med-ced'); clr('f-aux-nom'); clr('f-aux-ced');
 
-    // Conductor siempre requerido
-    if (!document.getElementById('con_nombre').value.trim()) { setErr('f-con-nom'); document.getElementById('crew-conductor').classList.add('open'); }
-    if (!document.getElementById('con_cedula').value.trim()) { setErr('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
-    if (!document.getElementById('con_foto').files.length) { document.getElementById('f-con-foto').classList.add('has-error'); document.getElementById('err-con-foto').style.display='block'; document.getElementById('crew-conductor').classList.add('open'); ok=false; }
+    if (!document.getElementById('con_nombre').value.trim()) { err('f-con-nom'); document.getElementById('crew-conductor').classList.add('open'); }
+    if (!document.getElementById('con_cedula').value.trim()) { err('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
+    if (!photoUrls.con) { document.getElementById('err-con-foto').style.display='block'; document.getElementById('crew-conductor').classList.add('open'); ok=false; }
 
-    // Auxiliar requerido en Medicalizada y Básica (no en MED)
-    if (tipoActual !== 'MED') {
-      if (!document.getElementById('aux_nombre').value.trim()) { setErr('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
-      if (!document.getElementById('aux_cedula').value.trim()) { setErr('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
-      if (!document.getElementById('aux_foto').files.length) { document.getElementById('f-aux-foto').classList.add('has-error'); document.getElementById('err-aux-foto').style.display='block'; document.getElementById('crew-auxiliar').classList.add('open'); ok=false; }
+    if (tipoActual!=='MED') {
+      if (!document.getElementById('aux_nombre').value.trim()) { err('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
+      if (!document.getElementById('aux_cedula').value.trim()) { err('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
+      if (!photoUrls.aux) { document.getElementById('err-aux-foto').style.display='block'; document.getElementById('crew-auxiliar').classList.add('open'); ok=false; }
     }
 
-    // Médico requerido en Medicalizada y MED
-    if (tipoActual === 'Medicalizada' || tipoActual === 'MED') {
-      if (!document.getElementById('med_nombre').value.trim()) { setErr('f-med-nom'); document.getElementById('crew-medico').classList.add('open'); }
-      if (!document.getElementById('med_cedula').value.trim()) { setErr('f-med-ced'); document.getElementById('crew-medico').classList.add('open'); }
-      if (!document.getElementById('med_foto').files.length) { document.getElementById('f-med-foto').classList.add('has-error'); document.getElementById('err-med-foto').style.display='block'; document.getElementById('crew-medico').classList.add('open'); ok=false; }
+    if (tipoActual==='Medicalizada'||tipoActual==='MED') {
+      if (!document.getElementById('med_nombre').value.trim()) { err('f-med-nom'); document.getElementById('crew-medico').classList.add('open'); }
+      if (!document.getElementById('med_cedula').value.trim()) { err('f-med-ced'); document.getElementById('crew-medico').classList.add('open'); }
+      if (!photoUrls.med) { document.getElementById('err-med-foto').style.display='block'; document.getElementById('crew-medico').classList.add('open'); ok=false; }
     }
 
-    // Check personal doblado
-    if (ok) checkDobladoPersonal();
+    if (ok) checkDoblado();
     const alertEl = document.getElementById('doblado-alert');
-    const confirmEl = document.getElementById('doblado-confirm');
-    if (alertEl.style.display !== 'none' && !confirmEl.checked) {
-      alertEl.style.borderColor = '#EF4444';
+    if (alertEl.style.display!=='none' && !document.getElementById('doblado-confirm').checked) {
+      alertEl.style.borderColor='#EF4444';
       alertEl.scrollIntoView({behavior:'smooth',block:'center'});
-      ok = false;
+      ok=false;
     }
   }
 
-  if (step === 3) {
-    clearErr('f-ref-nom');
-    if (!document.getElementById('referente').value.trim()) setErr('f-ref-nom');
+  if (step===3) {
+    clr('f-ref-nom');
+    if (!document.getElementById('referente').value.trim()) err('f-ref-nom');
   }
 
-  if (!ok) {
-    const firstErr = document.querySelector('.has-error');
-    if (firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
-  }
+  if (!ok) { const fe=document.querySelector('.has-error'); if(fe) fe.scrollIntoView({behavior:'smooth',block:'center'}); }
   return ok;
 }
 
-// ── CREW TOGGLE ──
+// ── CREW ──
 function toggleCrew(id) { document.getElementById(id).classList.toggle('open'); }
-function handleFile(input, areaId, previewId) {
-  const area = document.getElementById(areaId);
-  const preview = document.getElementById(previewId);
-  if (input.files[0]) {
-    area.classList.add('has-file');
-    preview.style.display = 'block';
-    preview.textContent = '✓ ' + input.files[0].name;
-    area.querySelector('.upload-icon').textContent = '✅';
-    // Clear error
-    area.parentElement.classList.remove('has-error');
-    const errId = 'err-' + areaId.replace('upload-','').replace('-area','-foto');
-    const errEl = document.getElementById(errId);
-    if (errEl) errEl.style.display = 'none';
+
+// ── DOBLADO ──
+async function checkDoblado() {
+  const conCed = document.getElementById('con_cedula').value.trim();
+  const auxCed = document.getElementById('aux_cedula').value.trim();
+  const medCed = document.getElementById('med_cedula').value.trim();
+
+  let activeRecords = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
+  try {
+    const data = await new Promise((resolve) => {
+      const cbName = '_scatCbD_'+Date.now();
+      const script = document.createElement('script');
+      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
+      script.onerror = () => resolve(null);
+      script.src = SHEET_URL+'?action=getAll&callback='+cbName;
+      setTimeout(()=>resolve(null), 5000);
+      document.head.appendChild(script);
+    });
+    if (data && data.status==='ok') activeRecords = data.active||[];
+  } catch{}
+
+  const hoy = new Date().toDateString();
+  const hoyRecs = activeRecords.filter(r => new Date(r.inicio).toDateString()===hoy);
+
+  const yaEnTurno = ced => hoyRecs.find(r => r.con_cedula===ced||r.aux_cedula===ced||r.med_cedula===ced);
+
+  const checks = [
+    {cedula:conCed, nombre:document.getElementById('con_nombre').value.trim(), rol:'Conductor'},
+    {cedula:auxCed, nombre:document.getElementById('aux_nombre').value.trim(), rol:'Auxiliar'},
+    {cedula:medCed, nombre:document.getElementById('med_nombre').value.trim(), rol:'Médico'},
+  ].filter(p=>p.cedula);
+
+  const doblados = checks.map(p=>({...p,turno:yaEnTurno(p.cedula)})).filter(p=>p.turno);
+  const alertEl  = document.getElementById('doblado-alert');
+
+  if (doblados.length) {
+    alertEl.style.display='block'; alertEl.style.borderColor='#F97316';
+    document.getElementById('doblado-confirm').checked=false;
+    document.getElementById('doblado-detail').innerHTML = doblados.map(p=>
+      `🟠 <strong>${p.rol} ${p.nombre}</strong> — Ya en móvil <strong>${p.turno.placa}</strong> (${p.turno.turno})`
+    ).join('<br>');
+  } else {
+    alertEl.style.display='none';
   }
 }
 
 // ── RESUMEN ──
 function buildResumen() {
-  const v = n => document.getElementById(n)?.value || '';
-  const r = (key, val) => val ? `<div class="resumen-row"><span class="resumen-key">${key}</span><span class="resumen-val">${val}</span></div>` : '';
-  const tipo  = document.querySelector('input[name="tipo"]:checked')?.value || '';
-  const turno = document.querySelector('input[name="turno"]:checked')?.value || '';
+  const v = n => document.getElementById(n)?.value||'';
+  const r = (k,val) => val?`<div class="resumen-row"><span class="resumen-key">${k}</span><span class="resumen-val">${val}</span></div>`:'';
+  const tipo  = document.querySelector('input[name="tipo"]:checked')?.value||'';
+  const turno = document.querySelector('input[name="turno"]:checked')?.value||'';
   const inicio = v('inicio');
   const inicioFmt = inicio ? new Date(inicio).toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
 
-  const medHtml = (tipo === 'Medicalizada' || tipo === 'MED') && v('med_nombre') ?
-    `<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}</div>` : '';
+  const medHtml = (tipo==='Medicalizada'||tipo==='MED')&&v('med_nombre') ?
+    `<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}${r('Foto',photoUrls.med?'✅ Subida':'❌ Falta')}</div>`:'' ;
 
-  const conLabel = tipo === 'MED' ? '🚘 Conductor / Auxiliar' : '🚘 Conductor';
-  const auxHtml = tipo !== 'MED' && v('aux_nombre') ?
-    `<div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}</div>` : '';
+  const auxHtml = tipo!=='MED' && v('aux_nombre') ?
+    `<div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}${r('Foto',photoUrls.aux?'✅ Subida':'❌ Falta')}</div>`:'';
 
   document.getElementById('resumen-content').innerHTML = `
-    <div class="resumen-card">
-      <div class="resumen-title">🚑 Móvil</div>
-      ${r('Subred', v('subred'))}${r('Placa', v('placa').toUpperCase())}${r('Tipo', tipo)}${r('Turno', turno)}${r('Inicio', inicioFmt)}
-    </div>
+    <div class="resumen-card"><div class="resumen-title">🚑 Móvil</div>${r('Subred',v('subred'))}${r('Placa',v('placa').toUpperCase())}${r('Tipo',tipo)}${r('Turno',turno)}${r('Inicio',inicioFmt)}</div>
     ${medHtml}
-    <div class="resumen-card"><div class="resumen-title">${conLabel}</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}</div>
+    <div class="resumen-card"><div class="resumen-title">🚘 Conductor${tipo==='MED'?' / Auxiliar':''}</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}${r('Foto',photoUrls.con?'✅ Subida':'❌ Falta')}</div>
     ${auxHtml}
     <div class="resumen-card"><div class="resumen-title">📋 Referente</div>${r('Nombre',v('referente'))}${r('Observaciones',v('observaciones'))}</div>`;
-}
-
-// ── DETECCIÓN DOBLADO ──
-async function checkDobladoPersonal() {
-  const conCed = document.getElementById('con_cedula').value.trim();
-  const auxCed = document.getElementById('aux_cedula').value.trim();
-  const medCed = document.getElementById('med_cedula').value.trim();
-
-  let activeRecords = [];
-  try {
-    const cbName = '_scatCbDob_' + Date.now();
-    const data = await new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
-      script.onerror = () => reject();
-      script.src = SHEET_URL + '?action=getAll&callback=' + cbName;
-      setTimeout(() => reject(), 5000);
-      document.head.appendChild(script);
-    });
-    if (data.status === 'ok') activeRecords = (data.active || []);
-  } catch { activeRecords = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); }
-
-  // Verificar en turnos activos del DÍA actual
-  const hoy = new Date().toDateString();
-  const hoyRecords = activeRecords.filter(r => new Date(r.inicio).toDateString() === hoy);
-
-  function yaEnTurno(cedula) {
-    if (!cedula) return null;
-    return hoyRecords.find(r => r.con_cedula===cedula || r.aux_cedula===cedula || r.med_cedula===cedula);
-  }
-
-  const checks = [
-    { cedula: conCed, nombre: document.getElementById('con_nombre').value.trim(), rol: 'Conductor' },
-    { cedula: auxCed, nombre: document.getElementById('aux_nombre').value.trim(), rol: 'Auxiliar' },
-    { cedula: medCed, nombre: document.getElementById('med_nombre').value.trim(), rol: 'Médico' },
-  ].filter(p => p.cedula);
-
-  const doblados = checks.map(p => ({ ...p, turno: yaEnTurno(p.cedula) })).filter(p => p.turno);
-
-  const alertEl = document.getElementById('doblado-alert');
-  const detailEl = document.getElementById('doblado-detail');
-  const confirmEl = document.getElementById('doblado-confirm');
-
-  if (doblados.length) {
-    alertEl.style.display = 'block';
-    alertEl.style.borderColor = '#F97316';
-    confirmEl.checked = false;
-    detailEl.innerHTML = doblados.map(p =>
-      `🟠 <strong>${p.rol} ${p.nombre}</strong> — Ya registrado en móvil <strong>${p.turno.placa}</strong> (${p.turno.turno})`
-    ).join('<br>');
-  } else {
-    alertEl.style.display = 'none';
-  }
 }
 
 // ── SUBMIT ──
 async function submitForm() {
   if (!validateStep(3)) { goStep(3); return; }
   const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Guardando...';
 
-  const v = n => document.getElementById(n)?.value?.trim() || '';
-  const tipo = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const v = n => document.getElementById(n)?.value?.trim()||'';
+  const tipo = document.querySelector('input[name="tipo"]:checked')?.value||'';
 
   const obj = {
     id: Date.now(), ts: Date.now(),
     subred: v('subred'), placa: v('placa').toUpperCase(),
-    tipo, turno: document.querySelector('input[name="turno"]:checked')?.value || '',
+    tipo, turno: document.querySelector('input[name="turno"]:checked')?.value||'',
     inicio: v('inicio'),
-    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'),
-    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'),
-    aux_nombre: tipo === 'MED' ? v('con_nombre') : v('aux_nombre'),
-    aux_cedula: tipo === 'MED' ? v('con_cedula') : v('aux_cedula'),
+    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'), med_foto_url: photoUrls.med||'',
+    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'), con_foto_url: photoUrls.con||'',
+    aux_nombre: tipo==='MED'?v('con_nombre'):v('aux_nombre'),
+    aux_cedula: tipo==='MED'?v('con_cedula'):v('aux_cedula'),
+    aux_foto_url: tipo==='MED'?photoUrls.con:photoUrls.aux||'',
     referente: v('referente'), ref_subred: v('ref_subred'),
     observaciones: v('observaciones'), estado: 'activo',
-    doblado: document.getElementById('doblado-alert').style.display !== 'none' ? 'si' : 'no'
+    doblado: document.getElementById('doblado-alert').style.display!=='none'?'si':'no'
   };
 
-  // Guardar local
-  const db = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
-  db.push(obj);
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
+  const db = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
+  db.push(obj); localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
 
-  // Enviar con múltiples métodos para máxima compatibilidad
   let synced = false;
-  btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
-  
-  const params = new URLSearchParams({ action: 'register', record: JSON.stringify(obj) });
-  const fullUrl = SHEET_URL + '?' + params.toString();
+  btn.innerHTML='<span class="spinner"></span> Sincronizando...';
 
-  // Método 1: JSONP (funciona en la mayoría)
+  // JSONP
   try {
+    const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
     const result = await new Promise((resolve) => {
-      const cbName = '_scatReg_' + Date.now();
+      const cbName = '_scatReg_'+Date.now();
       const script = document.createElement('script');
-      window[cbName] = (data) => { delete window[cbName]; script.remove(); resolve(data); };
+      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
       script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
       params.set('callback', cbName);
-      script.src = SHEET_URL + '?' + params.toString();
-      setTimeout(() => resolve(null), 6000);
+      script.src = SHEET_URL+'?'+params.toString();
+      setTimeout(()=>resolve(null), 8000);
       document.head.appendChild(script);
     });
-    if (result && result.status === 'ok') synced = true;
-  } catch(e) {}
+    if (result && result.status==='ok') synced=true;
+  } catch{}
 
-  // Método 2: fetch no-cors como respaldo (siempre dispara, no confirma)
+  // Fallback fetch no-cors
   if (!synced) {
     try {
-      await fetch(fullUrl, { method: 'GET', mode: 'no-cors' });
-      // no-cors no devuelve respuesta pero el request llega al servidor
-      await new Promise(r => setTimeout(r, 2000));
-      synced = true; // asumimos ok si no hubo error de red
-    } catch(e) {}
+      const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
+      await fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'});
+      await new Promise(r=>setTimeout(r,1500));
+      synced=true;
+    } catch{}
   }
 
-  // Método 3: imagen pixel como último recurso
-  if (!synced) {
-    try {
-      await new Promise((resolve) => {
-        const img = new Image();
-        img.onload = img.onerror = () => resolve();
-        img.src = fullUrl + '&t=' + Date.now();
-        setTimeout(resolve, 3000);
-      });
-      synced = true;
-    } catch(e) {}
-  }
-
-  const turnoLabel = tipo === 'MED' ? `${obj.con_nombre} (Cond/Aux)` : obj.con_nombre;
   document.getElementById('success-detail-text').innerHTML =
-    `<strong>${obj.placa} · Subred ${obj.subred} · ${tipo}</strong><br>
-    ${obj.med_nombre ? 'Médico: '+obj.med_nombre+'<br>' : ''}
-    Conductor: ${turnoLabel}<br>
-    ${tipo !== 'MED' ? 'Auxiliar: '+obj.aux_nombre+'<br>' : ''}
-    Registrado por: ${obj.referente}<br>
+    `<strong>${obj.placa} · ${obj.subred} · ${tipo}</strong><br>
+    ${obj.med_nombre?'Médico: '+obj.med_nombre+'<br>':''}
+    Conductor: ${obj.con_nombre}<br>
+    ${tipo!=='MED'?'Auxiliar: '+obj.aux_nombre+'<br>':''}
+    Referente: ${obj.referente}<br>
     Hora: ${new Date().toLocaleTimeString('es-CO',{hour12:false})}`;
 
   const syncEl = document.getElementById('success-sync-msg');
-  syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente — se sincronizará luego';
-  syncEl.className = 'success-sync ' + (synced ? 'ok' : 'err');
-
+  syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente';
+  syncEl.className = 'success-sync '+(synced?'ok':'err');
   document.getElementById('success-screen').classList.add('show');
-  btn.disabled = false;
-  btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR TURNO';
+  btn.disabled=false; btn.innerHTML='✓ CONFIRMAR Y REGISTRAR TURNO';
 }
 
 // ── RESET ──
 function resetForm() {
   document.getElementById('main-form').reset();
   document.getElementById('success-screen').classList.remove('show');
-  document.querySelectorAll('.upload-preview').forEach(el => { el.style.display='none'; el.textContent=''; });
-  document.querySelectorAll('.file-upload-area').forEach(el => { el.classList.remove('has-file'); const ic=el.querySelector('.upload-icon'); if(ic) ic.textContent='📷'; });
-  document.querySelectorAll('.has-error').forEach(el => el.classList.remove('has-error'));
-  document.querySelectorAll('#err-tipo,#err-turno,#err-med-foto,#err-con-foto,#err-aux-foto').forEach(el => el.style.display='none');
+  document.querySelectorAll('.photo-upload').forEach(el=>{el.classList.remove('has-file','uploading');});
+  document.querySelectorAll('.photo-status').forEach(el=>{el.textContent='';el.className='photo-status';});
+  document.querySelectorAll('.has-error').forEach(el=>el.classList.remove('has-error'));
   document.getElementById('crew-medico').classList.add('hidden-crew');
   document.getElementById('crew-auxiliar').classList.add('hidden-crew');
   document.getElementById('doblado-alert').style.display='none';
-  tipoActual = '';
-  const now = new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
-  document.getElementById('inicio').value = now.toISOString().slice(0,16);
+  photoUrls={med:'',con:'',aux:''};
+  tipoActual='';
+  const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+  document.getElementById('inicio').value=now.toISOString().slice(0,16);
   goStep(1);
 }
 
 // Live crew status
-document.querySelectorAll('input[type="text"]').forEach(inp => {
-  inp.addEventListener('input', () => {
-    ['med','con','aux'].forEach(p => {
-      const val = document.getElementById(p+'_nombre')?.value.trim();
-      const el = document.getElementById(p+'-status');
-      if (el) el.textContent = val || 'Toca para ingresar datos';
-    });
+document.addEventListener('input', e => {
+  ['med','con','aux'].forEach(p => {
+    const val = document.getElementById(p+'_nombre')?.value.trim();
+    const el  = document.getElementById(p+'-status');
+    if (el) el.textContent = val||'Toca para ingresar datos';
   });
 });
 </script>
