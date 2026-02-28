@@ -4,680 +4,704 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Registro de Turno · SCAT</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#F0F4FF;--white:#FFFFFF;--surface:#F8FAFF;
-  --border:#DDE3F0;--border-focus:#2563EB;
-  --text:#0F172A;--text-sub:#475569;--text-muted:#94A3B8;
-  --accent:#2563EB;--accent-light:#EFF6FF;
-  --green:#16A34A;--green-light:#F0FDF4;
-  --red:#DC2626;--red-light:#FEF2F2;
-  --yellow:#D97706;--yellow-light:#FFFBEB;
-  --radius:16px;--radius-sm:10px;
+:root{
+  --bg:#F0F4FF;--white:#fff;--surface:#F8FAFF;
+  --border:#DDE3F0;--focus:#2563EB;
+  --text:#0F172A;--sub:#475569;--muted:#94A3B8;
+  --accent:#2563EB;--accent-l:#EFF6FF;
+  --green:#16A34A;--green-l:#F0FDF4;
+  --red:#DC2626;--yellow:#D97706;--yellow-l:#FFFBEB;
+  --orange:#F97316;
+  --r:16px;--rs:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px;}
-.app-header{background:var(--accent);position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(37,99,235,0.4);}
-.header-inner{max-width:640px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;}
-.header-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
-.header-text h1{font-size:0.95rem;font-weight:700;color:#fff;line-height:1.2;}
-.header-text p{font-size:0.68rem;color:rgba(255,255,255,0.75);margin-top:1px;}
-.progress-wrap{max-width:640px;margin:0 auto;padding:14px 20px 0;}
-.progress-steps{display:flex;gap:6px;align-items:center;}
-.step-item{display:flex;align-items:center;gap:5px;flex:1;}
-.step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;border:2px solid var(--border);background:var(--white);color:var(--text-muted);transition:all 0.3s;}
-.step-dot.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(37,99,235,0.15);}
-.step-dot.done{border-color:var(--green);background:var(--green);color:#fff;}
-.step-label{font-size:0.6rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;}
-.step-label.active{color:var(--accent);}
-.step-line{flex:1;height:2px;background:var(--border);border-radius:2px;}
-.step-line.done{background:var(--green);}
-.form-container{max-width:640px;margin:0 auto;padding:16px;}
-.section-card{background:var(--white);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden;border:1px solid var(--border);display:none;}
-.section-card.active{display:block;}
-.section-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
-.section-num{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;flex-shrink:0;}
-.section-num.blue{background:var(--accent-light);color:var(--accent);}
-.section-num.green{background:var(--green-light);color:var(--green);}
-.section-num.purple{background:#F3E8FF;color:#7C3AED;}
-.section-title{font-size:0.95rem;font-weight:700;}
-.section-sub{font-size:0.68rem;color:var(--text-muted);margin-top:2px;}
-.section-body{padding:18px;}
-.field{display:flex;flex-direction:column;gap:5px;}
-.field label{font-size:0.78rem;font-weight:600;color:var(--text-sub);}
-.field input,.field select,.field textarea{padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text);background:var(--white);transition:border-color 0.2s;outline:none;width:100%;}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
-.field textarea{resize:none;height:68px;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.field-row.single{grid-template-columns:1fr;}
-@media(max-width:500px){.field-row{grid-template-columns:1fr;}}
-.field-error{font-size:0.7rem;color:var(--red);display:none;}
-.has-error input,.has-error select{border-color:var(--red)!important;}
-.has-error .field-error{display:block;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
+
+/* HEADER */
+.hdr{background:var(--accent);position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(37,99,235,.4);}
+.hdr-in{max-width:600px;margin:0 auto;padding:13px 18px;display:flex;align-items:center;gap:12px;}
+.hdr-ico{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+.hdr-t h1{font-size:.92rem;font-weight:700;color:#fff;}
+.hdr-t p{font-size:.65rem;color:rgba(255,255,255,.75);margin-top:1px;}
+
+/* PROGRESS */
+.prg{max-width:600px;margin:0 auto;padding:14px 18px 0;}
+.prg-steps{display:flex;align-items:center;gap:5px;}
+.prg-item{display:flex;align-items:center;gap:4px;flex:1;}
+.prg-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;border:2px solid var(--border);background:var(--white);color:var(--muted);transition:all .25s;}
+.prg-dot.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+.prg-dot.done{border-color:var(--green);background:var(--green);color:#fff;}
+.prg-lbl{font-size:.58rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+.prg-lbl.active{color:var(--accent);}
+.prg-line{flex:1;height:2px;background:var(--border);border-radius:2px;}
+.prg-line.done{background:var(--green);}
+
+/* CARDS */
+.wrap{max-width:600px;margin:0 auto;padding:14px 16px;}
+.card{background:var(--white);border-radius:var(--r);box-shadow:0 3px 14px rgba(0,0,0,.07);margin-bottom:14px;border:1px solid var(--border);display:none;}
+.card.show{display:block;}
+.card-hd{padding:14px 18px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-num{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;}
+.num-blue{background:var(--accent-l);color:var(--accent);}
+.num-green{background:var(--green-l);color:var(--green);}
+.num-purple{background:#F3E8FF;color:#7C3AED;}
+.card-title{font-size:.9rem;font-weight:700;}
+.card-sub{font-size:.65rem;color:var(--muted);margin-top:1px;}
+.card-body{padding:16px 18px;}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field label{font-size:.76rem;font-weight:600;color:var(--sub);}
+.field input,.field select,.field textarea{
+  padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--rs);
+  font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--text);
+  background:var(--white);outline:none;width:100%;transition:border-color .2s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.field textarea{resize:none;height:64px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:480px){.row2{grid-template-columns:1fr;}}
 .req{color:var(--red);}
+.ferr{font-size:.7rem;color:var(--red);display:none;margin-top:2px;}
+.has-err input,.has-err select{border-color:var(--red)!important;}
+.has-err .ferr{display:block;}
+
 /* TIPO */
 .tipo-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
-.tipo-card{position:relative;}
-.tipo-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
-.tipo-card label{display:flex;align-items:center;gap:14px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;background:var(--surface);}
-.tipo-card label .tipo-icon{font-size:1.5rem;flex-shrink:0;}
-.tipo-card label .tipo-name{font-size:0.88rem;font-weight:700;}
-.tipo-card label .tipo-desc{font-size:0.7rem;color:var(--text-muted);margin-top:2px;}
-.tipo-card input:checked+label{border-color:var(--accent);background:var(--accent-light);}
-.tipo-card input:checked+label .tipo-name{color:var(--accent);}
+.tipo-opt{position:relative;}
+.tipo-opt input{position:absolute;opacity:0;width:0;height:0;}
+.tipo-opt label{display:flex;align-items:center;gap:13px;padding:12px 15px;border:2px solid var(--border);border-radius:var(--rs);cursor:pointer;background:var(--surface);transition:all .2s;}
+.tipo-opt input:checked+label{border-color:var(--accent);background:var(--accent-l);}
+.tipo-opt input:checked+label .tn{color:var(--accent);}
+.ti{font-size:1.4rem;flex-shrink:0;}
+.tn{font-size:.86rem;font-weight:700;}
+.td{font-size:.68rem;color:var(--muted);margin-top:1px;}
+
 /* TURNO */
-.turno-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.turno-card{position:relative;}
-.turno-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
-.turno-card label{display:flex;align-items:center;gap:10px;padding:13px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;background:var(--surface);}
-.turno-card input:checked+label{border-color:var(--accent);background:var(--accent-light);}
-.turno-name{font-size:0.85rem;font-weight:700;}
-.turno-time{font-size:0.68rem;color:var(--text-muted);}
-.err-msg{font-size:0.72rem;color:var(--red);display:none;margin-top:-6px;margin-bottom:8px;}
+.turno-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.turno-opt{position:relative;}
+.turno-opt input{position:absolute;opacity:0;width:0;height:0;}
+.turno-opt label{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid var(--border);border-radius:var(--rs);cursor:pointer;background:var(--surface);transition:all .2s;}
+.turno-opt input:checked+label{border-color:var(--accent);background:var(--accent-l);}
+.turno-name{font-size:.84rem;font-weight:700;}
+.turno-time{font-size:.67rem;color:var(--muted);}
+
 /* CREW */
-.crew-card{border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;}
-.crew-card.hidden-crew{display:none;}
-.crew-header{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;background:var(--surface);}
-.crew-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
-.crew-avatar.med{background:#EFF6FF;}
-.crew-avatar.con{background:#F0FDF4;}
-.crew-avatar.aux{background:#FFF7ED;}
+.crew{border:1.5px solid var(--border);border-radius:var(--rs);margin-bottom:10px;overflow:hidden;}
+.crew.hide{display:none;}
+.crew-hd{display:flex;align-items:center;gap:11px;padding:12px 15px;cursor:pointer;background:var(--surface);user-select:none;}
+.crew-av{width:33px;height:33px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.av-med{background:#EFF6FF;} .av-con{background:#F0FDF4;} .av-aux{background:#FFF7ED;}
 .crew-info{flex:1;}
-.crew-role{font-size:0.83rem;font-weight:700;}
-.crew-note{font-size:0.68rem;color:var(--text-muted);margin-top:1px;}
-.crew-chevron{color:var(--text-muted);font-size:0.7rem;transition:transform 0.2s;}
-.crew-body{display:none;padding:14px;border-top:1px solid var(--border);}
-.crew-card.open .crew-body{display:block;}
-.crew-card.open .crew-chevron{transform:rotate(180deg);}
-/* PHOTO UPLOAD */
-.photo-upload{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;position:relative;transition:all 0.2s;background:var(--surface);margin-top:4px;}
-.photo-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.photo-upload:hover{border-color:var(--accent);background:var(--accent-light);}
-.photo-upload.has-file{border-color:var(--green);background:var(--green-light);border-style:solid;}
-.photo-upload.uploading{border-color:var(--accent);background:var(--accent-light);border-style:solid;}
-.photo-icon{font-size:1.4rem;margin-bottom:3px;}
-.photo-text{font-size:0.78rem;color:var(--text-sub);}
-.photo-hint{font-size:0.65rem;color:var(--text-muted);margin-top:2px;}
-.photo-status{font-size:0.72rem;font-weight:600;margin-top:5px;display:none;font-family:'JetBrains Mono',monospace;}
-.photo-status.ok{color:var(--green);display:block;}
-.photo-status.uploading{color:var(--accent);display:block;}
-.photo-status.err{color:var(--red);display:block;}
+.crew-role{font-size:.82rem;font-weight:700;}
+.crew-note{font-size:.66rem;color:var(--muted);margin-top:1px;}
+.crew-chev{color:var(--muted);font-size:.68rem;transition:transform .2s;}
+.crew-bd{display:none;padding:14px;border-top:1px solid var(--border);}
+.crew.open .crew-bd{display:block;}
+.crew.open .crew-chev{transform:rotate(180deg);}
+
+/* PHOTO */
+.photo-box{border:2px dashed var(--border);border-radius:var(--rs);padding:14px;text-align:center;cursor:pointer;position:relative;background:var(--surface);transition:all .2s;margin-top:4px;}
+.photo-box input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.photo-box:hover{border-color:var(--accent);background:var(--accent-l);}
+.photo-box.ok{border-color:var(--green);background:var(--green-l);border-style:solid;}
+.ph-ico{font-size:1.3rem;margin-bottom:2px;}
+.ph-txt{font-size:.76rem;color:var(--sub);}
+.ph-hint{font-size:.63rem;color:var(--muted);margin-top:2px;}
+.ph-st{font-size:.7rem;font-weight:600;margin-top:4px;display:none;}
+.ph-st.ok{color:var(--green);display:block;}
+
 /* DOBLADO */
-.doblado-alert{display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:13px 15px;margin-top:10px;}
+.dob-alert{display:none;background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:12px 14px;margin-top:10px;}
+
 /* NAV */
-.nav-buttons{display:flex;gap:10px;margin-top:14px;}
-.btn-back{flex:0 0 auto;padding:11px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text-sub);font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;}
-.btn-next{flex:1;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;}
-.btn-submit-final{width:100%;padding:15px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-submit-final:disabled{background:#6B7280;cursor:not-allowed;}
-/* RESUMEN */
-.resumen-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:10px;}
-.resumen-title{font-size:0.75rem;font-weight:800;color:var(--accent);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.05em;}
-.resumen-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
-.resumen-row:last-child{border-bottom:none;}
-.resumen-key{color:var(--text-muted);font-weight:500;}
-.resumen-val{font-weight:600;text-align:right;max-width:60%;}
+.nav{display:flex;gap:10px;margin-top:14px;}
+.btn-back{padding:11px 15px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--white);color:var(--sub);font-family:'Outfit',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;}
+.btn-next{flex:1;padding:12px;border-radius:var(--rs);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-next:hover{background:#1D4ED8;}
+.btn-next:active{background:#1E40AF;}
+.err-msg{font-size:.7rem;color:var(--red);display:none;margin-bottom:8px;}
+
+/* MODAL CONFIRM */
+.modal-bg{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal-box{background:var(--white);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:600px;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:1.05rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.modal-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;max-height:55vh;overflow-y:auto;}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;}
+.mcard-title{font-size:.72rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.mrow{display:flex;justify-content:space-between;font-size:.79rem;padding:2px 0;border-bottom:1px solid var(--border);}
+.mrow:last-child{border-bottom:none;}
+.mkey{color:var(--muted);}
+.mval{font-weight:600;text-align:right;max-width:55%;}
+.modal-warn{background:var(--yellow-l);border:1.5px solid #FCD34D;border-radius:var(--rs);padding:10px 12px;font-size:.74rem;color:#92400E;margin-bottom:14px;line-height:1.5;}
+.btn-confirm{width:100%;padding:14px;border:none;border-radius:var(--rs);background:var(--green);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-confirm:disabled{background:#6B7280;cursor:not-allowed;}
+.btn-modal-cancel{width:100%;padding:11px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--white);color:var(--sub);font-family:'Outfit',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;margin-top:8px;}
+
 /* SUCCESS */
-.success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;text-align:center;}
-.success-screen.show{display:flex;}
-.success-circle{width:76px;height:76px;border-radius:50%;border:3px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--green);margin-bottom:18px;background:var(--green-light);}
-.success-title{font-size:1.5rem;font-weight:800;margin-bottom:6px;}
-.success-sub{font-size:0.88rem;color:var(--text-muted);margin-bottom:18px;}
-.success-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;font-size:0.83rem;line-height:1.8;max-width:400px;width:100%;}
-.success-sync{font-size:0.7rem;margin-top:8px;font-family:'JetBrains Mono',monospace;}
-.success-sync.ok{color:var(--green);}
-.success-sync.err{color:var(--yellow);}
-.btn-nuevo{padding:13px 26px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;margin-top:1.2rem;}
-.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+.success{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;text-align:center;}
+.success.show{display:flex;}
+.s-circle{width:72px;height:72px;border-radius:50%;border:3px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:var(--green);margin-bottom:16px;background:var(--green-l);}
+.s-title{font-size:1.45rem;font-weight:800;margin-bottom:6px;}
+.s-sub{font-size:.86rem;color:var(--muted);margin-bottom:16px;}
+.s-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:14px 18px;font-size:.82rem;line-height:1.8;max-width:380px;width:100%;}
+.s-sync{font-size:.68rem;margin-top:8px;font-family:monospace;}
+.s-sync.ok{color:var(--green);}
+.s-sync.warn{color:var(--yellow);}
+.btn-new{padding:13px 24px;border-radius:var(--rs);border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:1.2rem;}
+
+.spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* FOOTER */
-.footer-credit{text-align:center;padding:20px;font-size:0.65rem;color:var(--text-muted);}
-.footer-credit strong{color:var(--accent);}
+.footer{text-align:center;padding:18px;font-size:.62rem;color:var(--muted);}
+.footer strong{color:var(--accent);}
 </style>
 </head>
 <body>
 
-<div class="app-header">
-  <div class="header-inner">
-    <div class="header-icon">🚑</div>
-    <div class="header-text">
+<div class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-ico">🚑</div>
+    <div class="hdr-t">
       <h1>Registro de Turno · SCAT</h1>
       <p>Secretaría de Salud · Bogotá D.C.</p>
     </div>
   </div>
 </div>
 
-<div class="progress-wrap">
-  <div class="progress-steps">
-    <div class="step-item"><div class="step-dot active" id="dot-1">1</div><div class="step-label active" id="lbl-1">Móvil</div></div>
-    <div class="step-line" id="line-1"></div>
-    <div class="step-item"><div class="step-dot" id="dot-2">2</div><div class="step-label" id="lbl-2">Personal</div></div>
-    <div class="step-line" id="line-2"></div>
-    <div class="step-item"><div class="step-dot" id="dot-3">3</div><div class="step-label" id="lbl-3">Referente</div></div>
-    <div class="step-line" id="line-3"></div>
-    <div class="step-item"><div class="step-dot" id="dot-4">4</div><div class="step-label" id="lbl-4">Confirmar</div></div>
+<div class="prg">
+  <div class="prg-steps">
+    <div class="prg-item"><div class="prg-dot active" id="d1">1</div><div class="prg-lbl active" id="l1">Móvil</div></div>
+    <div class="prg-line" id="ln1"></div>
+    <div class="prg-item"><div class="prg-dot" id="d2">2</div><div class="prg-lbl" id="l2">Personal</div></div>
+    <div class="prg-line" id="ln2"></div>
+    <div class="prg-item"><div class="prg-dot" id="d3">3</div><div class="prg-lbl" id="l3">Referente</div></div>
   </div>
 </div>
 
-<div class="form-container">
-<form id="main-form" onsubmit="return false;">
+<div class="wrap">
 
-<!-- PASO 1 -->
-<div class="section-card active" id="step-1">
-  <div class="section-head">
-    <div class="section-num blue">01</div>
-    <div><div class="section-title">Identificación de la Móvil</div><div class="section-sub">Datos del vehículo que inicia turno</div></div>
-  </div>
-  <div class="section-body">
-    <div class="field-row">
+<!-- PASO 1: MÓVIL -->
+<div class="card show" id="s1">
+  <div class="card-hd"><div class="card-num num-blue">01</div><div><div class="card-title">Identificación de la Móvil</div><div class="card-sub">Datos del vehículo que inicia turno</div></div></div>
+  <div class="card-body">
+    <div class="row2">
       <div class="field" id="f-subred">
         <label>Subred <span class="req">*</span></label>
-        <select name="subred" id="subred">
-          <option value="">Seleccionar…</option>
-          <option>Norte</option><option>Sur</option>
-          <option>Sur Occidente</option><option>Centro Oriente</option>
-        </select>
-        <div class="field-error">Seleccione la subred</div>
+        <select id="subred"><option value="">Seleccionar…</option><option>Norte</option><option>Sur</option><option>Sur Occidente</option><option>Centro Oriente</option></select>
+        <div class="ferr">Seleccione la subred</div>
       </div>
       <div class="field" id="f-placa">
         <label>Placa / Número <span class="req">*</span></label>
-        <input type="text" name="placa" id="placa" placeholder="EJ: AMB-001" style="text-transform:uppercase">
-        <div class="field-error">Ingrese el número de móvil</div>
+        <input type="text" id="placa" placeholder="Ej: AMB-001" style="text-transform:uppercase">
+        <div class="ferr">Ingrese el número de móvil</div>
       </div>
     </div>
-    <label style="font-size:0.78rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Móvil <span class="req">*</span></label>
+
+    <label style="font-size:.76rem;font-weight:600;color:var(--sub);display:block;margin-bottom:8px">Tipo de Móvil <span class="req">*</span></label>
     <div class="tipo-list">
-      <div class="tipo-card">
-        <input type="radio" name="tipo" id="tipo-med" value="Medicalizada" onchange="onTipoChange()">
-        <label for="tipo-med"><div class="tipo-icon">🏥</div><div><div class="tipo-name">Medicalizada</div><div class="tipo-desc">Médico + Conductor + Auxiliar</div></div></label>
-      </div>
-      <div class="tipo-card">
-        <input type="radio" name="tipo" id="tipo-bas" value="Básica" onchange="onTipoChange()">
-        <label for="tipo-bas"><div class="tipo-icon">🚑</div><div><div class="tipo-name">Básica</div><div class="tipo-desc">Conductor + Auxiliar</div></div></label>
-      </div>
-      <div class="tipo-card">
-        <input type="radio" name="tipo" id="tipo-mec" value="MED" onchange="onTipoChange()">
-        <label for="tipo-mec"><div class="tipo-icon">⚕️</div><div><div class="tipo-name">MED</div><div class="tipo-desc">Médico + Auxiliar/Conductor</div></div></label>
-      </div>
+      <div class="tipo-opt"><input type="radio" name="tipo" id="t-med" value="Medicalizada" onchange="onTipo()"><label for="t-med"><span class="ti">🏥</span><div><div class="tn">Medicalizada</div><div class="td">Médico + Conductor + Auxiliar</div></div></label></div>
+      <div class="tipo-opt"><input type="radio" name="tipo" id="t-bas" value="Básica" onchange="onTipo()"><label for="t-bas"><span class="ti">🚑</span><div><div class="tn">Básica</div><div class="td">Conductor + Auxiliar</div></div></label></div>
+      <div class="tipo-opt"><input type="radio" name="tipo" id="t-mec" value="MED" onchange="onTipo()"><label for="t-mec"><span class="ti">⚕️</span><div><div class="tn">MED</div><div class="td">Médico + Auxiliar/Conductor</div></div></label></div>
     </div>
     <div class="err-msg" id="err-tipo">⚠ Seleccione el tipo de móvil</div>
-    <label style="font-size:0.78rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:8px">Tipo de Turno <span class="req">*</span></label>
-    <div class="turno-grid">
-      <div class="turno-card">
-        <input type="radio" name="turno" id="turno-dia" value="Día (7am-7pm)">
-        <label for="turno-dia"><span style="font-size:1.3rem">☀️</span><div><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></div></label>
-      </div>
-      <div class="turno-card">
-        <input type="radio" name="turno" id="turno-noc" value="Noche (7pm-7am)">
-        <label for="turno-noc"><span style="font-size:1.3rem">🌙</span><div><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></div></label>
-      </div>
+
+    <label style="font-size:.76rem;font-weight:600;color:var(--sub);display:block;margin-bottom:8px">Tipo de Turno <span class="req">*</span></label>
+    <div class="turno-row">
+      <div class="turno-opt"><input type="radio" name="turno" id="tr-dia" value="Día (7am-7pm)"><label for="tr-dia"><span style="font-size:1.2rem">☀️</span><div><div class="turno-name">Día</div><div class="turno-time">7:00 am – 7:00 pm</div></div></label></div>
+      <div class="turno-opt"><input type="radio" name="turno" id="tr-noc" value="Noche (7pm-7am)"><label for="tr-noc"><span style="font-size:1.2rem">🌙</span><div><div class="turno-name">Noche</div><div class="turno-time">7:00 pm – 7:00 am</div></div></label></div>
     </div>
     <div class="err-msg" id="err-turno">⚠ Seleccione el tipo de turno</div>
-    <div class="field-row single" style="margin-top:4px">
-      <div class="field" id="f-inicio">
-        <label>Fecha y hora de inicio <span class="req">*</span></label>
-        <input type="datetime-local" name="inicio" id="inicio">
-        <div class="field-error">Ingrese la fecha y hora</div>
-      </div>
+
+    <div class="field" id="f-inicio">
+      <label>Fecha y hora de inicio <span class="req">*</span></label>
+      <input type="datetime-local" id="inicio">
+      <div class="ferr">Ingrese la fecha y hora</div>
     </div>
-    <div class="nav-buttons"><button type="button" class="btn-next" style="width:100%" onclick="goStep(2)">Siguiente — Personal →</button></div>
+
+    <div class="nav"><button class="btn-next" style="width:100%" onclick="next(2)">Siguiente — Personal →</button></div>
   </div>
 </div>
 
-<!-- PASO 2 -->
-<div class="section-card" id="step-2">
-  <div class="section-head">
-    <div class="section-num green">02</div>
-    <div><div class="section-title">Personal del Turno</div><div class="section-sub" id="personal-sub">Datos de cada tripulante</div></div>
-  </div>
-  <div class="section-body">
+<!-- PASO 2: PERSONAL -->
+<div class="card" id="s2">
+  <div class="card-hd"><div class="card-num num-green">02</div><div><div class="card-title">Personal del Turno</div><div class="card-sub" id="personal-sub">Datos de cada tripulante</div></div></div>
+  <div class="card-body">
 
     <!-- MÉDICO -->
-    <div class="crew-card hidden-crew" id="crew-medico">
-      <div class="crew-header" onclick="toggleCrew('crew-medico')">
-        <div class="crew-avatar med">👨‍⚕️</div>
-        <div class="crew-info"><div class="crew-role">Médico <span class="req">*</span></div><div class="crew-note" id="med-status">Toca para ingresar datos</div></div>
-        <div class="crew-chevron">▼</div>
+    <div class="crew hide" id="cr-med">
+      <div class="crew-hd" onclick="toggleCrew('cr-med')">
+        <div class="crew-av av-med">👨‍⚕️</div>
+        <div class="crew-info"><div class="crew-role">Médico <span class="req">*</span></div><div class="crew-note" id="n-med">Toca para ingresar datos</div></div>
+        <div class="crew-chev">▼</div>
       </div>
-      <div class="crew-body">
-        <div class="field-row">
-          <div class="field" id="f-med-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="med_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
-          <div class="field" id="f-med-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="med_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
+      <div class="crew-bd">
+        <div class="row2">
+          <div class="field" id="f-mn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="med_n" placeholder="Apellidos y nombres"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-mc"><label>Cédula <span class="req">*</span></label><input type="text" id="med_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
         </div>
-        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
-          <div class="photo-upload" id="up-med"><input type="file" id="foto_med" accept="image/*" capture="environment" onchange="handlePhoto(this,'med')"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-med"></div></div>
-          <div class="field-error" id="err-med-foto" style="display:none">Se requiere foto de cédula</div>
+        <div class="field">
+          <label>Foto cédula <span class="req">*</span></label>
+          <div class="photo-box" id="pb-med"><input type="file" id="f-med" accept="image/*" capture="environment" onchange="onPhoto(this,'med')"><div class="ph-ico">📷</div><div class="ph-txt">Tomar o subir foto de cédula</div><div class="ph-hint">Frente de la cédula visible</div><div class="ph-st" id="ps-med"></div></div>
+          <div class="ferr" id="ef-med">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
 
     <!-- CONDUCTOR -->
-    <div class="crew-card open" id="crew-conductor">
-      <div class="crew-header" onclick="toggleCrew('crew-conductor')">
-        <div class="crew-avatar con">🚘</div>
-        <div class="crew-info"><div class="crew-role">Conductor <span class="req">*</span> <span id="medcon-badge" style="display:none;background:#F3E8FF;color:#7C3AED;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:4px">También Auxiliar</span></div><div class="crew-note" id="con-status">Toca para ingresar datos</div></div>
-        <div class="crew-chevron">▼</div>
+    <div class="crew open" id="cr-con">
+      <div class="crew-hd" onclick="toggleCrew('cr-con')">
+        <div class="crew-av av-con">🚘</div>
+        <div class="crew-info"><div class="crew-role">Conductor <span class="req">*</span> <span id="badge-med-con" style="display:none;background:#F3E8FF;color:#7C3AED;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:4px">También Auxiliar</span></div><div class="crew-note" id="n-con">Toca para ingresar datos</div></div>
+        <div class="crew-chev">▼</div>
       </div>
-      <div class="crew-body">
-        <div class="field-row">
-          <div class="field" id="f-con-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="con_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
-          <div class="field" id="f-con-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="con_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
+      <div class="crew-bd">
+        <div class="row2">
+          <div class="field" id="f-cn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="con_n" placeholder="Apellidos y nombres"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-cc"><label>Cédula <span class="req">*</span></label><input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
         </div>
-        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
-          <div class="photo-upload" id="up-con"><input type="file" id="foto_con" accept="image/*" capture="environment" onchange="handlePhoto(this,'con')"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-con"></div></div>
-          <div class="field-error" id="err-con-foto" style="display:none">Se requiere foto de cédula</div>
+        <div class="field">
+          <label>Foto cédula <span class="req">*</span></label>
+          <div class="photo-box" id="pb-con"><input type="file" id="f-con" accept="image/*" capture="environment" onchange="onPhoto(this,'con')"><div class="ph-ico">📷</div><div class="ph-txt">Tomar o subir foto de cédula</div><div class="ph-hint">Frente de la cédula visible</div><div class="ph-st" id="ps-con"></div></div>
+          <div class="ferr" id="ef-con">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
 
     <!-- AUXILIAR -->
-    <div class="crew-card hidden-crew" id="crew-auxiliar">
-      <div class="crew-header" onclick="toggleCrew('crew-auxiliar')">
-        <div class="crew-avatar aux">🩺</div>
-        <div class="crew-info"><div class="crew-role">Auxiliar <span class="req">*</span></div><div class="crew-note" id="aux-status">Toca para ingresar datos</div></div>
-        <div class="crew-chevron">▼</div>
+    <div class="crew hide" id="cr-aux">
+      <div class="crew-hd" onclick="toggleCrew('cr-aux')">
+        <div class="crew-av av-aux">🩺</div>
+        <div class="crew-info"><div class="crew-role">Auxiliar <span class="req">*</span></div><div class="crew-note" id="n-aux">Toca para ingresar datos</div></div>
+        <div class="crew-chev">▼</div>
       </div>
-      <div class="crew-body">
-        <div class="field-row">
-          <div class="field" id="f-aux-nom"><label>Nombre completo <span class="req">*</span></label><input type="text" id="aux_nombre" placeholder="Apellidos y nombres"><div class="field-error">Ingrese nombre</div></div>
-          <div class="field" id="f-aux-ced"><label>Cédula <span class="req">*</span></label><input type="text" id="aux_cedula" placeholder="Sin puntos" inputmode="numeric"><div class="field-error">Ingrese cédula</div></div>
+      <div class="crew-bd">
+        <div class="row2">
+          <div class="field" id="f-an"><label>Nombre completo <span class="req">*</span></label><input type="text" id="aux_n" placeholder="Apellidos y nombres"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-ac"><label>Cédula <span class="req">*</span></label><input type="text" id="aux_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
         </div>
-        <div class="field"><label>Foto cédula (frente) <span class="req">*</span></label>
-          <div class="photo-upload" id="up-aux"><input type="file" id="foto_aux" accept="image/*" capture="environment" onchange="handlePhoto(this,'aux')"><div class="photo-icon">📷</div><div class="photo-text">Tomar o subir foto</div><div class="photo-hint">JPG, PNG — cédula frente visible</div><div class="photo-status" id="ps-aux"></div></div>
-          <div class="field-error" id="err-aux-foto" style="display:none">Se requiere foto de cédula</div>
+        <div class="field">
+          <label>Foto cédula <span class="req">*</span></label>
+          <div class="photo-box" id="pb-aux"><input type="file" id="f-aux" accept="image/*" capture="environment" onchange="onPhoto(this,'aux')"><div class="ph-ico">📷</div><div class="ph-txt">Tomar o subir foto de cédula</div><div class="ph-hint">Frente de la cédula visible</div><div class="ph-st" id="ps-aux"></div></div>
+          <div class="ferr" id="ef-aux">Se requiere foto de cédula</div>
         </div>
       </div>
     </div>
 
     <!-- DOBLADO -->
-    <div class="doblado-alert" id="doblado-alert">
-      <div style="font-weight:800;color:#EA580C;margin-bottom:6px;font-size:0.85rem">⚠️ Personal con turno previo detectado</div>
-      <div id="doblado-detail" style="font-size:0.78rem;color:#9A3412;line-height:1.8"></div>
-      <div style="margin-top:8px;font-size:0.73rem;color:#9A3412">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
-          <input type="checkbox" id="doblado-confirm" style="width:15px;height:15px;accent-color:#F97316">
-          Confirmo que este personal está autorizado para doblar turno
-        </label>
+    <div class="dob-alert" id="dob-alert">
+      <div style="font-weight:800;color:#EA580C;margin-bottom:5px;font-size:.84rem">⚠️ Personal con turno previo hoy</div>
+      <div id="dob-detail" style="font-size:.76rem;color:#9A3412;line-height:1.7"></div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:.72rem;color:#9A3412;margin-top:8px">
+        <input type="checkbox" id="dob-ok" style="width:15px;height:15px;accent-color:#F97316">
+        Confirmo que está autorizado para doblar turno
+      </label>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="back(1)">← Volver</button>
+      <button class="btn-next" onclick="next(3)">Siguiente — Referente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASO 3: REFERENTE -->
+<div class="card" id="s3">
+  <div class="card-hd"><div class="card-num num-purple">03</div><div><div class="card-title">Profesional que Registra</div><div class="card-sub">Responsable de la veracidad</div></div></div>
+  <div class="card-body">
+    <div class="row2">
+      <div class="field" id="f-rn">
+        <label>Su nombre completo <span class="req">*</span></label>
+        <input type="text" id="ref_n" placeholder="Apellidos y nombres">
+        <div class="ferr">Ingrese su nombre</div>
+      </div>
+      <div class="field">
+        <label>Su subred</label>
+        <select id="ref_s"><option value="">Seleccionar…</option><option>Norte</option><option>Sur</option><option>Sur Occidente</option><option>Centro Oriente</option></select>
       </div>
     </div>
-
-    <div class="nav-buttons">
-      <button type="button" class="btn-back" onclick="goStep(1)">← Volver</button>
-      <button type="button" class="btn-next" onclick="goStep(3)">Siguiente →</button>
+    <div class="field">
+      <label>Observaciones <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+      <textarea id="obs" placeholder="Novedad, cambio de personal, etc."></textarea>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="back(2)">← Volver</button>
+      <button class="btn-next" onclick="openConfirm()">Revisar y Confirmar →</button>
     </div>
   </div>
 </div>
 
-<!-- PASO 3 -->
-<div class="section-card" id="step-3">
-  <div class="section-head">
-    <div class="section-num purple">03</div>
-    <div><div class="section-title">Profesional que Registra</div><div class="section-sub">Responsable de la veracidad de los datos</div></div>
-  </div>
-  <div class="section-body">
-    <div class="field-row">
-      <div class="field" id="f-ref-nom"><label>Su nombre completo <span class="req">*</span></label><input type="text" id="referente" placeholder="Apellidos y nombres"><div class="field-error">Ingrese su nombre</div></div>
-      <div class="field"><label>Su subred</label><select id="ref_subred"><option value="">Seleccionar…</option><option>Norte</option><option>Sur</option><option>Sur Occidente</option><option>Centro Oriente</option></select></div>
-    </div>
-    <div class="field-row single">
-      <div class="field"><label>Observaciones <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label><textarea id="observaciones" placeholder="Novedad, cambio de personal, etc."></textarea></div>
-    </div>
-    <div class="nav-buttons">
-      <button type="button" class="btn-back" onclick="goStep(2)">← Volver</button>
-      <button type="button" class="btn-next" onclick="goStep(4)">Revisar →</button>
-    </div>
-  </div>
-</div>
-
-<!-- PASO 4 -->
-<div class="section-card" id="step-4">
-  <div class="section-head">
-    <div class="section-num blue">04</div>
-    <div><div class="section-title">Confirmar Registro</div><div class="section-sub">Verifique los datos antes de enviar</div></div>
-  </div>
-  <div class="section-body">
-    <div id="resumen-content"></div>
-    <div style="background:var(--yellow-light);border:1.5px solid #FCD34D;border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;font-size:0.75rem;color:#92400E;line-height:1.5">
-      ⚠️ <strong>Al enviar</strong>, confirma que los datos son verídicos.
-    </div>
-    <button type="button" class="btn-submit-final" id="submit-btn" onclick="submitForm()">✓ CONFIRMAR Y REGISTRAR TURNO</button>
-    <div class="nav-buttons" style="margin-top:10px"><button type="button" class="btn-back" style="flex:1" onclick="goStep(3)">← Editar datos</button></div>
-  </div>
-</div>
-
-</form>
-</div>
+</div><!-- /wrap -->
 
 <!-- SUCCESS -->
-<div class="success-screen" id="success-screen">
-  <div class="success-circle">✓</div>
-  <div class="success-title">¡Turno Registrado!</div>
-  <div class="success-sub">Los datos han sido enviados correctamente.</div>
-  <div class="success-detail" id="success-detail-text"></div>
-  <div class="success-sync" id="success-sync-msg"></div>
-  <button class="btn-nuevo" onclick="resetForm()">+ Registrar otro turno</button>
+<div class="success" id="success">
+  <div class="s-circle">✓</div>
+  <div class="s-title">¡Turno Registrado!</div>
+  <div class="s-sub">Los datos fueron enviados correctamente.</div>
+  <div class="s-detail" id="s-detail"></div>
+  <div class="s-sync" id="s-sync"></div>
+  <button class="btn-new" onclick="resetAll()">+ Registrar otro turno</button>
 </div>
 
-<div class="footer-credit">Sistema SCAT · Desarrollado por <strong>Ing. Edisson Macías</strong> · Secretaría de Salud Bogotá</div>
+<!-- MODAL CONFIRM -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-title">📋 Confirmar Registro</div>
+    <div class="modal-rows" id="modal-rows"></div>
+    <div class="modal-warn">⚠️ <strong>Al confirmar</strong>, certifica que los datos son verídicos. Se registrará la hora exacta de envío.</div>
+    <button class="btn-confirm" id="btn-confirm" onclick="submitForm()">✓ CONFIRMAR Y REGISTRAR</button>
+    <button class="btn-modal-cancel" onclick="closeModal()">← Volver a editar</button>
+  </div>
+</div>
+
+<div class="footer">Sistema SCAT · Desarrollado por <strong>Ing. Edisson Macías</strong> · Secretaría de Salud Bogotá</div>
 
 <script>
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
-const LOCAL_KEY = 'scat_registros_v3';
-let currentStep = 1;
-let tipoActual = '';
-let photoUrls = { med: '', con: '', aux: '' };
-let photoFiles = { med: null, con: null, aux: null };
+const SHEET = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
+const LOCAL = 'scat_v3';
 
-window.addEventListener('DOMContentLoaded', () => {
+let step = 1;
+let tipo = '';
+let photos = { med:'', con:'', aux:'' }; // '' = no hay, 'ok' = tiene archivo
+let photoFiles = { med:null, con:null, aux:null };
+
+// ── INIT ──
+window.onload = () => {
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('inicio').value = now.toISOString().slice(0,16);
-});
+};
 
-// ── TIPO ──
-function onTipoChange() {
-  tipoActual = document.querySelector('input[name="tipo"]:checked')?.value || '';
-  const medCard = document.getElementById('crew-medico');
-  const auxCard = document.getElementById('crew-auxiliar');
-  const badge   = document.getElementById('medcon-badge');
-  const sub     = document.getElementById('personal-sub');
-  photoUrls = { med: '', con: '', aux: '' };
-  photoFiles = { med: null, con: null, aux: null };
+// ── TIPO DE MÓVIL ──
+function onTipo() {
+  tipo = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const med = document.getElementById('cr-med');
+  const aux = document.getElementById('cr-aux');
+  const badge = document.getElementById('badge-med-con');
+  const sub = document.getElementById('personal-sub');
 
-  if (tipoActual === 'Medicalizada') {
-    medCard.classList.remove('hidden-crew'); auxCard.classList.remove('hidden-crew');
-    badge.style.display = 'none'; sub.textContent = 'Médico + Conductor + Auxiliar';
-  } else if (tipoActual === 'Básica') {
-    medCard.classList.add('hidden-crew'); auxCard.classList.remove('hidden-crew');
-    badge.style.display = 'none'; sub.textContent = 'Conductor + Auxiliar';
-    document.getElementById('med_nombre').value = '';
-    document.getElementById('med_cedula').value = '';
-  } else if (tipoActual === 'MED') {
-    medCard.classList.remove('hidden-crew'); auxCard.classList.add('hidden-crew');
-    badge.style.display = 'inline'; sub.textContent = 'Médico + Auxiliar-Conductor';
-    document.getElementById('aux_nombre').value = '';
-    document.getElementById('aux_cedula').value = '';
-  }
-}
-
-// ── FOTO: solo marca el archivo localmente, sube después del envío ──
-function handlePhoto(input, role) {
-  if (!input.files[0]) return;
-  const file  = input.files[0];
-  const area  = document.getElementById('up-' + role);
-  const status= document.getElementById('ps-' + role);
-
-  // Guardar referencia al archivo para subir después
-  photoFiles[role] = file;
-  photoUrls[role]  = '__pending__'; // marca que hay foto pendiente
-
-  area.classList.add('has-file');
-  status.className = 'photo-status ok';
-  status.textContent = '✓ ' + file.name + ' (se subirá al enviar)';
-  const errEl = document.getElementById('err-' + role + '-foto');
-  if (errEl) errEl.style.display = 'none';
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload  = () => resolve(r.result);
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
-}
-
-// Sube una foto a Drive en segundo plano (no bloquea)
-async function uploadPhotoBackground(role, recordId) {
-  const file = photoFiles[role];
-  if (!file) return;
-  try {
-    const b64      = await fileToBase64(file);
-    const filename = `SCAT_${role}_${recordId}.jpg`;
-    const res = await fetch(SHEET_URL, {
-      method : 'POST',
-      body   : JSON.stringify({ action:'uploadPhoto', base64: b64.split(',')[1], mimeType: file.type, filename, recordId: String(recordId), role }),
-      headers: { 'Content-Type': 'text/plain' }
-    });
-    const data = await res.json();
-    if (data.status === 'ok') {
-      photoUrls[role] = data.url;
-      console.log('Foto ' + role + ' subida:', data.url);
-    }
-  } catch(e) {
-    console.warn('Foto ' + role + ' no pudo subirse:', e);
+  if (tipo === 'Medicalizada') {
+    med.classList.remove('hide'); aux.classList.remove('hide');
+    badge.style.display = 'none';
+    sub.textContent = 'Médico + Conductor + Auxiliar';
+  } else if (tipo === 'Básica') {
+    med.classList.add('hide'); aux.classList.remove('hide');
+    badge.style.display = 'none';
+    sub.textContent = 'Conductor + Auxiliar';
+    document.getElementById('med_n').value = '';
+    document.getElementById('med_c').value = '';
+    photos.med = ''; photoFiles.med = null;
+  } else if (tipo === 'MED') {
+    med.classList.remove('hide'); aux.classList.add('hide');
+    badge.style.display = 'inline';
+    sub.textContent = 'Médico + Auxiliar/Conductor';
+    document.getElementById('aux_n').value = '';
+    document.getElementById('aux_c').value = '';
+    photos.aux = ''; photoFiles.aux = null;
   }
 }
 
 // ── NAVEGACIÓN ──
-function goStep(n) {
-  if (n > currentStep && !validateStep(currentStep)) return;
-  document.getElementById('step-' + currentStep).classList.remove('active');
-  document.getElementById('step-' + n).classList.add('active');
-  currentStep = n;
-  updateProgress(n);
-  if (n === 4) buildResumen();
-  window.scrollTo({ top:0, behavior:'smooth' });
+function next(n) {
+  if (!validate(step)) return;
+  goTo(n);
+}
+function back(n) { goTo(n); }
+
+function goTo(n) {
+  document.getElementById('s' + step).classList.remove('show');
+  document.getElementById('s' + n).classList.add('show');
+  step = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function updateProgress(n) {
-  for (let i=1; i<=4; i++) {
-    const dot = document.getElementById('dot-'+i);
-    const lbl = document.getElementById('lbl-'+i);
-    dot.className = 'step-dot'+(i<n?' done':i===n?' active':'');
-    dot.textContent = i<n?'✓':i;
-    if (lbl) lbl.className = 'step-label'+(i===n?' active':'');
-    const line = document.getElementById('line-'+i);
-    if (line) line.className = 'step-line'+(i<n?' done':'');
+function updateProgress() {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('d' + i);
+    const lbl = document.getElementById('l' + i);
+    const line = document.getElementById('ln' + i);
+    dot.className = 'prg-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    dot.textContent = i < step ? '✓' : i;
+    lbl.className = 'prg-lbl' + (i === step ? ' active' : '');
+    if (line) line.className = 'prg-line' + (i < step ? ' done' : '');
   }
 }
 
 // ── VALIDACIÓN ──
-function validateStep(step) {
+function validate(s) {
   let ok = true;
-  const clr = id => { const f=document.getElementById(id); if(f) f.classList.remove('has-error'); };
-  const err = id => { const f=document.getElementById(id); if(f) f.classList.add('has-error'); ok=false; };
+  const clr = id => document.getElementById(id)?.classList.remove('has-err');
+  const err = id => { document.getElementById(id)?.classList.add('has-err'); ok = false; };
 
-  if (step===1) {
+  if (s === 1) {
     clr('f-subred'); clr('f-placa'); clr('f-inicio');
-    document.getElementById('err-tipo').style.display='none';
-    document.getElementById('err-turno').style.display='none';
+    document.getElementById('err-tipo').style.display = 'none';
+    document.getElementById('err-turno').style.display = 'none';
     if (!document.getElementById('subred').value) err('f-subred');
     if (!document.getElementById('placa').value.trim()) err('f-placa');
-    if (!document.querySelector('input[name="tipo"]:checked')) { document.getElementById('err-tipo').style.display='block'; ok=false; }
-    if (!document.querySelector('input[name="turno"]:checked')) { document.getElementById('err-turno').style.display='block'; ok=false; }
+    if (!document.querySelector('input[name="tipo"]:checked')) { document.getElementById('err-tipo').style.display = 'block'; ok = false; }
+    if (!document.querySelector('input[name="turno"]:checked')) { document.getElementById('err-turno').style.display = 'block'; ok = false; }
     if (!document.getElementById('inicio').value) err('f-inicio');
   }
 
-  if (step===2) {
-    clr('f-con-nom'); clr('f-con-ced'); clr('f-med-nom'); clr('f-med-ced'); clr('f-aux-nom'); clr('f-aux-ced');
+  if (s === 2) {
+    // Conductor siempre
+    clr('f-cn'); clr('f-cc');
+    if (!v('con_n')) { err('f-cn'); open('cr-con'); }
+    if (!v('con_c')) { err('f-cc'); open('cr-con'); }
+    if (!photos.con) { show('ef-con'); open('cr-con'); ok = false; }
+    else hide('ef-con');
 
-    if (!document.getElementById('con_nombre').value.trim()) { err('f-con-nom'); document.getElementById('crew-conductor').classList.add('open'); }
-    if (!document.getElementById('con_cedula').value.trim()) { err('f-con-ced'); document.getElementById('crew-conductor').classList.add('open'); }
-    if (!photoUrls.con) { document.getElementById('err-con-foto').style.display='block'; document.getElementById('crew-conductor').classList.add('open'); ok=false; }
-
-    if (tipoActual!=='MED') {
-      if (!document.getElementById('aux_nombre').value.trim()) { err('f-aux-nom'); document.getElementById('crew-auxiliar').classList.add('open'); }
-      if (!document.getElementById('aux_cedula').value.trim()) { err('f-aux-ced'); document.getElementById('crew-auxiliar').classList.add('open'); }
-      if (!photoUrls.aux) { document.getElementById('err-aux-foto').style.display='block'; document.getElementById('crew-auxiliar').classList.add('open'); ok=false; }
+    // Auxiliar (no en MED)
+    if (tipo !== 'MED') {
+      clr('f-an'); clr('f-ac');
+      if (!v('aux_n')) { err('f-an'); open('cr-aux'); }
+      if (!v('aux_c')) { err('f-ac'); open('cr-aux'); }
+      if (!photos.aux) { show('ef-aux'); open('cr-aux'); ok = false; }
+      else hide('ef-aux');
     }
 
-    if (tipoActual==='Medicalizada'||tipoActual==='MED') {
-      if (!document.getElementById('med_nombre').value.trim()) { err('f-med-nom'); document.getElementById('crew-medico').classList.add('open'); }
-      if (!document.getElementById('med_cedula').value.trim()) { err('f-med-ced'); document.getElementById('crew-medico').classList.add('open'); }
-      if (!photoUrls.med) { document.getElementById('err-med-foto').style.display='block'; document.getElementById('crew-medico').classList.add('open'); ok=false; }
+    // Médico (Medicalizada y MED)
+    if (tipo === 'Medicalizada' || tipo === 'MED') {
+      clr('f-mn'); clr('f-mc');
+      if (!v('med_n')) { err('f-mn'); open('cr-med'); }
+      if (!v('med_c')) { err('f-mc'); open('cr-med'); }
+      if (!photos.med) { show('ef-med'); open('cr-med'); ok = false; }
+      else hide('ef-med');
     }
 
+    // Doblado
     if (ok) checkDoblado();
-    const alertEl = document.getElementById('doblado-alert');
-    if (alertEl.style.display!=='none' && !document.getElementById('doblado-confirm').checked) {
-      alertEl.style.borderColor='#EF4444';
-      alertEl.scrollIntoView({behavior:'smooth',block:'center'});
-      ok=false;
+    const da = document.getElementById('dob-alert');
+    if (da.style.display !== 'none' && !document.getElementById('dob-ok').checked) {
+      da.style.borderColor = '#EF4444';
+      da.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ok = false;
     }
   }
 
-  if (step===3) {
-    clr('f-ref-nom');
-    if (!document.getElementById('referente').value.trim()) err('f-ref-nom');
+  if (s === 3) {
+    clr('f-rn');
+    if (!v('ref_n')) err('f-rn');
   }
 
-  if (!ok) { const fe=document.querySelector('.has-error'); if(fe) fe.scrollIntoView({behavior:'smooth',block:'center'}); }
+  if (!ok) {
+    const fe = document.querySelector('.has-err');
+    if (fe) fe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   return ok;
 }
+
+const v = id => document.getElementById(id)?.value?.trim() || '';
+const show = id => { const e = document.getElementById(id); if(e) e.style.display='block'; };
+const hide = id => { const e = document.getElementById(id); if(e) e.style.display='none'; };
+const open = id => document.getElementById(id)?.classList.add('open');
 
 // ── CREW ──
 function toggleCrew(id) { document.getElementById(id).classList.toggle('open'); }
 
+// ── FOTOS ──
+function onPhoto(input, role) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  photoFiles[role] = file;
+  photos[role] = 'ok';
+  const pb = document.getElementById('pb-' + role);
+  const ps = document.getElementById('ps-' + role);
+  pb.classList.add('ok');
+  ps.className = 'ph-st ok';
+  ps.textContent = '✓ ' + file.name;
+  hide('ef-' + role);
+  // Update crew note
+  const nameEl = document.getElementById('n-' + role);
+  if (nameEl && nameEl.textContent === 'Toca para ingresar datos') return;
+}
+
 // ── DOBLADO ──
 async function checkDoblado() {
-  const conCed = document.getElementById('con_cedula').value.trim();
-  const auxCed = document.getElementById('aux_cedula').value.trim();
-  const medCed = document.getElementById('med_cedula').value.trim();
+  const cedulas = [
+    { ced: v('con_c'), nombre: v('con_n'), rol: 'Conductor' },
+    { ced: v('aux_c'), nombre: v('aux_n'), rol: 'Auxiliar' },
+    { ced: v('med_c'), nombre: v('med_n'), rol: 'Médico' },
+  ].filter(p => p.ced);
 
-  let activeRecords = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
+  let activos = JSON.parse(localStorage.getItem(LOCAL) || '[]');
   try {
     const data = await new Promise((resolve) => {
-      const cbName = '_scatCbD_'+Date.now();
-      const script = document.createElement('script');
-      window[cbName] = (d) => { delete window[cbName]; script.remove(); resolve(d); };
-      script.onerror = () => resolve(null);
-      script.src = SHEET_URL+'?action=getAll&callback='+cbName;
-      setTimeout(()=>resolve(null), 5000);
-      document.head.appendChild(script);
+      const cb = '_dob_' + Date.now();
+      const sc = document.createElement('script');
+      window[cb] = d => { delete window[cb]; sc.remove(); resolve(d); };
+      sc.onerror = () => resolve(null);
+      sc.src = SHEET + '?action=getAll&callback=' + cb;
+      setTimeout(() => resolve(null), 4000);
+      document.head.appendChild(sc);
     });
-    if (data && data.status==='ok') activeRecords = data.active||[];
-  } catch{}
+    if (data?.status === 'ok') activos = data.active || [];
+  } catch {}
 
   const hoy = new Date().toDateString();
-  const hoyRecs = activeRecords.filter(r => new Date(r.inicio).toDateString()===hoy);
+  const hoyRecs = activos.filter(r => new Date(r.inicio).toDateString() === hoy);
+  const yaEsta = ced => hoyRecs.find(r => r.con_cedula===ced || r.aux_cedula===ced || r.med_cedula===ced);
 
-  const yaEnTurno = ced => hoyRecs.find(r => r.con_cedula===ced||r.aux_cedula===ced||r.med_cedula===ced);
-
-  const checks = [
-    {cedula:conCed, nombre:document.getElementById('con_nombre').value.trim(), rol:'Conductor'},
-    {cedula:auxCed, nombre:document.getElementById('aux_nombre').value.trim(), rol:'Auxiliar'},
-    {cedula:medCed, nombre:document.getElementById('med_nombre').value.trim(), rol:'Médico'},
-  ].filter(p=>p.cedula);
-
-  const doblados = checks.map(p=>({...p,turno:yaEnTurno(p.cedula)})).filter(p=>p.turno);
-  const alertEl  = document.getElementById('doblado-alert');
+  const doblados = cedulas.map(p => ({ ...p, turno: yaEsta(p.ced) })).filter(p => p.turno);
+  const da = document.getElementById('dob-alert');
 
   if (doblados.length) {
-    alertEl.style.display='block'; alertEl.style.borderColor='#F97316';
-    document.getElementById('doblado-confirm').checked=false;
-    document.getElementById('doblado-detail').innerHTML = doblados.map(p=>
-      `🟠 <strong>${p.rol} ${p.nombre}</strong> — Ya en móvil <strong>${p.turno.placa}</strong> (${p.turno.turno})`
+    da.style.display = 'block';
+    da.style.borderColor = '#F97316';
+    document.getElementById('dob-ok').checked = false;
+    document.getElementById('dob-detail').innerHTML = doblados.map(p =>
+      `🟠 <strong>${p.rol} ${p.nombre}</strong> — ya en móvil <strong>${p.turno.placa}</strong>`
     ).join('<br>');
   } else {
-    alertEl.style.display='none';
+    da.style.display = 'none';
   }
 }
 
-// ── RESUMEN ──
-function buildResumen() {
-  const v = n => document.getElementById(n)?.value||'';
-  const r = (k,val) => val?`<div class="resumen-row"><span class="resumen-key">${k}</span><span class="resumen-val">${val}</span></div>`:'';
-  const tipo  = document.querySelector('input[name="tipo"]:checked')?.value||'';
-  const turno = document.querySelector('input[name="turno"]:checked')?.value||'';
+// ── ABRIR MODAL CONFIRM ──
+function openConfirm() {
+  if (!validate(3)) return;
+
+  const tipo = document.querySelector('input[name="tipo"]:checked')?.value || '';
+  const turno = document.querySelector('input[name="turno"]:checked')?.value || '';
   const inicio = v('inicio');
   const inicioFmt = inicio ? new Date(inicio).toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
 
-  const medHtml = (tipo==='Medicalizada'||tipo==='MED')&&v('med_nombre') ?
-    `<div class="resumen-card"><div class="resumen-title">👨‍⚕️ Médico</div>${r('Nombre',v('med_nombre'))}${r('Cédula',v('med_cedula'))}${r('Foto',photoUrls.med?'✅ Subida':'❌ Falta')}</div>`:'' ;
+  const row = (k, val) => val ? `<div class="mrow"><span class="mkey">${k}</span><span class="mval">${val}</span></div>` : '';
 
-  const auxHtml = tipo!=='MED' && v('aux_nombre') ?
-    `<div class="resumen-card"><div class="resumen-title">🩺 Auxiliar</div>${r('Nombre',v('aux_nombre'))}${r('Cédula',v('aux_cedula'))}${r('Foto',photoUrls.aux?'✅ Subida':'❌ Falta')}</div>`:'';
+  let html = `
+    <div class="mcard"><div class="mcard-title">🚑 Móvil</div>${row('Subred', v('subred'))}${row('Placa', v('placa').toUpperCase())}${row('Tipo', tipo)}${row('Turno', turno)}${row('Inicio', inicioFmt)}</div>`;
 
-  document.getElementById('resumen-content').innerHTML = `
-    <div class="resumen-card"><div class="resumen-title">🚑 Móvil</div>${r('Subred',v('subred'))}${r('Placa',v('placa').toUpperCase())}${r('Tipo',tipo)}${r('Turno',turno)}${r('Inicio',inicioFmt)}</div>
-    ${medHtml}
-    <div class="resumen-card"><div class="resumen-title">🚘 Conductor${tipo==='MED'?' / Auxiliar':''}</div>${r('Nombre',v('con_nombre'))}${r('Cédula',v('con_cedula'))}${r('Foto',photoUrls.con?'✅ Subida':'❌ Falta')}</div>
-    ${auxHtml}
-    <div class="resumen-card"><div class="resumen-title">📋 Referente</div>${r('Nombre',v('referente'))}${r('Observaciones',v('observaciones'))}</div>`;
+  if (tipo === 'Medicalizada' || tipo === 'MED') {
+    html += `<div class="mcard"><div class="mcard-title">👨‍⚕️ Médico</div>${row('Nombre', v('med_n'))}${row('Cédula', v('med_c'))}${row('Foto', photos.med ? '✅ Lista' : '—')}</div>`;
+  }
+
+  html += `<div class="mcard"><div class="mcard-title">🚘 Conductor${tipo==='MED'?' / Auxiliar':''}</div>${row('Nombre', v('con_n'))}${row('Cédula', v('con_c'))}${row('Foto', photos.con ? '✅ Lista' : '—')}</div>`;
+
+  if (tipo !== 'MED') {
+    html += `<div class="mcard"><div class="mcard-title">🩺 Auxiliar</div>${row('Nombre', v('aux_n'))}${row('Cédula', v('aux_c'))}${row('Foto', photos.aux ? '✅ Lista' : '—')}</div>`;
+  }
+
+  html += `<div class="mcard"><div class="mcard-title">📋 Referente</div>${row('Nombre', v('ref_n'))}${row('Subred', v('ref_s'))}${row('Observaciones', v('obs'))}</div>`;
+
+  document.getElementById('modal-rows').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
 }
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
 // ── SUBMIT ──
 async function submitForm() {
-  if (!validateStep(3)) { goStep(3); return; }
-  const btn = document.getElementById('submit-btn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Guardando...';
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Registrando...';
 
-  const v = n => document.getElementById(n)?.value?.trim()||'';
-  const tipo = document.querySelector('input[name="tipo"]:checked')?.value||'';
-
+  const tipo = document.querySelector('input[name="tipo"]:checked')?.value || '';
   const obj = {
     id: Date.now(), ts: Date.now(),
     subred: v('subred'), placa: v('placa').toUpperCase(),
-    tipo, turno: document.querySelector('input[name="turno"]:checked')?.value||'',
+    tipo, turno: document.querySelector('input[name="turno"]:checked')?.value || '',
     inicio: v('inicio'),
-    med_nombre: v('med_nombre'), med_cedula: v('med_cedula'), med_foto_url: photoUrls.med||'',
-    con_nombre: v('con_nombre'), con_cedula: v('con_cedula'), con_foto_url: photoUrls.con||'',
-    aux_nombre: tipo==='MED'?v('con_nombre'):v('aux_nombre'),
-    aux_cedula: tipo==='MED'?v('con_cedula'):v('aux_cedula'),
-    aux_foto_url: tipo==='MED' ? ((photoUrls.con && photoUrls.con !== '__pending__') ? photoUrls.con : '') : ((photoUrls.aux && photoUrls.aux !== '__pending__') ? photoUrls.aux : ''),
-    referente: v('referente'), ref_subred: v('ref_subred'),
-    observaciones: v('observaciones'), estado: 'activo',
-    doblado: document.getElementById('doblado-alert').style.display!=='none'?'si':'no'
+    med_nombre: v('med_n'), med_cedula: v('med_c'), med_foto_url: '',
+    con_nombre: v('con_n'), con_cedula: v('con_c'), con_foto_url: '',
+    aux_nombre: tipo === 'MED' ? v('con_n') : v('aux_n'),
+    aux_cedula: tipo === 'MED' ? v('con_c') : v('aux_c'),
+    aux_foto_url: '',
+    referente: v('ref_n'), ref_subred: v('ref_s'),
+    observaciones: v('obs'), estado: 'activo',
+    doblado: document.getElementById('dob-alert').style.display !== 'none' ? 'si' : 'no'
   };
 
-  // 1. Guardar local inmediatamente
-  const db = JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
-  db.push(obj); localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
+  // Guardar local
+  const db = JSON.parse(localStorage.getItem(LOCAL) || '[]');
+  db.push(obj);
+  localStorage.setItem(LOCAL, JSON.stringify(db));
 
-  // 2. Enviar a Google Sheets — UN solo método, sin esperar
-  const params = new URLSearchParams({action:'register', record:JSON.stringify(obj)});
-  fetch(SHEET_URL+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
+  // Enviar a Sheets — fire and forget, sin await
+  const params = new URLSearchParams({ action: 'register', record: JSON.stringify(obj) });
+  fetch(SHEET + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
 
-  // 3. Subir fotos en segundo plano
+  // Subir fotos en segundo plano
   setTimeout(() => {
-    if (photoFiles.med) uploadPhotoBackground('med', obj.id);
-    if (photoFiles.con) uploadPhotoBackground('con', obj.id);
-    if (photoFiles.aux) uploadPhotoBackground('aux', obj.id);
-  }, 1000);
+    if (photoFiles.med) uploadPhoto('med', obj.id);
+    if (photoFiles.con) uploadPhoto('con', obj.id);
+    if (tipo !== 'MED' && photoFiles.aux) uploadPhoto('aux', obj.id);
+  }, 800);
 
-  const synced = true; // siempre mostramos éxito — el dato está guardado local
+  closeModal();
 
-  document.getElementById('success-detail-text').innerHTML =
-    `<strong>${obj.placa} · ${obj.subred} · ${tipo}</strong><br>
-    ${obj.med_nombre?'Médico: '+obj.med_nombre+'<br>':''}
+  // Mostrar éxito
+  document.getElementById('s' + step).classList.remove('show');
+  document.getElementById('success').classList.add('show');
+
+  document.getElementById('s-detail').innerHTML =
+    `<strong>${obj.placa} · Subred ${obj.subred} · ${tipo}</strong><br>
+    ${obj.med_nombre ? 'Médico: ' + obj.med_nombre + '<br>' : ''}
     Conductor: ${obj.con_nombre}<br>
-    ${tipo!=='MED'?'Auxiliar: '+obj.aux_nombre+'<br>':''}
+    ${tipo !== 'MED' ? 'Auxiliar: ' + obj.aux_nombre + '<br>' : ''}
     Referente: ${obj.referente}<br>
-    Hora: ${new Date().toLocaleTimeString('es-CO',{hour12:false})}`;
+    Hora: ${new Date().toLocaleTimeString('es-CO', { hour12: false })}`;
 
-  const syncEl = document.getElementById('success-sync-msg');
-  syncEl.textContent = synced ? '✓ Sincronizado con Google Sheets' : '⚠ Guardado localmente';
-  syncEl.className = 'success-sync '+(synced?'ok':'err');
-  document.getElementById('success-screen').classList.add('show');
-  btn.disabled=false; btn.innerHTML='✓ CONFIRMAR Y REGISTRAR TURNO';
+  document.getElementById('s-sync').textContent = '✓ Turno guardado — datos enviados a Google Sheets';
+  document.getElementById('s-sync').className = 's-sync ok';
+
+  btn.disabled = false;
+  btn.innerHTML = '✓ CONFIRMAR Y REGISTRAR';
+}
+
+// ── FOTO UPLOAD BACKGROUND ──
+async function uploadPhoto(role, recordId) {
+  const file = photoFiles[role];
+  if (!file) return;
+  try {
+    const b64 = await toBase64(file);
+    await fetch(SHEET, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'uploadPhoto', base64: b64.split(',')[1], mimeType: file.type, filename: `SCAT_${role}_${recordId}.jpg`, recordId: String(recordId), role }),
+      headers: { 'Content-Type': 'text/plain' }
+    });
+  } catch (e) { console.warn('Photo upload failed:', e); }
+}
+
+function toBase64(file) {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
 }
 
 // ── RESET ──
-function resetForm() {
-  document.getElementById('main-form').reset();
-  document.getElementById('success-screen').classList.remove('show');
-  document.querySelectorAll('.photo-upload').forEach(el=>{el.classList.remove('has-file','uploading');});
-  document.querySelectorAll('.photo-status').forEach(el=>{el.textContent='';el.className='photo-status';});
-  document.querySelectorAll('.has-error').forEach(el=>el.classList.remove('has-error'));
-  document.getElementById('crew-medico').classList.add('hidden-crew');
-  document.getElementById('crew-auxiliar').classList.add('hidden-crew');
-  document.getElementById('doblado-alert').style.display='none';
-  photoUrls={med:'',con:'',aux:''};
-  photoFiles={med:null,con:null,aux:null};
-  tipoActual='';
-  const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
-  document.getElementById('inicio').value=now.toISOString().slice(0,16);
-  goStep(1);
+function resetAll() {
+  document.querySelectorAll('input[type=text], select, textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+  document.querySelectorAll('.photo-box').forEach(el => el.classList.remove('ok'));
+  document.querySelectorAll('.ph-st').forEach(el => { el.textContent = ''; el.className = 'ph-st'; });
+  document.querySelectorAll('.has-err').forEach(el => el.classList.remove('has-err'));
+  document.querySelectorAll('.err-msg').forEach(el => el.style.display = 'none');
+  document.getElementById('cr-med').classList.add('hide');
+  document.getElementById('cr-aux').classList.add('hide');
+  document.getElementById('dob-alert').style.display = 'none';
+  document.getElementById('success').classList.remove('show');
+  photos = { med: '', con: '', aux: '' };
+  photoFiles = { med: null, con: null, aux: null };
+  tipo = '';
+  step = 1;
+  updateProgress();
+  document.getElementById('s1').classList.add('show');
+  const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('inicio').value = now.toISOString().slice(0, 16);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Live crew status
-document.addEventListener('input', e => {
-  ['med','con','aux'].forEach(p => {
-    const val = document.getElementById(p+'_nombre')?.value.trim();
-    const el  = document.getElementById(p+'-status');
-    if (el) el.textContent = val||'Toca para ingresar datos';
+// Live crew notes
+document.addEventListener('input', () => {
+  [['med_n','n-med'],['con_n','n-con'],['aux_n','n-aux']].forEach(([src, tgt]) => {
+    const val = document.getElementById(src)?.value.trim();
+    const el = document.getElementById(tgt);
+    if (el && val) el.textContent = val;
   });
 });
 </script>
