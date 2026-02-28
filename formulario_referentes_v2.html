@@ -522,43 +522,74 @@ function onPhoto(input, role) {
   if (nameEl && nameEl.textContent === 'Toca para ingresar datos') return;
 }
 
-// ── DOBLADO ──
+// ── DOBLADO — consulta directa a Google Sheets ──
 async function checkDoblado() {
-  const cedulas = [
+  const personas = [
     { ced: v('con_c'), nombre: v('con_n'), rol: 'Conductor' },
     { ced: v('aux_c'), nombre: v('aux_n'), rol: 'Auxiliar' },
     { ced: v('med_c'), nombre: v('med_n'), rol: 'Médico' },
   ].filter(p => p.ced);
 
-  let activos = JSON.parse(localStorage.getItem(LOCAL) || '[]');
+  if (!personas.length) return;
+
+  const da = document.getElementById('dob-alert');
+  const dd = document.getElementById('dob-detail');
+
+  // Mostrar "consultando..."
+  da.style.display = 'block';
+  da.style.borderColor = '#94A3B8';
+  dd.innerHTML = '<span style="color:#64748B;font-size:.75rem">⏳ Consultando historial en tiempo real...</span>';
+
   try {
+    const cedulas = personas.map(p => p.ced).join(',');
     const data = await new Promise((resolve) => {
-      const cb = '_dob_' + Date.now();
+      const cb = '_chk_' + Date.now();
       const sc = document.createElement('script');
       window[cb] = d => { delete window[cb]; sc.remove(); resolve(d); };
-      sc.onerror = () => resolve(null);
-      sc.src = SHEET + '?action=getAll&callback=' + cb;
-      setTimeout(() => resolve(null), 4000);
+      sc.onerror = () => { delete window[cb]; sc.remove(); resolve(null); };
+      sc.src = SHEET + '?action=checkPersonal&cedulas=' + encodeURIComponent(cedulas) + '&callback=' + cb;
+      setTimeout(() => resolve(null), 7000);
       document.head.appendChild(sc);
     });
-    if (data?.status === 'ok') activos = data.active || [];
-  } catch {}
 
-  const hoy = new Date().toDateString();
-  const hoyRecs = activos.filter(r => new Date(r.inicio).toDateString() === hoy);
-  const yaEsta = ced => hoyRecs.find(r => r.con_cedula===ced || r.aux_cedula===ced || r.med_cedula===ced);
+    if (!data || data.status !== 'ok' || !data.resultados.length) {
+      da.style.display = 'none';
+      return;
+    }
 
-  const doblados = cedulas.map(p => ({ ...p, turno: yaEsta(p.ced) })).filter(p => p.turno);
-  const da = document.getElementById('dob-alert');
+    // Construir alertas con info detallada
+    let alertas = [];
+    data.resultados.forEach(res => {
+      const persona = personas.find(p => p.ced === res.cedula);
+      res.encontrados.forEach(enc => {
+        const hDesde = enc.hDesde != null ? enc.hDesde + 'h' : '';
+        const hTrabajo = enc.horas != null ? enc.horas + 'h trabajadas' : '';
+        if (enc.tipo === 'activo') {
+          alertas.push(
+            `🔴 <strong>${enc.rol} ${enc.nombre || persona?.nombre}</strong> — ` +
+            `<strong>TURNO ACTIVO AHORA</strong> en móvil <strong>${enc.placa}</strong> (${enc.subred} · ${enc.turno})`
+          );
+        } else {
+          alertas.push(
+            `🟠 <strong>${enc.rol} ${enc.nombre || persona?.nombre}</strong> — ` +
+            `Turno previo hace <strong>${hDesde}</strong> en móvil <strong>${enc.placa}</strong> ` +
+            `(${enc.subred} · ${enc.turno}${hTrabajo ? ' · ' + hTrabajo : ''})`
+          );
+        }
+      });
+    });
 
-  if (doblados.length) {
-    da.style.display = 'block';
-    da.style.borderColor = '#F97316';
-    document.getElementById('dob-ok').checked = false;
-    document.getElementById('dob-detail').innerHTML = doblados.map(p =>
-      `🟠 <strong>${p.rol} ${p.nombre}</strong> — ya en móvil <strong>${p.turno.placa}</strong>`
-    ).join('<br>');
-  } else {
+    if (alertas.length) {
+      da.style.display = 'block';
+      da.style.borderColor = '#F97316';
+      document.getElementById('dob-ok').checked = false;
+      dd.innerHTML = alertas.join('<br>');
+    } else {
+      da.style.display = 'none';
+    }
+
+  } catch(e) {
+    // Si falla la consulta, ocultar alerta y continuar
     da.style.display = 'none';
   }
 }
