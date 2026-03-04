@@ -317,30 +317,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-h
     </div>
   </div>
 
-  <!-- CONDUCTOR -->
-  <div class="crew-card" id="cc-con">
-    <div class="crew-hd">
-      <span style="font-size:1.1rem">🚗</span>
-      <span class="crew-role con">Conductor</span>
-      <span class="crew-done-ico">✅</span>
-    </div>
-    <div class="crew-grid">
-      <div class="field" style="margin:0">
-        <label>Cédula <span class="req">*</span></label>
-        <input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"
-          onblur="checkCed('con')">
-        <div class="ferr" id="fe-con">Cédula no válida</div>
-      </div>
-      <div class="field" style="margin:0">
-        <label>Nombre</label>
-        <input type="text" id="con_n" readonly
-          placeholder="Desde cédula" style="cursor:not-allowed;color:var(--sub)">
-      </div>
-    </div>
-    <div class="ibox" id="cat-con" style="margin-top:7px"></div>
-  </div>
-
-  <!-- AUXILIAR -->
+  <!-- AUXILIAR (antes de conductor) -->
   <div class="crew-card" id="cc-aux">
     <div class="crew-hd">
       <span style="font-size:1.1rem">🏥</span>
@@ -361,6 +338,29 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-h
       </div>
     </div>
     <div class="ibox" id="cat-aux" style="margin-top:7px"></div>
+  </div>
+
+  <!-- CONDUCTOR (último) -->
+  <div class="crew-card" id="cc-con">
+    <div class="crew-hd">
+      <span style="font-size:1.1rem">🚗</span>
+      <span class="crew-role con">Conductor</span>
+      <span class="crew-done-ico">✅</span>
+    </div>
+    <div class="crew-grid">
+      <div class="field" style="margin:0">
+        <label>Cédula <span class="req">*</span></label>
+        <input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"
+          onblur="checkCed('con')">
+        <div class="ferr" id="fe-con">Cédula no válida</div>
+      </div>
+      <div class="field" style="margin:0">
+        <label>Nombre</label>
+        <input type="text" id="con_n" readonly
+          placeholder="Desde cédula" style="cursor:not-allowed;color:var(--sub)">
+      </div>
+    </div>
+    <div class="ibox" id="cat-con" style="margin-top:7px"></div>
   </div>
 </div>
 
@@ -523,8 +523,9 @@ async function onMovil(val){
       st.className='ibox warn show';
       st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno})`;
     } else if(d.estado==='no_existe'){
-      st.className='ibox err show';
-      st.innerHTML=`❌ Móvil <strong>${val}</strong> no registrada en esta subred`;
+      // Catálogo vacío — solo avisar, no bloquear
+      st.className='ibox warn show';
+      st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no encontrada en el catálogo — verifique el número`;
     } else {
       st.className='ibox ok show';
       st.innerHTML=`✓ Móvil <strong>${val}</strong> disponible`;
@@ -553,35 +554,43 @@ async function checkCed(role){
   if(!ced){ catEl.className='ibox'; S.catOk[role]=false; return; }
 
   catEl.className='ibox load show';
-  catEl.innerHTML='<span class="spin-s"></span>Verificando en catálogo...';
+  catEl.innerHTML='<span class="spin-s"></span>Verificando...';
 
   try{
-    const d = await api({action:'checkCatalogo', cedulas:ced}, 6000);
+    // Timeout corto — si falla permite continuar con nombre manual
+    const d = await api({action:'checkCatalogo', cedulas:ced}, 4000);
     const r = d?.resultados?.[0];
-    if(!r){ catEl.className='ibox'; return; }
+    if(!r){ catEl.className='ibox'; S.catOk[role]=true; return; }
 
     if(r.estado==='ok'){
       nomEl.value=r.nombre; nomEl.style.color='var(--txt)';
+      nomEl.removeAttribute('readonly'); nomEl.readOnly=true;
       catEl.className='ibox ok show';
       catEl.innerHTML=`✓ <strong>${r.nombre}</strong> · ${r.cargo}${r.subred?' · '+r.subred:''}`;
       S.catOk[role]=true;
       g('cc-'+role).classList.add('done');
       g('fe-'+role).classList.remove('show');
-      if(role!=='med') checkDoblado();
+      checkDoblado();
     } else if(r.estado==='inactivo'){
       nomEl.value=''; S.catOk[role]=false;
       catEl.className='ibox err show';
-      catEl.innerHTML=`🚫 <strong>${r.nombre}</strong> está INACTIVO`;
+      catEl.innerHTML=`🚫 <strong>${r.nombre}</strong> está INACTIVO — no puede ingresar`;
       cedEl.value=''; g('cc-'+role).classList.remove('done');
-    } else {
-      nomEl.value=''; S.catOk[role]=false;
-      catEl.className='ibox err show';
-      catEl.innerHTML=`❌ Cédula no registrada en el catálogo de personal`;
+    } else if(r.estado==='no_existe'){
+      // Catálogo vacío o cédula no registrada — permitir ingreso manual con advertencia
+      nomEl.value=''; nomEl.removeAttribute('readonly'); nomEl.style.color='var(--txt)';
+      nomEl.placeholder='Ingrese el nombre manualmente';
+      catEl.className='ibox warn show';
+      catEl.innerHTML=`⚠️ Cédula no está en el catálogo. Ingrese el nombre manualmente.`;
+      S.catOk[role]=true; // permitir continuar
       g('cc-'+role).classList.remove('done');
     }
   } catch {
+    // Si falla la conexión, permitir ingreso manual del nombre
+    nomEl.removeAttribute('readonly'); nomEl.style.color='var(--txt)';
+    nomEl.placeholder='Ingrese el nombre manualmente';
     catEl.className='ibox warn show';
-    catEl.innerHTML='⚠️ No se pudo verificar — continúe con precaución';
+    catEl.innerHTML='⚠️ Sin conexión al catálogo — ingrese el nombre manualmente';
     S.catOk[role]=true;
   }
 }
