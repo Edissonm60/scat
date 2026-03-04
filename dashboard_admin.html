@@ -246,6 +246,8 @@ td{padding:9px 10px;vertical-align:middle;}
       <button class="tab" onclick="showTab('subs',this)">Subredes</button>
       <button class="tab" onclick="showTab('hist',this)">Historial</button>
       <button class="tab" onclick="showTab('pers',this)">Personal</button>
+      <button class="tab" onclick="showTab('stats',this)">Estadísticas</button>
+      <button class="tab" onclick="showTab('moviles',this)">Móviles</button>
     </nav>
     <div class="t-right">
       <div class="live" id="live-dot"></div>
@@ -271,7 +273,7 @@ td{padding:9px 10px;vertical-align:middle;}
       <button class="chip cp" onclick="setSF('frz',this)">Relevo</button>
       <button class="chip cod" onclick="setSF('dob',this)">Doblados</button>
       <button class="chip cr" onclick="setSF('crit',this)">Criticos</button>
-      <input class="srch" type="text" placeholder="Buscar placa..." oninput="setSearch(this.value)" id="srch">
+      <input class="srch" type="text" placeholder="Buscar móvil..." oninput="setSearch(this.value)" id="srch">
       <div class="spc"></div>
       <button class="expbtn" onclick="exportCsv()">Excel</button>
       <button class="expbtn" onclick="exportTxt()">Texto</button>
@@ -279,7 +281,7 @@ td{padding:9px 10px;vertical-align:middle;}
     <div class="twrap">
       <table>
         <thead><tr>
-          <th>Subred</th><th>Placa</th><th>Tipo</th>
+          <th>Subred</th><th>Móvil</th><th>Tipo</th>
           <th>Medico</th><th>Conductor</th><th>Auxiliar</th>
           <th>Turno</th><th>Inicio</th><th>Tiempo</th>
           <th>Estado</th><th>Novedad</th><th>Accion</th>
@@ -309,7 +311,7 @@ td{padding:9px 10px;vertical-align:middle;}
     </div>
     <div class="twrap">
       <table>
-        <thead><tr><th>Fecha</th><th>Subred</th><th>Placa</th><th>Tipo</th><th>Medico</th><th>Conductor</th><th>Auxiliar</th><th>Inicio</th><th>Cierre</th><th>Total</th><th>Resultado</th><th>Cerrado por</th></tr></thead>
+        <thead><tr><th>Fecha</th><th>Subred</th><th>Móvil</th><th>Tipo</th><th>Medico</th><th>Conductor</th><th>Auxiliar</th><th>Inicio</th><th>Cierre</th><th>Total</th><th>Resultado</th><th>Cerrado por</th></tr></thead>
         <tbody id="htbody"></tbody>
       </table>
       <div class="empty" id="hempty">No hay turnos en este periodo</div>
@@ -396,6 +398,128 @@ td{padding:9px 10px;vertical-align:middle;}
         <tbody id="pers-tbody"></tbody>
       </table>
       <div class="empty" id="pers-empty" style="display:none">No hay personal registrado</div>
+    </div>
+  </div>
+
+  <!-- MÓVILES VIEW -->
+  <div class="view" id="tab-moviles">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:1rem;font-weight:800">Catálogo de Móviles</div>
+        <div style="font-size:.72rem;color:var(--sub);margin-top:2px">Solo los números registrados aquí pueden iniciar turno</div>
+      </div>
+      <button class="expbtn" onclick="showAddMovilForm()" style="background:var(--acc);border-color:var(--acc);color:#fff;font-size:.76rem;padding:6px 14px">+ Agregar móvil</button>
+    </div>
+
+    <div id="add-movil-form" style="display:none;background:var(--sur);border:1px solid var(--bdr2);border-radius:14px;padding:1.2rem;margin-bottom:1rem">
+      <div style="font-size:.82rem;font-weight:700;margin-bottom:.8rem;color:var(--acc)">Nueva móvil al catálogo</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:.8rem">
+        <div>
+          <label style="font-size:.65rem;color:var(--mut);display:block;margin-bottom:4px">NÚMERO (4 dígitos) *</label>
+          <input id="nm-num" type="text" placeholder="Ej: 1234" inputmode="numeric" maxlength="4"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)"
+            style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.82rem">
+        </div>
+        <div>
+          <label style="font-size:.65rem;color:var(--mut);display:block;margin-bottom:4px">TIPO *</label>
+          <select id="nm-tipo" style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.82rem">
+            <option value="">Seleccionar...</option>
+            <option>Medicalizada</option>
+            <option>Básica</option>
+            <option>MED</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.65rem;color:var(--mut);display:block;margin-bottom:4px">SUBRED</label>
+          <select id="nm-sub" style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.82rem">
+            <option value="">Todas</option>
+            <option>Norte</option>
+            <option>Sur</option>
+            <option>Sur Occidente</option>
+            <option>Centro Oriente</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="saveMovil()" id="btn-save-movil"
+          style="padding:8px 20px;background:var(--grn);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">Guardar</button>
+        <button onclick="document.getElementById('add-movil-form').style.display='none'"
+          style="padding:8px 14px;background:none;border:1px solid var(--bdr);border-radius:8px;color:var(--mut);font-family:'Outfit',sans-serif;font-size:.78rem;cursor:pointer">Cancelar</button>
+        <span id="save-movil-msg" style="font-size:.76rem;color:var(--grn);display:none"></span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:.8rem;flex-wrap:wrap">
+      <input id="movil-search" type="text" placeholder="Buscar número..."
+        oninput="renderMoviles()"
+        style="padding:6px 11px;background:var(--sur);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.76rem;width:180px">
+      <button class="chip on" onclick="setMF('todos',this)">Todos</button>
+      <button class="chip" onclick="setMF('activos',this)">Activos</button>
+      <button class="chip" onclick="setMF('inactivos',this)">Inactivos</button>
+      <div style="margin-left:auto;font-size:.72rem;color:var(--mut)" id="moviles-count"></div>
+    </div>
+
+    <div class="twrap">
+      <table style="min-width:500px">
+        <thead><tr>
+          <th>Número</th><th>Tipo</th><th>Subred</th><th>Registrado</th><th>Estado</th><th>Acción</th>
+        </tr></thead>
+        <tbody id="moviles-tbody"></tbody>
+      </table>
+      <div class="empty" id="moviles-empty" style="display:none">No hay móviles registradas</div>
+    </div>
+  </div>
+
+  <!-- ESTADÍSTICAS VIEW -->
+  <div class="view" id="tab-stats">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:1rem;font-weight:800">Estadísticas Operativas</div>
+        <div style="font-size:.72rem;color:var(--sub);margin-top:2px">Últimos 30 días · se actualiza al abrir la pestaña</div>
+      </div>
+      <button class="expbtn" onclick="loadStats()" id="btn-reload-stats">Actualizar</button>
+    </div>
+
+    <div id="stats-loading" style="text-align:center;padding:3rem;color:var(--mut)">
+      <div class="lring" style="margin:0 auto 12px"></div>
+      Cargando estadísticas...
+    </div>
+
+    <div id="stats-content" style="display:none">
+      <!-- KPIs resumen -->
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.9rem;margin-bottom:1.4rem" id="stats-kpis"></div>
+
+      <!-- Gráfica turnos por día + Top móviles -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:1.2rem">
+        <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:1.1rem">
+          <div style="font-size:.75rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">Turnos por día (últimos 14 días)</div>
+          <div id="chart-dias" style="height:120px;display:flex;align-items:flex-end;gap:4px"></div>
+          <div id="chart-dias-labels" style="display:flex;gap:4px;margin-top:4px"></div>
+        </div>
+        <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:1.1rem">
+          <div style="font-size:.75rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Top Móviles Activas</div>
+          <div id="top-moviles"></div>
+        </div>
+      </div>
+
+      <!-- Top personal + Por subred -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:1.2rem">
+        <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:1.1rem">
+          <div style="font-size:.75rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Personal con más turnos</div>
+          <div class="twrap" style="border:none">
+            <table style="width:100%;min-width:0">
+              <thead><tr>
+                <th>Nombre</th><th>Cargo</th><th>Turnos</th><th>Horas tot.</th><th>Prom/turno</th><th>Doblados</th>
+              </tr></thead>
+              <tbody id="stats-personal-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:1.1rem">
+          <div style="font-size:.75rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Turnos por Subred</div>
+          <div id="stats-subredes"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -717,7 +841,7 @@ function renderHist(){
 function setF(val,btn){fSub=val;fSt=null;fQ='';document.querySelectorAll('#tbar .chip').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('srch').value='';renderTable();}
 function setSF(type,btn){fSt=fSt===type?null:type;fSub='all';document.querySelectorAll('#tbar .chip').forEach(b=>b.classList.remove('on'));if(fSt)btn.classList.add('on');else document.querySelector('#tbar .chip').classList.add('on');renderTable();}
 function setSearch(q){fQ=q;renderTable();}
-function showTab(name,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));document.getElementById('tab-'+name).classList.add('on');btn.classList.add('on');if(name==='pers')loadPersonal();}
+function showTab(name,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));document.getElementById('tab-'+name).classList.add('on');btn.classList.add('on');if(name==='pers')loadPersonal();if(name==='stats')loadStats();if(name==='moviles')loadMoviles();}
 function setDF(type,btn){fDay=type;document.querySelectorAll('.hbar .chip').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');renderHist();}
 
 // MODAL
@@ -896,6 +1020,189 @@ async function togglePersonal(cedula) {
       showToast('ok', d.activo==='si'?'Personal activado':'Personal desactivado');
     }
   } catch { showToast('err','Error al cambiar estado'); }
+}
+
+// ── CATÁLOGO DE MÓVILES ───────────────────────
+let movilesList = [];
+let fMovil = 'todos';
+
+async function loadMoviles() {
+  try {
+    const d = await jsonp({action:'getMoviles'}, 8000);
+    if (d.status==='ok') { movilesList = d.moviles||[]; renderMoviles(); }
+  } catch { showToast('err','Error cargando móviles'); }
+}
+
+function renderMoviles() {
+  const q = (document.getElementById('movil-search')?.value||'').toLowerCase();
+  let lista = [...movilesList];
+  if (fMovil==='activos')   lista = lista.filter(m=>String(m.activo).toLowerCase()==='si');
+  if (fMovil==='inactivos') lista = lista.filter(m=>String(m.activo).toLowerCase()!=='si');
+  if (q) lista = lista.filter(m=>String(m.numero||'').includes(q)||(m.subred||'').toLowerCase().includes(q));
+  lista.sort((a,b)=>Number(a.numero)-Number(b.numero));
+
+  document.getElementById('moviles-count').textContent = lista.length+' móviles';
+  const tbody = document.getElementById('moviles-tbody');
+  const empty = document.getElementById('moviles-empty');
+  if (!lista.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+
+  tbody.innerHTML = lista.map(m => {
+    const activo = String(m.activo).toLowerCase()==='si';
+    const fecha  = m.fecha_registro ? new Date(m.fecha_registro).toLocaleDateString('es-CO') : '-';
+    // Check if currently active
+    const enTurno = active.some(r=>String(r.placa)===String(m.numero));
+    return `<tr style="${activo?'':'opacity:.5'}">
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700">${m.numero}
+        ${enTurno?'<span style="font-size:.55rem;background:var(--grnd);color:var(--grn);padding:1px 6px;border-radius:4px;margin-left:4px">EN TURNO</span>':''}
+      </td>
+      <td><span class="btp">${m.tipo||'-'}</span></td>
+      <td><span class="bsub ${sc(m.subred)}">${m.subred||'Todas'}</span></td>
+      <td style="font-size:.68rem;color:var(--mut)">${fecha}</td>
+      <td><span style="font-size:.63rem;font-weight:700;padding:2px 8px;border-radius:4px;${activo?'background:var(--grnd);color:var(--grn)':'background:var(--redd);color:var(--red)'}">${activo?'ACTIVO':'INACTIVO'}</span></td>
+      <td>
+        <button onclick="toggleMovil('${m.numero}')"
+          style="padding:3px 9px;border-radius:6px;border:1px solid ${activo?'rgba(239,68,68,.3)':'rgba(34,197,94,.3)'};background:${activo?'var(--redd)':'var(--grnd)'};color:${activo?'var(--red)':'var(--grn)'};font-size:.63rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">
+          ${activo?'Desactivar':'Activar'}
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setMF(f, btn) {
+  fMovil = f;
+  document.querySelectorAll('#tab-moviles .chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMoviles();
+}
+
+function showAddMovilForm() {
+  const f = document.getElementById('add-movil-form');
+  f.style.display = f.style.display==='none'?'block':'none';
+  if (f.style.display==='block') document.getElementById('nm-num').focus();
+}
+
+async function saveMovil() {
+  const num  = document.getElementById('nm-num').value.trim();
+  const tipo = document.getElementById('nm-tipo').value;
+  const sub  = document.getElementById('nm-sub').value;
+  if (!num||!tipo) { showToast('err','Número y tipo son obligatorios'); return; }
+
+  const btn = document.getElementById('btn-save-movil');
+  const msg = document.getElementById('save-movil-msg');
+  btn.textContent='Guardando...'; btn.disabled=true;
+
+  try {
+    const rec = {numero:num, tipo, subred:sub, activo:'si'};
+    const d   = await jsonp({action:'addMovil', record:JSON.stringify(rec)}, 8000);
+    if (d.status==='ok') {
+      if (d.msg==='ya_existe') { showToast('err','Ese número ya está registrado'); }
+      else {
+        movilesList.push({...rec, fecha_registro:new Date().toISOString()});
+        renderMoviles();
+        document.getElementById('nm-num').value='';
+        document.getElementById('nm-tipo').value='';
+        msg.textContent='✓ Móvil agregada'; msg.style.display='inline';
+        setTimeout(()=>msg.style.display='none',3000);
+        showToast('ok','Móvil '+num+' agregada');
+      }
+    } else throw 0;
+  } catch { showToast('err','Error al guardar'); }
+  btn.textContent='Guardar'; btn.disabled=false;
+}
+
+async function toggleMovil(numero) {
+  try {
+    const d = await jsonp({action:'toggleMovil', numero}, 8000);
+    if (d.status==='ok') {
+      const m = movilesList.find(x=>String(x.numero)===String(numero));
+      if (m) m.activo = d.activo;
+      renderMoviles();
+      showToast('ok', d.activo==='si'?'Móvil activada':'Móvil desactivada');
+    }
+  } catch { showToast('err','Error al cambiar estado'); }
+}
+
+// ── ESTADÍSTICAS ──────────────────────────────
+async function loadStats() {
+  document.getElementById('stats-loading').style.display='block';
+  document.getElementById('stats-content').style.display='none';
+  try {
+    const d = await jsonp({action:'getStats'}, 15000);
+    if (d.status !== 'ok') throw 0;
+    renderStats(d);
+  } catch {
+    showToast('err','Error cargando estadísticas');
+    document.getElementById('stats-loading').innerHTML='Error al cargar. Intente de nuevo.';
+  }
+}
+
+function renderStats(d) {
+  document.getElementById('stats-loading').style.display='none';
+  document.getElementById('stats-content').style.display='block';
+
+  // KPIs
+  document.getElementById('stats-kpis').innerHTML=`
+    <div class="kpi k0"><div class="kn">${d.totalTurnos}</div><div class="kl">Total Turnos</div><div class="ks">30 días</div></div>
+    <div class="kpi k1"><div class="kn">${d.promHoras}h</div><div class="kl">Prom. Duración</div><div class="ks">por turno</div></div>
+    <div class="kpi k2"><div class="kn">${d.totalDoblados}</div><div class="kl">Doblados</div><div class="ks">2do turno</div></div>
+    <div class="kpi k5"><div class="kn">${d.totalCriticos}</div><div class="kl">Críticos</div><div class="ks">3er turno</div></div>
+    <div class="kpi k3"><div class="kn">${d.totalVencidos}</div><div class="kl">Vencidos</div><div class="ks">+36h sin cerrar</div></div>
+    <div class="kpi k4"><div class="kn">${Object.keys(d.porSubred||{}).length}</div><div class="kl">Subredes</div><div class="ks">activas</div></div>`;
+
+  // Gráfica barras por día
+  const dias = d.porDia||[];
+  const maxT = Math.max(...dias.map(x=>x.turnos),1);
+  const chartH = 120;
+  document.getElementById('chart-dias').innerHTML = dias.map(x=>{
+    const h = Math.max(4, Math.round((x.turnos/maxT)*chartH));
+    const isToday = x.fecha === today();
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div style="font-size:.55rem;color:var(--mut)">${x.turnos||''}</div>
+      <div style="width:100%;height:${h}px;background:${isToday?'var(--acc)':'var(--bdr2)'};border-radius:3px 3px 0 0;min-height:4px;transition:height .3s"></div>
+    </div>`;
+  }).join('');
+  document.getElementById('chart-dias-labels').innerHTML = dias.map(x=>{
+    const d2=new Date(x.fecha+'T12:00:00');
+    return `<div style="flex:1;text-align:center;font-size:.5rem;color:var(--mut)">${d2.getDate()}/${d2.getMonth()+1}</div>`;
+  }).join('');
+
+  // Top móviles
+  document.getElementById('top-moviles').innerHTML = (d.topMoviles||[]).map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);${i===0?'':''}">
+      <div style="font-size:.65rem;font-weight:700;color:var(--mut);width:14px">${i+1}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;flex:1">Móvil ${m.placa}</div>
+      <div style="font-size:.75rem;font-weight:700;color:var(--acc)">${m.turnos} turnos</div>
+    </div>`).join('') || '<div style="font-size:.75rem;color:var(--mut)">Sin datos</div>';
+
+  // Top personal
+  document.getElementById('stats-personal-tbody').innerHTML = (d.topPersonal||[]).map((p,i)=>`
+    <tr>
+      <td style="font-size:.78rem;font-weight:500">${p.nombre}</td>
+      <td><span class="btp">${p.rol}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;font-weight:700;color:var(--acc)">${p.turnos}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--sub)">${p.horas}h</td>
+      <td style="font-size:.74rem;color:var(--sub)">${p.turnos>0?parseFloat((p.horas/p.turnos).toFixed(1))+'h':'-'}</td>
+      <td style="font-size:.72rem;font-weight:700;color:${p.doblados>0?'var(--org)':'var(--grn)'}">${p.doblados||0}</td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--mut);font-size:.75rem;padding:1rem">Sin datos</td></tr>';
+
+  // Por subred
+  const subredes = d.porSubred||{};
+  const maxS = Math.max(...Object.values(subredes),1);
+  const colors = {Norte:'var(--n)',Sur:'var(--s)','Sur Occidente':'var(--so)','Centro Oriente':'var(--co)'};
+  document.getElementById('stats-subredes').innerHTML = Object.entries(subredes)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([s,n])=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px">
+        <span style="color:${colors[s]||'var(--sub)'}">Subred ${s}</span>
+        <span style="font-weight:700">${n}</span>
+      </div>
+      <div style="background:var(--bdr);border-radius:4px;height:6px;overflow:hidden">
+        <div style="background:${colors[s]||'var(--acc)'};height:100%;width:${Math.round(n/maxS*100)}%;border-radius:4px;transition:width .5s"></div>
+      </div>
+    </div>`).join('') || '<div style="font-size:.75rem;color:var(--mut)">Sin datos</div>';
 }
 
 function showLoad(t){document.getElementById('ltxt').textContent=t||'';document.getElementById('lov').classList.add('show');}
