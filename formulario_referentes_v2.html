@@ -240,8 +240,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <div class="crew-bd">
         <div class="row2">
-          <div class="field" id="f-mn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="med_n" placeholder="Apellidos y nombres" oninput="updateCrewNote('med_n','n-med')"><div class="ferr">Requerido</div></div>
-          <div class="field" id="f-mc"><label>Cédula <span class="req">*</span></label><input type="text" id="med_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-mn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="med_n" placeholder="Apellidos y nombres — se llena desde cédula" oninput="updateCrewNote('med_n','n-med')" readonly style="background:var(--surface);color:var(--sub);cursor:not-allowed"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-mc"><label>Cédula <span class="req">*</span></label><input type="text" id="med_c" placeholder="Sin puntos" inputmode="numeric" onblur="checkCedula('med')"><div class="ferr">Requerido</div></div>
+        <div id="cat-med" class="info-box" style="display:none;margin-top:4px"></div>
         </div>
         <div class="field">
           <label>Foto cédula <span class="req">*</span></label>
@@ -262,8 +263,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <div class="crew-bd">
         <div class="row2">
-          <div class="field" id="f-cn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="con_n" placeholder="Apellidos y nombres" oninput="updateCrewNote('con_n','n-con')"><div class="ferr">Requerido</div></div>
-          <div class="field" id="f-cc"><label>Cédula <span class="req">*</span></label><input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-cn"><label>Nombre completo <span class="req">*</span></label><input type="text" id="con_n" placeholder="Apellidos y nombres — se llena desde cédula" oninput="updateCrewNote('con_n','n-con')" readonly style="background:var(--surface);color:var(--sub);cursor:not-allowed"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-cc"><label>Cédula <span class="req">*</span></label><input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric" onblur="checkCedula('con')"><div class="ferr">Requerido</div></div>
+        <div id="cat-con" class="info-box" style="display:none;margin-top:4px"></div>
         </div>
         <div class="field">
           <label>Foto cédula <span class="req">*</span></label>
@@ -281,8 +283,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <div class="crew-bd">
         <div class="row2">
-          <div class="field" id="f-an"><label>Nombre completo <span class="req">*</span></label><input type="text" id="aux_n" placeholder="Apellidos y nombres" oninput="updateCrewNote('aux_n','n-aux')"><div class="ferr">Requerido</div></div>
-          <div class="field" id="f-ac"><label>Cédula <span class="req">*</span></label><input type="text" id="aux_c" placeholder="Sin puntos" inputmode="numeric"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-an"><label>Nombre completo <span class="req">*</span></label><input type="text" id="aux_n" placeholder="Apellidos y nombres — se llena desde cédula" oninput="updateCrewNote('aux_n','n-aux')" readonly style="background:var(--surface);color:var(--sub);cursor:not-allowed"><div class="ferr">Requerido</div></div>
+          <div class="field" id="f-ac"><label>Cédula <span class="req">*</span></label><input type="text" id="aux_c" placeholder="Sin puntos" inputmode="numeric" onblur="checkCedula('aux')"><div class="ferr">Requerido</div></div>
+        <div id="cat-aux" class="info-box" style="display:none;margin-top:4px"></div>
         </div>
         <div class="field">
           <label>Foto cédula <span class="req">*</span></label>
@@ -564,6 +567,63 @@ function checkCrewComplete(role) {
   else crew.classList.remove('done');
 }
 
+// ── CATÁLOGO DE PERSONAL — anti-fraude ──────────
+// Cuando se ingresa una cédula:
+// - Si existe: autocompleta nombre (no editable)
+// - Si no existe: bloquea, muestra error
+// - Si inactivo: bloquea, muestra razón
+async function checkCedula(role) {
+  const cedId  = role==='med'?'med_c':role==='con'?'con_c':'aux_c';
+  const nomId  = role==='med'?'med_n':role==='con'?'con_n':'aux_n';
+  const catEl  = g('cat-'+role);
+  const cedVal = g(cedId)?.value.trim();
+
+  if (!cedVal) { catEl.style.display='none'; return; }
+
+  catEl.className='info-box loading'; catEl.style.display='block';
+  catEl.innerHTML='<span class="spin-dark"></span>Verificando cédula...';
+
+  try {
+    const d = await jsonpCall({ action:'checkCatalogo', cedulas:cedVal }, 6000);
+    const res = d?.resultados?.[0];
+    if (!res) { catEl.style.display='none'; return; }
+
+    const nomEl = g(nomId);
+    if (res.estado === 'ok') {
+      // Autocompletar nombre — no editable
+      nomEl.value = res.nombre;
+      nomEl.setAttribute('readonly','');
+      nomEl.style.background = 'var(--green-l)';
+      nomEl.style.color       = 'var(--text)';
+      nomEl.style.cursor      = 'default';
+      updateCrewNote(nomId, 'n-'+role);
+      catEl.className='info-box ok';
+      catEl.innerHTML = `✓ <strong>${res.nombre}</strong> · ${res.cargo} · ${res.subred}`;
+      // Marcar crew como done si también tiene foto
+      checkCrewComplete(role);
+    } else if (res.estado === 'inactivo') {
+      nomEl.value = '';
+      nomEl.removeAttribute('readonly');
+      catEl.className='info-box err-box';
+      catEl.innerHTML = `🚫 <strong>${res.nombre}</strong> está marcado como INACTIVO. No puede ingresar al turno.`;
+      g(cedId).value = '';
+    } else {
+      // no_existe
+      nomEl.value = '';
+      nomEl.removeAttribute('readonly');
+      nomEl.style.background = '';
+      nomEl.style.color      = '';
+      nomEl.style.cursor     = '';
+      catEl.className='info-box err-box';
+      catEl.innerHTML = `❌ Cédula <strong>${cedVal}</strong> no está registrada en el catálogo de personal autorizado.`;
+    }
+  } catch {
+    catEl.className='info-box loading';
+    catEl.innerHTML = '⚠️ No se pudo verificar — continúe con precaución';
+    setTimeout(()=>catEl.style.display='none', 3000);
+  }
+}
+
 // ── DOBLADO ───────────────────────────────────
 async function checkDoblado() {
   const personas = [
@@ -761,6 +821,17 @@ function resetAll() {
   g('placa-st').style.display='none';
   g('success').classList.remove('show');
   photos    = { med:'', con:'', aux:'' };
+  // Reset catalog status boxes and nombre readonly
+  ['med','con','aux'].forEach(role => {
+    const catEl = g('cat-'+role);
+    if(catEl){ catEl.style.display='none'; catEl.className='info-box'; }
+    const nomId = role==='med'?'med_n':role==='con'?'con_n':'aux_n';
+    const nomEl = g(nomId);
+    if(nomEl){
+      nomEl.removeAttribute('readonly');
+      nomEl.style.background=''; nomEl.style.color=''; nomEl.style.cursor='';
+    }
+  });
   photoFiles= { med:null, con:null, aux:null };
   photoUrls = { med:'', con:'', aux:'' };
   tipoVal   = '';
