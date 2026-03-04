@@ -2,498 +2,529 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>SCAT · Inicio de Turno</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#060B18;--sur:#0F1D35;--sur2:#162440;--bdr:#1E3050;--bdr2:#243B5E;
-  --acc:#3B82F6;--accg:rgba(59,130,246,.18);
+  --acc:#3B82F6;--accg:rgba(59,130,246,.15);
   --grn:#22C55E;--grnd:rgba(34,197,94,.12);
   --red:#EF4444;--redd:rgba(239,68,68,.1);
   --org:#F97316;--orgd:rgba(249,115,22,.1);
-  --yel:#F59E0B;--yeld:rgba(245,158,11,.1);
   --txt:#F1F5F9;--sub:#94A3B8;--mut:#4A6080;
   --n:#60A5FA;--s:#4ADE80;--so:#FCD34D;--co:#C084FC;
+  --green-l:rgba(34,197,94,.08);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{min-height:100vh;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
 
 /* HEADER */
-.hdr{background:rgba(6,11,24,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
-.hdr-logo{font-size:.9rem;font-weight:800;}
-.hdr-badge{background:var(--acc);color:#fff;font-size:.55rem;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;}
-.hdr-right{margin-left:auto;font-size:.65rem;color:var(--mut);}
+.top{background:rgba(6,11,24,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);
+  padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.top-logo{font-size:.88rem;font-weight:800;}
+.top-badge{background:var(--acc);color:#fff;font-size:.54rem;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em;}
+.top-clk{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--mut);}
 
 /* PROGRESS */
-.prg{padding:14px 16px 0;max-width:520px;margin:0 auto;}
-.prg-steps{display:flex;align-items:center;gap:4px;margin-bottom:4px;}
-.prg-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--bdr2);background:var(--sur2);color:var(--mut);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;}
-.prg-dot.active{border-color:var(--acc);background:var(--accg);color:var(--acc);}
-.prg-dot.done{border-color:var(--grn);background:var(--grnd);color:var(--grn);}
-.prg-line{flex:1;height:2px;background:var(--bdr);border-radius:2px;transition:background .25s;}
-.prg-line.done{background:var(--grn);}
-.prg-lbls{display:flex;justify-content:space-between;margin-bottom:16px;}
-.prg-lbl{font-size:.58rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.04em;transition:color .25s;}
-.prg-lbl.active{color:var(--acc);}
+.prg{max-width:560px;margin:0 auto;padding:14px 16px 0;}
+.prg-steps{display:flex;align-items:center;gap:4px;}
+.pd{width:27px;height:27px;border-radius:50%;border:2px solid var(--bdr2);background:var(--sur2);
+  color:var(--mut);font-size:.64rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;}
+.pd.active{border-color:var(--acc);background:var(--accg);color:var(--acc);}
+.pd.done{border-color:var(--grn);background:var(--grnd);color:var(--grn);}
+.pl{flex:1;height:2px;background:var(--bdr);border-radius:2px;transition:background .3s;}
+.pl.done{background:var(--grn);}
+.prg-lbls{display:flex;justify-content:space-between;padding:5px 0 14px;}
+.plbl{font-size:.57rem;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;transition:color .25s;}
+.plbl.active{color:var(--acc);}
 
-/* CARD */
-.card{max-width:520px;margin:0 auto 80px;padding:0 14px;}
-.screen{display:none;}
+/* CONTENT */
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 100px;}
+.screen{display:none;animation:fadein .2s ease;}
 .screen.show{display:block;}
-.s-title{font-size:1.05rem;font-weight:800;margin-bottom:4px;}
-.s-sub{font-size:.76rem;color:var(--sub);margin-bottom:1.2rem;line-height:1.5;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.s-hd{margin-bottom:1.2rem;}
+.s-title{font-size:1.15rem;font-weight:800;margin-bottom:3px;}
+.s-sub{font-size:.75rem;color:var(--sub);line-height:1.5;}
+
+/* SECTION LABELS */
+.sec-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--mut);margin:1.2rem 0 .7rem;display:flex;align-items:center;gap:8px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--bdr);}
 
 /* FIELDS */
-.field{margin-bottom:1rem;}
-.field label{display:block;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin-bottom:6px;}
+.field{margin-bottom:.9rem;}
+.field label{display:block;font-size:.63rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--mut);margin-bottom:5px;}
+.req{color:var(--red);}
 .field input,.field select,.field textarea{
-  width:100%;padding:11px 13px;
-  background:var(--sur);border:1.5px solid var(--bdr2);
-  border-radius:10px;color:var(--txt);
-  font-family:'Outfit',sans-serif;font-size:.9rem;
-  outline:none;transition:border-color .2s;
-}
-.field input:focus,.field select:focus{border-color:var(--acc);}
-.field input.ok{border-color:var(--grn);}
-.field input.err{border-color:var(--red);}
+  width:100%;padding:11px 13px;background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:10px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
+.field input.f-ok{border-color:var(--grn);}
+.field input.f-err,.field select.f-err{border-color:var(--red);}
 .field select option{background:var(--sur2);}
-.ferr{font-size:.67rem;color:var(--red);margin-top:4px;display:none;}
+.field textarea{resize:none;}
+.ferr{font-size:.66rem;color:var(--red);margin-top:3px;display:none;}
 .ferr.show{display:block;}
 
+/* TURNO PILLS */
+.turno-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tp{padding:13px 10px;background:var(--sur);border:2px solid var(--bdr2);border-radius:12px;
+  cursor:pointer;text-align:center;transition:all .2s;}
+.tp:hover{border-color:var(--bdr);}
+.tp.sel{border-color:var(--acc);background:var(--accg);}
+.tp-ico{font-size:1.5rem;line-height:1;}
+.tp-lbl{font-size:.84rem;font-weight:700;margin-top:4px;}
+
+/* SUBRED PILLS */
+.sub-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sp{padding:10px;background:var(--sur);border:2px solid var(--bdr2);border-radius:10px;
+  cursor:pointer;text-align:center;font-size:.8rem;font-weight:600;transition:all .2s;}
+.sp:hover{border-color:var(--bdr);}
+.sp.norte.sel{border-color:var(--n);background:rgba(96,165,250,.1);color:var(--n);}
+.sp.sur.sel{border-color:var(--s);background:rgba(74,222,128,.1);color:var(--s);}
+.sp.surocc.sel{border-color:var(--so);background:rgba(252,211,77,.1);color:var(--so);}
+.sp.centoo.sel{border-color:var(--co);background:rgba(192,132,252,.1);color:var(--co);}
+
 /* INFO BOX */
-.ibox{border-radius:9px;padding:9px 12px;font-size:.76rem;margin-top:6px;line-height:1.5;display:none;}
+.ibox{border-radius:8px;padding:8px 11px;font-size:.75rem;margin-top:5px;line-height:1.5;display:none;}
 .ibox.show{display:block;}
 .ibox.ok{background:var(--grnd);border:1px solid rgba(34,197,94,.25);color:var(--grn);}
 .ibox.err{background:var(--redd);border:1px solid rgba(239,68,68,.25);color:#FCA5A5;}
 .ibox.warn{background:var(--orgd);border:1px solid rgba(249,115,22,.25);color:var(--org);}
-.ibox.info{background:var(--accg);border:1px solid rgba(59,130,246,.25);color:var(--n);}
-.ibox.loading{background:var(--sur2);border:1px solid var(--bdr2);color:var(--sub);}
+.ibox.load{background:var(--sur2);border:1px solid var(--bdr2);color:var(--sub);}
 
-/* TURNO SELECTOR */
-.turno-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.turno-opt{padding:14px;background:var(--sur);border:2px solid var(--bdr2);border-radius:12px;cursor:pointer;text-align:center;transition:all .2s;}
-.turno-opt:hover{border-color:var(--bdr);}
-.turno-opt.sel{border-color:var(--acc);background:var(--accg);}
-.turno-ico{font-size:1.6rem;margin-bottom:4px;}
-.turno-lbl{font-size:.82rem;font-weight:700;}
-.turno-sub{font-size:.65rem;color:var(--sub);margin-top:2px;}
+/* CREW CARD */
+.crew-card{background:var(--sur);border:1.5px solid var(--bdr2);border-radius:14px;
+  padding:13px;margin-bottom:.9rem;transition:border-color .3s;}
+.crew-card.done{border-color:var(--grn);}
+.crew-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.crew-role{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;}
+.crew-role.med{color:var(--n);}.crew-role.con{color:var(--s);}.crew-role.aux{color:var(--co);}
+.crew-done-ico{margin-left:auto;font-size:.85rem;display:none;}
+.crew-card.done .crew-done-ico{display:block;}
+.crew-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* SUBRED PILLS */
-.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.sub-opt{padding:10px 12px;background:var(--sur);border:2px solid var(--bdr2);border-radius:10px;cursor:pointer;text-align:center;font-size:.8rem;font-weight:600;transition:all .2s;}
-.sub-opt:hover{border-color:var(--bdr);}
-.sub-opt.sel{border-width:2px;}
-.sub-opt.norte.sel{border-color:var(--n);background:rgba(96,165,250,.1);color:var(--n);}
-.sub-opt.sur.sel{border-color:var(--s);background:rgba(74,222,128,.1);color:var(--s);}
-.sub-opt.surocc.sel{border-color:var(--so);background:rgba(252,211,77,.1);color:var(--so);}
-.sub-opt.centoo.sel{border-color:var(--co);background:rgba(192,132,252,.1);color:var(--co);}
+/* DOBLADO */
+.dob-box{border-radius:12px;padding:12px 14px;margin-bottom:1rem;display:none;}
+.dob-box.show{display:block;}
+.dob-box.warn{background:var(--orgd);border:1px solid rgba(249,115,22,.3);}
+.dob-box.crit{background:var(--redd);border:1px solid rgba(239,68,68,.3);}
+.dob-ttl{font-size:.82rem;font-weight:700;margin-bottom:5px;}
+.dob-box.warn .dob-ttl{color:var(--org);}
+.dob-box.crit .dob-ttl{color:var(--red);}
+.dob-items{font-size:.74rem;color:var(--sub);line-height:1.7;margin-bottom:8px;}
+.dob-ck{display:flex;gap:8px;align-items:flex-start;}
+.dob-ck input{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--acc);}
+.dob-ck label{font-size:.72rem;color:var(--sub);cursor:pointer;line-height:1.5;}
 
-/* FOTO UNICA */
-.foto-area{border:2px dashed var(--bdr2);border-radius:14px;padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;background:var(--sur);}
-.foto-area:hover{border-color:var(--acc);}
-.foto-area.done{border-color:var(--grn);border-style:solid;}
-.foto-area.dragging{border-color:var(--acc);background:var(--accg);}
-.foto-ico{font-size:2.2rem;margin-bottom:8px;}
-.foto-lbl{font-size:.82rem;font-weight:600;margin-bottom:4px;}
+/* FOTO */
+.foto-drop{border:2px dashed var(--bdr2);border-radius:14px;padding:1.4rem;text-align:center;
+  cursor:pointer;background:var(--sur);transition:all .2s;position:relative;}
+.foto-drop:hover{border-color:var(--acc);}
+.foto-drop.done{border-style:solid;border-color:var(--grn);}
+.foto-ico{font-size:2rem;margin-bottom:6px;}
+.foto-lbl{font-size:.82rem;font-weight:600;margin-bottom:3px;}
 .foto-sub{font-size:.68rem;color:var(--sub);}
-.foto-preview{width:100%;max-height:220px;object-fit:cover;border-radius:10px;display:none;}
-.foto-preview.show{display:block;}
-.foto-retake{margin-top:8px;padding:6px 14px;background:none;border:1px solid var(--bdr2);border-radius:8px;color:var(--sub);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif;}
-.foto-retake:hover{border-color:var(--red);color:var(--red);}
-.foto-hint{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:.72rem;color:var(--sub);line-height:1.6;}
+.foto-prev{width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:none;}
+.foto-prev.show{display:block;}
+.btn-retake{margin-top:8px;padding:5px 12px;background:none;border:1px solid var(--bdr2);
+  border-radius:7px;color:var(--sub);font-size:.68rem;cursor:pointer;font-family:'Outfit',sans-serif;}
+.btn-retake:hover{border-color:var(--red);color:var(--red);}
+.foto-hint{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;
+  padding:9px 12px;margin-top:9px;font-size:.71rem;color:var(--sub);line-height:1.6;}
 .foto-hint strong{color:var(--txt);}
 
-/* DOBLADO ALERT */
-.dob-alert{border-radius:12px;padding:12px 14px;margin-bottom:1rem;display:none;}
-.dob-alert.show{display:block;}
-.dob-alert.warn{background:var(--orgd);border:1px solid rgba(249,115,22,.35);}
-.dob-alert.crit{background:var(--redd);border:1px solid rgba(239,68,68,.35);}
-.dob-title{font-size:.82rem;font-weight:700;margin-bottom:6px;}
-.dob-alert.warn .dob-title{color:var(--org);}
-.dob-alert.crit .dob-title{color:var(--red);}
-.dob-list{font-size:.74rem;color:var(--sub);margin-bottom:8px;line-height:1.7;}
-.dob-check{display:flex;align-items:flex-start;gap:8px;margin-top:6px;}
-.dob-check input{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--acc);}
-.dob-check label{font-size:.73rem;color:var(--sub);line-height:1.5;cursor:pointer;}
-
 /* RESUMEN */
-.rsm-card{background:var(--sur);border:1px solid var(--bdr2);border-radius:14px;padding:14px;margin-bottom:.8rem;}
-.rsm-title{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin-bottom:10px;}
-.rsm-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,48,80,.4);font-size:.8rem;}
+.rsm{background:var(--sur);border:1px solid var(--bdr2);border-radius:14px;
+  padding:13px;margin-bottom:.8rem;}
+.rsm-ttl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--mut);margin-bottom:9px;}
+.rsm-row{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid rgba(30,48,80,.4);font-size:.8rem;}
 .rsm-row:last-child{border-bottom:none;}
-.rsm-key{color:var(--sub);}
-.rsm-val{font-weight:600;text-align:right;}
-.rsm-badge{padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;}
-
-/* BOTONES */
-.btn-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:var(--bg);border-top:1px solid var(--bdr);display:flex;gap:10px;max-width:520px;margin:0 auto;}
-.btn-bar{left:50%;transform:translateX(-50%);width:100%;}
-.btn-back{padding:11px 18px;background:none;border:1px solid var(--bdr2);border-radius:10px;color:var(--sub);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;flex-shrink:0;}
-.btn-next{flex:1;padding:12px;background:var(--acc);border:none;border-radius:10px;color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-next:disabled{background:var(--bdr2);cursor:not-allowed;}
-.btn-next.grn{background:var(--grn);}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin-dark{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--sub);border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;}
+.rsm-k{color:var(--sub);}
+.rsm-v{font-weight:600;text-align:right;max-width:60%;}
+.rsm-foto{width:100%;max-height:130px;object-fit:cover;border-radius:8px;margin-top:6px;}
 
 /* SUCCESS */
-.success-scr{display:none;text-align:center;padding:2.5rem 1rem;}
-.success-scr.show{display:block;}
-.suc-ico{font-size:3.5rem;margin-bottom:12px;animation:pop .5s ease;}
-@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
-.suc-title{font-size:1.3rem;font-weight:800;color:var(--grn);margin-bottom:6px;}
-.suc-sub{font-size:.8rem;color:var(--sub);margin-bottom:1.4rem;line-height:1.6;}
-.suc-detail{background:var(--sur);border:1px solid var(--bdr2);border-radius:12px;padding:14px;text-align:left;margin-bottom:1rem;font-size:.78rem;line-height:1.8;}
-.suc-detail strong{color:var(--acc);}
-.btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#25D366;border:none;border-radius:10px;color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none;}
-.btn-nuevo{width:100%;padding:11px;background:none;border:1px solid var(--bdr2);border-radius:10px;color:var(--sub);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;}
+.suc{display:none;text-align:center;padding:2rem 1rem;}
+.suc.show{display:block;}
+.suc-ico{font-size:3.2rem;margin-bottom:10px;animation:pop .5s ease;}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.suc-ttl{font-size:1.25rem;font-weight:800;color:var(--grn);margin-bottom:5px;}
+.suc-sub{font-size:.78rem;color:var(--sub);margin-bottom:1.2rem;line-height:1.6;}
+.suc-detail{background:var(--sur);border:1px solid var(--bdr2);border-radius:12px;
+  padding:13px;text-align:left;font-size:.78rem;line-height:1.9;margin-bottom:1rem;}
+.btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:13px;background:#25D366;border:none;border-radius:10px;color:#fff;
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;
+  margin-bottom:9px;text-decoration:none;}
+.btn-nuevo{width:100%;padding:11px;background:none;border:1px solid var(--bdr2);
+  border-radius:10px;color:var(--sub);font-family:'Outfit',sans-serif;
+  font-size:.84rem;font-weight:600;cursor:pointer;}
 
-/* TIPO BADGE */
-.tbadge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.65rem;font-weight:700;text-transform:uppercase;}
-.tbadge.med{background:rgba(96,165,250,.15);color:var(--n);}
-.tbadge.bas{background:rgba(74,222,128,.15);color:var(--s);}
-.tbadge.mde{background:rgba(252,211,77,.15);color:var(--so);}
+/* BTN BAR */
+.bar{position:fixed;bottom:0;left:0;right:0;padding:11px 16px;background:var(--bg);
+  border-top:1px solid var(--bdr);display:flex;gap:9px;z-index:40;}
+.btn-back{padding:11px 16px;background:none;border:1px solid var(--bdr2);border-radius:10px;
+  color:var(--sub);font-family:'Outfit',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;flex-shrink:0;}
+.btn-next{flex:1;padding:12px;background:var(--acc);border:none;border-radius:10px;color:#fff;
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .2s;
+  display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-next:disabled{background:var(--bdr2);cursor:not-allowed;}
+.btn-next.grn{background:var(--grn);}
+
+/* SPINNERS */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.spin-s{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.15);
+  border-top-color:var(--sub);border-radius:50%;animation:spin .7s linear infinite;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<header class="hdr">
-  <span style="font-size:1.4rem">🚑</span>
+<header class="top">
+  <span style="font-size:1.3rem">🚑</span>
   <div>
-    <div class="hdr-logo">SCAT <span class="hdr-badge">Formulario</span></div>
-    <div style="font-size:.6rem;color:var(--mut)">Secretaría de Salud Bogotá</div>
+    <div class="top-logo">SCAT <span class="top-badge">Referentes</span></div>
+    <div style="font-size:.59rem;color:var(--mut)">Secretaría de Salud · Bogotá D.C.</div>
   </div>
-  <div class="hdr-right" id="hdr-time">--:--</div>
+  <div class="top-clk" id="clk">--:--</div>
 </header>
 
+<!-- PROGRESS -->
 <div class="prg">
   <div class="prg-steps">
-    <div class="prg-dot active" id="d1">1</div>
-    <div class="prg-line" id="ln1"></div>
-    <div class="prg-dot" id="d2">2</div>
-    <div class="prg-line" id="ln2"></div>
-    <div class="prg-dot" id="d3">3</div>
-    <div class="prg-line" id="ln3"></div>
-    <div class="prg-dot" id="d4">4</div>
+    <div class="pd active" id="d1">1</div><div class="pl" id="ln1"></div>
+    <div class="pd" id="d2">2</div><div class="pl" id="ln2"></div>
+    <div class="pd" id="d3">3</div><div class="pl" id="ln3"></div>
+    <div class="pd" id="d4">4</div>
   </div>
   <div class="prg-lbls">
-    <span class="prg-lbl active" id="l1">Móvil</span>
-    <span class="prg-lbl" id="l2">Tripulación</span>
-    <span class="prg-lbl" id="l3">Foto</span>
-    <span class="prg-lbl" id="l4">Confirmar</span>
+    <span class="plbl active" id="l1">Móvil</span>
+    <span class="plbl" id="l2">Tripulación</span>
+    <span class="plbl" id="l3">Foto</span>
+    <span class="plbl" id="l4">Confirmar</span>
   </div>
 </div>
 
-<div class="card">
+<div class="wrap">
 
-<!-- ═══════════════════════════════════ PASO 1 -->
+<!-- ══════════════════ PASO 1 — MÓVIL ══════════════════ -->
 <div class="screen show" id="s1">
-  <div class="s-title">Datos del Móvil</div>
-  <div class="s-sub">Ingrese la subred, seleccione el turno y escriba el número del móvil.</div>
-
-  <!-- Subred -->
-  <div class="field">
-    <label>Subred <span style="color:var(--red)">*</span></label>
-    <div class="sub-grid">
-      <div class="sub-opt norte" onclick="selSubred('Norte',this)">🔵 Norte</div>
-      <div class="sub-opt sur" onclick="selSubred('Sur',this)">🟢 Sur</div>
-      <div class="sub-opt surocc" onclick="selSubred('Sur Occidente',this)">🟡 Sur Occ.</div>
-      <div class="sub-opt centoo" onclick="selSubred('Centro Oriente',this)">🟣 Centro Or.</div>
-    </div>
-    <div class="ferr" id="ferr-subred">Seleccione la subred</div>
+  <div class="s-hd">
+    <div class="s-title">Datos del Turno</div>
+    <div class="s-sub">Seleccione subred, turno y tipo de móvil.</div>
   </div>
 
-  <!-- Turno -->
-  <div class="field">
-    <label>Turno <span style="color:var(--red)">*</span></label>
-    <div class="turno-grid">
-      <div class="turno-opt" id="t-dia" onclick="selTurno('Día')">
-        <div class="turno-ico">☀️</div>
-        <div class="turno-lbl">Día</div>
-        <div class="turno-sub">7am – 7pm</div>
-      </div>
-      <div class="turno-opt" id="t-noche" onclick="selTurno('Noche')">
-        <div class="turno-ico">🌙</div>
-        <div class="turno-lbl">Noche</div>
-        <div class="turno-sub">7pm – 7am</div>
-      </div>
-    </div>
-    <div class="ferr" id="ferr-turno">Seleccione el turno</div>
+  <div class="sec-lbl">Subred</div>
+  <div class="sub-row">
+    <div class="sp norte" onclick="selSub('Norte',this)">🔵 Norte</div>
+    <div class="sp sur" onclick="selSub('Sur',this)">🟢 Sur</div>
+    <div class="sp surocc" onclick="selSub('Sur Occidente',this)">🟡 Sur Occ.</div>
+    <div class="sp centoo" onclick="selSub('Centro Oriente',this)">🟣 Centro Or.</div>
   </div>
+  <div class="ferr" id="fe-sub">Seleccione la subred</div>
 
-  <!-- Tipo de móvil -->
+  <div class="sec-lbl" style="margin-top:1.1rem">Turno</div>
+  <div class="turno-row">
+    <div class="tp" id="t-dia" onclick="selTurno('Día',this)">
+      <div class="tp-ico">☀️</div>
+      <div class="tp-lbl">Día</div>
+    </div>
+    <div class="tp" id="t-noche" onclick="selTurno('Noche',this)">
+      <div class="tp-ico">🌙</div>
+      <div class="tp-lbl">Noche</div>
+    </div>
+  </div>
+  <div class="ferr" id="fe-turno">Seleccione el turno</div>
+
+  <div class="sec-lbl" style="margin-top:1.1rem">Móvil y Tipo</div>
   <div class="field">
-    <label>Tipo de móvil <span style="color:var(--red)">*</span></label>
-    <select id="tipo" onchange="onTipoChange()">
+    <label>Tipo de Móvil <span class="req">*</span></label>
+    <select id="tipo" onchange="onTipo()">
       <option value="">Seleccionar...</option>
-      <option value="Medicalizada">Medicalizada (Médico + Conductor + Auxiliar)</option>
-      <option value="Básica">Básica (Conductor + Auxiliar)</option>
-      <option value="MED">MED (Médico + Conductor/Auxiliar)</option>
+      <option value="Medicalizada">Medicalizada — Médico + Conductor + Auxiliar</option>
+      <option value="Básica">Básica — Conductor + Auxiliar</option>
+      <option value="MED">MED — Médico + Conductor/Auxiliar</option>
     </select>
-    <div class="ferr" id="ferr-tipo">Seleccione el tipo</div>
+    <div class="ferr" id="fe-tipo">Seleccione el tipo</div>
   </div>
-
-  <!-- Número de móvil -->
   <div class="field">
-    <label>Número de Móvil <span style="color:var(--red)">*</span></label>
-    <input type="text" id="movil" placeholder="Ej: 1234" inputmode="numeric" maxlength="4"
-      oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);onMovilInput(this.value)"
+    <label>Número de Móvil <span class="req">*</span></label>
+    <input type="text" id="movil" placeholder="4 dígitos" inputmode="numeric" maxlength="4"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);onMovil(this.value)"
       autocomplete="off">
-    <div class="ferr" id="ferr-movil">Ingrese el número de móvil</div>
+    <div class="ferr" id="fe-movil">Ingrese el número de móvil</div>
     <div class="ibox" id="movil-st"></div>
   </div>
 
-  <!-- Referente -->
+  <div class="sec-lbl">Referente</div>
   <div class="field">
-    <label>Referente quien reporta <span style="color:var(--red)">*</span></label>
-    <input type="text" id="referente" placeholder="Nombre del referente">
-    <div class="ferr" id="ferr-ref">Ingrese el nombre del referente</div>
+    <label>Nombre de quien reporta <span class="req">*</span></label>
+    <input type="text" id="referente" placeholder="Nombre completo del referente">
+    <div class="ferr" id="fe-ref">Ingrese el nombre del referente</div>
   </div>
-
-  <!-- Observaciones -->
   <div class="field">
-    <label>Observaciones <span style="color:var(--mut);font-weight:400;text-transform:none">(opcional)</span></label>
-    <textarea id="obs" rows="2" placeholder="Ej: vehículo con falla, tripulante con restricción..."
-      style="resize:none;width:100%;padding:11px 13px;background:var(--sur);border:1.5px solid var(--bdr2);border-radius:10px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s"
-      onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--bdr2)'"></textarea>
+    <label>Observaciones <span style="font-size:.65rem;color:var(--mut);font-weight:400;text-transform:none">(opcional)</span></label>
+    <textarea id="obs" rows="2" placeholder="Ej: vehículo con falla, tripulante con restricción..."></textarea>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ PASO 2 -->
+<!-- ══════════════════ PASO 2 — TRIPULACIÓN ══════════════════ -->
 <div class="screen" id="s2">
-  <div class="s-title">Tripulación</div>
-  <div class="s-sub">Ingrese la cédula de cada tripulante. El nombre se completa automáticamente desde el catálogo de personal.</div>
+  <div class="s-hd">
+    <div class="s-title">Tripulación</div>
+    <div class="s-sub">Ingrese la cédula — el nombre se completa automáticamente.</div>
+  </div>
 
-  <!-- Doblado alert -->
-  <div class="dob-alert" id="dob-alert">
-    <div class="dob-title" id="dob-title"></div>
-    <div class="dob-list" id="dob-list"></div>
-    <div class="dob-check">
+  <!-- Alerta doblado -->
+  <div class="dob-box" id="dob-box">
+    <div class="dob-ttl" id="dob-ttl"></div>
+    <div class="dob-items" id="dob-items"></div>
+    <div class="dob-ck">
       <input type="checkbox" id="dob-ok">
-      <label for="dob-ok" id="dob-lbl">Confirmo que está autorizado para continuar</label>
+      <label for="dob-ok" id="dob-lbl">Confirmo que está autorizado</label>
     </div>
   </div>
 
-  <!-- MÉDICO (solo si medicalizada o MED) -->
+  <!-- MÉDICO -->
   <div id="blk-med" style="display:none">
-    <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--n);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(96,165,250,.2)">👨‍⚕️ Médico</div>
-    <div class="field">
-      <label>Cédula</label>
-      <input type="text" id="med_c" placeholder="Sin puntos" inputmode="numeric"
-        onblur="checkCedula('med')">
-      <div class="ferr" id="ferr-med_c">Cédula requerida</div>
-      <div class="ibox" id="cat-med"></div>
-    </div>
-    <div class="field">
-      <label>Nombre</label>
-      <input type="text" id="med_n" placeholder="Se completa desde la cédula" readonly
-        style="cursor:not-allowed;color:var(--sub)">
+    <div class="crew-card" id="cc-med">
+      <div class="crew-hd">
+        <span style="font-size:1.1rem">👨‍⚕️</span>
+        <span class="crew-role med">Médico</span>
+        <span class="crew-done-ico">✅</span>
+      </div>
+      <div class="crew-grid">
+        <div class="field" style="margin:0">
+          <label>Cédula <span class="req">*</span></label>
+          <input type="text" id="med_c" placeholder="Sin puntos" inputmode="numeric"
+            onblur="checkCed('med')">
+          <div class="ferr" id="fe-med">Cédula no válida</div>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Nombre</label>
+          <input type="text" id="med_n" readonly
+            placeholder="Desde cédula" style="cursor:not-allowed;color:var(--sub)">
+        </div>
+      </div>
+      <div class="ibox" id="cat-med" style="margin-top:7px"></div>
     </div>
   </div>
 
   <!-- CONDUCTOR -->
-  <div id="blk-con">
-    <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--s);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(74,222,128,.2)">🚗 Conductor</div>
-    <div class="field">
-      <label>Cédula</label>
-      <input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"
-        onblur="checkCedula('con')">
-      <div class="ferr" id="ferr-con_c">Cédula requerida</div>
-      <div class="ibox" id="cat-con"></div>
+  <div class="crew-card" id="cc-con">
+    <div class="crew-hd">
+      <span style="font-size:1.1rem">🚗</span>
+      <span class="crew-role con">Conductor</span>
+      <span class="crew-done-ico">✅</span>
     </div>
-    <div class="field">
-      <label>Nombre</label>
-      <input type="text" id="con_n" placeholder="Se completa desde la cédula" readonly
-        style="cursor:not-allowed;color:var(--sub)">
+    <div class="crew-grid">
+      <div class="field" style="margin:0">
+        <label>Cédula <span class="req">*</span></label>
+        <input type="text" id="con_c" placeholder="Sin puntos" inputmode="numeric"
+          onblur="checkCed('con')">
+        <div class="ferr" id="fe-con">Cédula no válida</div>
+      </div>
+      <div class="field" style="margin:0">
+        <label>Nombre</label>
+        <input type="text" id="con_n" readonly
+          placeholder="Desde cédula" style="cursor:not-allowed;color:var(--sub)">
+      </div>
     </div>
+    <div class="ibox" id="cat-con" style="margin-top:7px"></div>
   </div>
 
   <!-- AUXILIAR -->
-  <div id="blk-aux">
-    <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--co);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(192,132,252,.2)">🏥 Auxiliar</div>
-    <div class="field">
-      <label>Cédula</label>
-      <input type="text" id="aux_c" placeholder="Sin puntos" inputmode="numeric"
-        onblur="checkCedula('aux')">
-      <div class="ferr" id="ferr-aux_c">Cédula requerida</div>
-      <div class="ibox" id="cat-aux"></div>
+  <div class="crew-card" id="cc-aux">
+    <div class="crew-hd">
+      <span style="font-size:1.1rem">🏥</span>
+      <span class="crew-role aux">Auxiliar</span>
+      <span class="crew-done-ico">✅</span>
     </div>
-    <div class="field">
-      <label>Nombre</label>
-      <input type="text" id="aux_n" placeholder="Se completa desde la cédula" readonly
-        style="cursor:not-allowed;color:var(--sub)">
+    <div class="crew-grid">
+      <div class="field" style="margin:0">
+        <label>Cédula <span class="req">*</span></label>
+        <input type="text" id="aux_c" placeholder="Sin puntos" inputmode="numeric"
+          onblur="checkCed('aux')">
+        <div class="ferr" id="fe-aux">Cédula no válida</div>
+      </div>
+      <div class="field" style="margin:0">
+        <label>Nombre</label>
+        <input type="text" id="aux_n" readonly
+          placeholder="Desde cédula" style="cursor:not-allowed;color:var(--sub)">
+      </div>
     </div>
+    <div class="ibox" id="cat-aux" style="margin-top:7px"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ PASO 3 -->
+<!-- ══════════════════ PASO 3 — FOTO ══════════════════ -->
 <div class="screen" id="s3">
-  <div class="s-title">Foto de Carnets</div>
-  <div class="s-sub">Tome una foto de los carnets o cédulas de toda la tripulación juntos.</div>
+  <div class="s-hd">
+    <div class="s-title">Foto de Carnets</div>
+    <div class="s-sub">Una sola foto con los carnets o cédulas de toda la tripulación.</div>
+  </div>
 
-  <div class="foto-area" id="foto-area" onclick="triggerFoto()" ondragover="ev.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')">
-    <img class="foto-preview" id="foto-preview" src="" alt="preview">
-    <div id="foto-placeholder">
+  <div class="foto-drop" id="foto-drop" onclick="g('foto-inp').click()">
+    <img class="foto-prev" id="foto-prev" src="" alt="">
+    <div id="foto-ph">
       <div class="foto-ico">📷</div>
       <div class="foto-lbl">Tomar foto o subir imagen</div>
-      <div class="foto-sub">Carnets/cédulas de toda la tripulación juntos</div>
+      <div class="foto-sub">Carnets de toda la tripulación visibles juntos</div>
     </div>
-    <button class="foto-retake" id="foto-retake" style="display:none" onclick.stop="retakeFoto(event)">🔄 Cambiar foto</button>
+    <button class="btn-retake" id="btn-retake" style="display:none"
+      onclick="event.stopPropagation();retakeFoto()">🔄 Cambiar foto</button>
   </div>
-  <input type="file" id="foto-input" accept="image/*" capture="environment" style="display:none" onchange="onFotoSelected(this)">
+  <input type="file" id="foto-inp" accept="image/*" capture="environment"
+    style="display:none" onchange="onFoto(this)">
 
-  <div class="foto-hint" style="margin-top:12px">
-    <strong>¿Qué debe aparecer en la foto?</strong><br>
-    Los carnets o cédulas de <strong id="foto-hint-roles">todos los tripulantes</strong> visibles y legibles en una sola imagen.
-    <br><br>
-    <strong>Consejo:</strong> Ponga los carnets sobre una superficie plana, asegúrese de que los nombres y fotos sean legibles.
+  <div class="foto-hint">
+    <strong>¿Qué debe aparecer?</strong><br>
+    Los carnets o cédulas de <strong id="hint-roles">todos los tripulantes</strong> en una sola imagen, legibles y bien iluminados.
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ PASO 4 -->
+<!-- ══════════════════ PASO 4 — CONFIRMAR ══════════════════ -->
 <div class="screen" id="s4">
-  <div class="s-title">Confirmar Turno</div>
-  <div class="s-sub">Revise que todo esté correcto antes de enviar.</div>
-
-  <div class="rsm-card">
-    <div class="rsm-title">Móvil y Turno</div>
-    <div class="rsm-row"><span class="rsm-key">Móvil</span><span class="rsm-val" id="r-movil">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Subred</span><span class="rsm-val" id="r-subred">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Tipo</span><span class="rsm-val" id="r-tipo">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Turno</span><span class="rsm-val" id="r-turno">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Referente</span><span class="rsm-val" id="r-ref">-</span></div>
+  <div class="s-hd">
+    <div class="s-title">Confirmar Turno</div>
+    <div class="s-sub">Revise los datos antes de enviar.</div>
   </div>
 
-  <div class="rsm-card">
-    <div class="rsm-title">Tripulación</div>
-    <div id="r-med-row" class="rsm-row"><span class="rsm-key">Médico</span><span class="rsm-val" id="r-med">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Conductor</span><span class="rsm-val" id="r-con">-</span></div>
-    <div class="rsm-row"><span class="rsm-key">Auxiliar</span><span class="rsm-val" id="r-aux">-</span></div>
+  <div class="rsm">
+    <div class="rsm-ttl">Móvil y Turno</div>
+    <div class="rsm-row"><span class="rsm-k">Móvil</span><span class="rsm-v" id="r-movil">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Subred</span><span class="rsm-v" id="r-sub">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Tipo</span><span class="rsm-v" id="r-tipo">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Turno</span><span class="rsm-v" id="r-turno">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Referente</span><span class="rsm-v" id="r-ref">-</span></div>
   </div>
-
-  <div class="rsm-card" id="r-foto-card" style="display:none">
-    <div class="rsm-title">Foto de Carnets</div>
-    <img id="r-foto-preview" style="width:100%;border-radius:8px;max-height:150px;object-fit:cover" src="" alt="">
-    <div style="font-size:.68rem;color:var(--grn);margin-top:6px" id="r-foto-status">Foto lista para subir</div>
+  <div class="rsm">
+    <div class="rsm-ttl">Tripulación</div>
+    <div class="rsm-row" id="rr-med" style="display:none"><span class="rsm-k">Médico</span><span class="rsm-v" id="r-med">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Conductor</span><span class="rsm-v" id="r-con">-</span></div>
+    <div class="rsm-row"><span class="rsm-k">Auxiliar</span><span class="rsm-v" id="r-aux">-</span></div>
   </div>
-
-  <div id="r-obs-card" class="rsm-card" style="display:none">
-    <div class="rsm-title">Observaciones</div>
+  <div class="rsm" id="rsm-foto" style="display:none">
+    <div class="rsm-ttl">Foto de Carnets</div>
+    <img class="rsm-foto" id="r-foto" src="" alt="">
+    <div style="font-size:.68rem;color:var(--grn);margin-top:5px" id="r-foto-st">Lista para subir</div>
+  </div>
+  <div class="rsm" id="rsm-obs" style="display:none">
+    <div class="rsm-ttl">Observaciones</div>
     <div style="font-size:.78rem;color:var(--sub)" id="r-obs"></div>
   </div>
 </div>
 
 <!-- SUCCESS -->
-<div class="success-scr" id="success">
+<div class="suc" id="suc">
   <div class="suc-ico">✅</div>
-  <div class="suc-title">Turno Registrado</div>
+  <div class="suc-ttl">¡Turno Registrado!</div>
   <div class="suc-sub" id="suc-sub">Datos guardados correctamente.</div>
-  <div class="suc-detail" id="suc-detail"></div>
+  <div class="suc-detail" id="suc-det"></div>
   <a class="btn-wa" id="btn-wa" href="#" target="_blank">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
     Compartir por WhatsApp
   </a>
   <button class="btn-nuevo" onclick="resetAll()">+ Registrar otro turno</button>
 </div>
 
-</div><!-- end card -->
+</div><!-- wrap -->
 
-<!-- BOTONES -->
-<div class="btn-bar" id="btn-bar">
-  <button class="btn-back" id="btn-back" onclick="goBack()" style="display:none">← Atrás</button>
+<!-- BTN BAR -->
+<div class="bar" id="bar">
+  <button class="btn-back" id="btn-back" style="display:none" onclick="goBack()">← Atrás</button>
   <button class="btn-next" id="btn-next" onclick="goNext()">Siguiente →</button>
 </div>
 
 <script>
 const SHEET = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
-const TOTAL_STEPS = 4;
-
 const g = id => document.getElementById(id);
 
-// ── ESTADO ────────────────────────────────────
-let step       = 1;
-let state = {
+let step = 1;
+let S = {
   subred:'', turno:'', tipo:'', movil:'', referente:'', obs:'',
-  med_n:'', med_c:'',
-  con_n:'', con_c:'',
-  aux_n:'', aux_c:'',
-  fotoBase64:'', fotoMime:'', fotoUrl:'',
-  recordId:'',
-  catOk: { med:false, con:false, aux:false }
+  med_c:'', med_n:'', con_c:'', con_n:'', aux_c:'', aux_n:'',
+  fotoB64:'', fotoMime:'', recordId:'',
+  catOk:{ med:false, con:false, aux:false }
 };
 
-// ── RELOJ ─────────────────────────────────────
-setInterval(()=>{
-  g('hdr-time').textContent = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
-},1000);
+// Reloj
+setInterval(()=>{ g('clk').textContent = new Date().toLocaleTimeString('es-CO',{hour12:false,hour:'2-digit',minute:'2-digit'}); }, 1000);
 
-// ── PROGRESO ──────────────────────────────────
+// ── PROGRESO ─────────────────────────────────
 function goTo(n){
   g('s'+step).classList.remove('show');
   step = n;
-  g('s'+step).classList.add('show');
-  for(let i=1;i<=TOTAL_STEPS;i++){
-    g('d'+i).className='prg-dot'+(i<step?' done':i===step?' active':'');
+  if(step<=4) g('s'+step).classList.add('show');
+  for(let i=1;i<=4;i++){
+    g('d'+i).className='pd'+(i<step?' done':i===step?' active':'');
     g('d'+i).textContent=i<step?'✓':i;
-    g('l'+i).className='prg-lbl'+(i===step?' active':'');
-    if(g('ln'+i)) g('ln'+i).className='prg-line'+(i<step?' done':'');
+    g('l'+i).className='plbl'+(i===step?' active':'');
+    if(g('ln'+i)) g('ln'+i).className='pl'+(i<step?' done':'');
   }
   g('btn-back').style.display = step>1?'block':'none';
-  g('btn-next').textContent   = step===TOTAL_STEPS?'Enviar turno ✓':'Siguiente →';
-  g('btn-next').className     = 'btn-next'+(step===TOTAL_STEPS?' grn':'');
+  const isLast = step===4;
+  g('btn-next').textContent   = isLast?'Enviar turno ✓':'Siguiente →';
+  g('btn-next').className     = 'btn-next'+(isLast?' grn':'');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function goBack(){ if(step>1) goTo(step-1); }
 
 async function goNext(){
-  if(step===1 && !validateStep1()) return;
-  if(step===2 && !await validateStep2()) return;
-  if(step===3 && !validateStep3()) return;
-  if(step===4){ submitForm(); return; }
-  if(step===3) buildResumen();
+  if(step===1 && !val1()) return;
+  if(step===2 && !(await val2())) return;
+  if(step===3 && !val3()) return;
+  if(step===4){ await submit(); return; }
+  if(step===3) buildRsm();
   goTo(step+1);
 }
 
 // ── PASO 1 ────────────────────────────────────
-function selSubred(val, el){
-  state.subred = val;
-  document.querySelectorAll('.sub-opt').forEach(e=>e.classList.remove('sel'));
+function selSub(val, el){
+  S.subred = val;
+  document.querySelectorAll('.sp').forEach(e=>e.classList.remove('sel'));
   el.classList.add('sel');
-  g('ferr-subred').classList.remove('show');
+  g('fe-sub').classList.remove('show');
 }
 
-function selTurno(val){
-  state.turno = val;
+function selTurno(val, el){
+  S.turno = val;
   g('t-dia').classList.toggle('sel', val==='Día');
   g('t-noche').classList.toggle('sel', val==='Noche');
-  g('ferr-turno').classList.remove('show');
+  g('fe-turno').classList.remove('show');
 }
 
-function onTipoChange(){
-  const val = g('tipo').value;
-  state.tipo = val;
-  const hasMed = val==='Medicalizada'||val==='MED';
+function onTipo(){
+  const v = g('tipo').value;
+  S.tipo = v;
+  const hasMed = v==='Medicalizada'||v==='MED';
   g('blk-med').style.display = hasMed?'block':'none';
-  // Update foto hint
-  const roles = val==='Medicalizada'?'médico, conductor y auxiliar':val==='MED'?'médico y conductor/auxiliar':'conductor y auxiliar';
-  g('foto-hint-roles').textContent = roles;
-  g('ferr-tipo').classList.remove('show');
+  g('hint-roles').textContent = v==='Medicalizada'?'médico, conductor y auxiliar':v==='MED'?'médico y conductor/auxiliar':'conductor y auxiliar';
+  g('fe-tipo').classList.remove('show');
 }
 
-async function onMovilInput(val){
+async function onMovil(val){
   const st = g('movil-st');
   if(val.length < 3){ st.className='ibox'; return; }
-  st.className='ibox loading show'; st.innerHTML='<span class="spin-dark"></span>Verificando...';
+  st.className='ibox load show'; st.innerHTML='<span class="spin-s"></span>Verificando...';
   try{
-    const d = await jsonpCall({action:'checkMovil', movil:val, subred:state.subred||''}, 5000);
+    const d = await api({action:'checkMovil', movil:val, subred:S.subred||''}, 5000);
     if(d.estado==='activo'){
       st.className='ibox warn show';
-      st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno}) — ¿es un cambio de tripulación?`;
+      st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno})`;
     } else if(d.estado==='no_existe'){
       st.className='ibox err show';
-      st.innerHTML=`❌ Móvil <strong>${val}</strong> no está registrada en el catálogo de esta subred.`;
+      st.innerHTML=`❌ Móvil <strong>${val}</strong> no registrada en esta subred`;
     } else {
       st.className='ibox ok show';
       st.innerHTML=`✓ Móvil <strong>${val}</strong> disponible`;
@@ -501,308 +532,252 @@ async function onMovilInput(val){
   } catch { st.className='ibox'; }
 }
 
-function validateStep1(){
-  let ok = true;
-  if(!state.subred){ g('ferr-subred').classList.add('show'); ok=false; }
-  if(!state.turno){ g('ferr-turno').classList.add('show'); ok=false; }
-  if(!g('tipo').value){ g('ferr-tipo').classList.add('show'); ok=false; } else state.tipo=g('tipo').value;
-  const mv = g('movil').value.trim();
-  if(!mv||mv.length<3){ g('ferr-movil').classList.add('show'); ok=false; } else state.movil=mv;
-  const ref = g('referente').value.trim();
-  if(!ref){ g('ferr-ref').classList.add('show'); ok=false; } else state.referente=ref;
-  state.obs = g('obs').value.trim();
+function val1(){
+  let ok=true;
+  if(!S.subred){ g('fe-sub').classList.add('show'); ok=false; }
+  if(!S.turno){ g('fe-turno').classList.add('show'); ok=false; }
+  S.tipo = g('tipo').value;
+  if(!S.tipo){ g('fe-tipo').classList.add('show'); ok=false; }
+  S.movil = g('movil').value.trim();
+  if(!S.movil||S.movil.length<3){ g('fe-movil').classList.add('show'); ok=false; }
+  S.referente = g('referente').value.trim();
+  if(!S.referente){ g('fe-ref').classList.add('show'); ok=false; }
+  S.obs = g('obs').value.trim();
   return ok;
 }
 
-// ── PASO 2 — TRIPULACIÓN ──────────────────────
-async function checkCedula(role){
-  const cedEl = g(role+'_c');
-  const nomEl = g(role+'_n');
-  const catEl = g('cat-'+role);
-  const ced   = cedEl?.value.trim();
-  if(!ced){ catEl.className='ibox'; return; }
+// ── PASO 2 ────────────────────────────────────
+async function checkCed(role){
+  const cedEl = g(role+'_c'), nomEl = g(role+'_n'), catEl = g('cat-'+role);
+  const ced   = cedEl.value.trim();
+  if(!ced){ catEl.className='ibox'; S.catOk[role]=false; return; }
 
-  catEl.className='ibox loading show';
-  catEl.innerHTML='<span class="spin-dark"></span>Verificando en catálogo...';
+  catEl.className='ibox load show';
+  catEl.innerHTML='<span class="spin-s"></span>Verificando en catálogo...';
 
   try{
-    const d = await jsonpCall({action:'checkCatalogo', cedulas:ced}, 6000);
-    const res = d?.resultados?.[0];
-    if(!res){ catEl.className='ibox'; return; }
-    if(res.estado==='ok'){
-      nomEl.value = res.nombre;
-      nomEl.style.color='var(--txt)';
+    const d = await api({action:'checkCatalogo', cedulas:ced}, 6000);
+    const r = d?.resultados?.[0];
+    if(!r){ catEl.className='ibox'; return; }
+
+    if(r.estado==='ok'){
+      nomEl.value=r.nombre; nomEl.style.color='var(--txt)';
       catEl.className='ibox ok show';
-      catEl.innerHTML=`✓ <strong>${res.nombre}</strong> · ${res.cargo} · ${res.subred||'General'}`;
-      state.catOk[role] = true;
-      // Disparar chequeo doblado si es conductor o auxiliar
-      if(role==='con'||role==='aux') checkDoblado();
-    } else if(res.estado==='inactivo'){
-      nomEl.value=''; state.catOk[role]=false;
+      catEl.innerHTML=`✓ <strong>${r.nombre}</strong> · ${r.cargo}${r.subred?' · '+r.subred:''}`;
+      S.catOk[role]=true;
+      g('cc-'+role).classList.add('done');
+      g('fe-'+role).classList.remove('show');
+      if(role!=='med') checkDoblado();
+    } else if(r.estado==='inactivo'){
+      nomEl.value=''; S.catOk[role]=false;
       catEl.className='ibox err show';
-      catEl.innerHTML=`🚫 <strong>${res.nombre}</strong> está INACTIVO — no puede ingresar`;
-      cedEl.value='';
+      catEl.innerHTML=`🚫 <strong>${r.nombre}</strong> está INACTIVO`;
+      cedEl.value=''; g('cc-'+role).classList.remove('done');
     } else {
-      nomEl.value=''; state.catOk[role]=false;
+      nomEl.value=''; S.catOk[role]=false;
       catEl.className='ibox err show';
-      catEl.innerHTML=`❌ Cédula <strong>${ced}</strong> no está en el catálogo de personal autorizado`;
+      catEl.innerHTML=`❌ Cédula no registrada en el catálogo de personal`;
+      g('cc-'+role).classList.remove('done');
     }
   } catch {
     catEl.className='ibox warn show';
     catEl.innerHTML='⚠️ No se pudo verificar — continúe con precaución';
-    state.catOk[role]=true; // fallback permissive
+    S.catOk[role]=true;
   }
 }
 
 async function checkDoblado(){
-  const cedulas = [g('con_c').value, g('aux_c').value, g('med_c').value]
-    .map(v=>v.trim()).filter(Boolean).join(',');
-  if(!cedulas) return;
+  const ceds=[g('con_c').value,g('aux_c').value,g('med_c').value].map(v=>v.trim()).filter(Boolean);
+  if(!ceds.length){ hideDob(); return; }
   try{
-    const d = await jsonpCall({action:'checkPersonal', cedulas}, 8000);
+    const d=await api({action:'checkPersonal',cedulas:ceds.join(',')},8000);
     if(!d?.resultados?.length){ hideDob(); return; }
-    let alertas=[], maxCons=0;
-    d.resultados.forEach(res=>{
-      res.encontrados.forEach(enc=>{
-        if(enc.tipo==='activo'){
-          alertas.push(`🔴 <strong>${enc.rol} ${enc.nombre}</strong> — TURNO ACTIVO en móvil ${enc.placa}`);
-        } else if(enc.consecutivos>=2){
-          const nivel=enc.consecutivos>=3?'🔴 TRIPLICADO':'🟠 DOBLADO';
-          alertas.push(`${nivel} — <strong>${enc.rol} ${enc.nombre}</strong> — ${enc.consecutivos} turnos seguidos`);
-          if(enc.consecutivos>maxCons) maxCons=enc.consecutivos;
-        }
-      });
-    });
+    let alertas=[],maxC=0;
+    d.resultados.forEach(res=>res.encontrados.forEach(e=>{
+      if(e.tipo==='activo') alertas.push(`🔴 <strong>${e.rol} ${e.nombre}</strong> — TURNO ACTIVO en móvil ${e.placa}`);
+      else if(e.consecutivos>=2){
+        alertas.push(`${e.consecutivos>=3?'🔴 TRIPLICADO':'🟠 DOBLADO'} — <strong>${e.rol} ${e.nombre}</strong> — ${e.consecutivos} turnos seguidos`);
+        if(e.consecutivos>maxC) maxC=e.consecutivos;
+      }
+    }));
     if(!alertas.length){ hideDob(); return; }
-    const isCrit = maxCons>=3;
-    const al = g('dob-alert');
-    al.className='dob-alert show '+(isCrit?'crit':'warn');
-    g('dob-title').textContent = isCrit?'⛔ PERSONAL EN TERCER TURNO — PARAR MÓVIL':'⚠️ Personal doblando turno';
-    g('dob-list').innerHTML = alertas.join('<br>');
-    g('dob-lbl').textContent = isCrit
-      ? 'Confirmo que el supervisor autorizó expresamente el tercer turno'
-      : 'Confirmo que el personal está autorizado para doblar turno';
-    g('dob-ok').checked = false;
+    const isCrit=maxC>=3;
+    const box=g('dob-box');
+    box.className='dob-box show '+(isCrit?'crit':'warn');
+    g('dob-ttl').textContent=isCrit?'⛔ PERSONAL EN TERCER TURNO — PARAR MÓVIL':'⚠️ Personal doblando turno';
+    g('dob-items').innerHTML=alertas.join('<br>');
+    g('dob-lbl').textContent=isCrit?'Confirmo que el supervisor autorizó el tercer turno':'Confirmo que el personal está autorizado para doblar';
+    g('dob-ok').checked=false;
   } catch { hideDob(); }
 }
+function hideDob(){ g('dob-box').className='dob-box'; }
 
-function hideDob(){ g('dob-alert').className='dob-alert'; }
-
-async function validateStep2(){
-  let ok = true;
-  const hasMed = state.tipo==='Medicalizada'||state.tipo==='MED';
-
+async function val2(){
+  let ok=true;
+  const hasMed=S.tipo==='Medicalizada'||S.tipo==='MED';
   if(hasMed){
-    const ced=g('med_c').value.trim(), nom=g('med_n').value.trim();
-    if(!ced||!nom||!state.catOk.med){ g('ferr-med_c').classList.add('show'); ok=false; }
-    else { state.med_c=ced; state.med_n=nom; g('ferr-med_c').classList.remove('show'); }
-  } else { state.med_c=''; state.med_n=''; }
-
-  const conCed=g('con_c').value.trim(), conNom=g('con_n').value.trim();
-  if(!conCed||!conNom||!state.catOk.con){ g('ferr-con_c').classList.add('show'); ok=false; }
-  else { state.con_c=conCed; state.con_n=conNom; g('ferr-con_c').classList.remove('show'); }
-
-  const auxCed=g('aux_c').value.trim(), auxNom=g('aux_n').value.trim();
-  if(!auxCed||!auxNom||!state.catOk.aux){ g('ferr-aux_c').classList.add('show'); ok=false; }
-  else { state.aux_c=auxCed; state.aux_n=auxNom; g('ferr-aux_c').classList.remove('show'); }
-
-  // Verificar doblado confirmado
-  const dob = g('dob-alert');
-  if(dob.classList.contains('show') && !g('dob-ok').checked){
+    S.med_c=g('med_c').value.trim(); S.med_n=g('med_n').value.trim();
+    if(!S.med_c||!S.med_n||!S.catOk.med){ g('fe-med').classList.add('show'); ok=false; }
+    else g('fe-med').classList.remove('show');
+  } else { S.med_c=''; S.med_n=''; }
+  S.con_c=g('con_c').value.trim(); S.con_n=g('con_n').value.trim();
+  if(!S.con_c||!S.con_n||!S.catOk.con){ g('fe-con').classList.add('show'); ok=false; }
+  else g('fe-con').classList.remove('show');
+  S.aux_c=g('aux_c').value.trim(); S.aux_n=g('aux_n').value.trim();
+  if(!S.aux_c||!S.aux_n||!S.catOk.aux){ g('fe-aux').classList.add('show'); ok=false; }
+  else g('fe-aux').classList.remove('show');
+  const dob=g('dob-box');
+  if(dob.classList.contains('show')&&!g('dob-ok').checked){
     dob.style.outline='2px solid var(--red)';
-    dob.scrollIntoView({behavior:'smooth',block:'center'});
-    return false;
+    dob.scrollIntoView({behavior:'smooth',block:'center'}); return false;
   }
   dob.style.outline='';
   return ok;
 }
 
-// ── PASO 3 — FOTO ─────────────────────────────
-function triggerFoto(){ g('foto-input').click(); }
-
-function retakeFoto(e){
-  e.stopPropagation();
-  state.fotoBase64=''; state.fotoMime='';
-  g('foto-preview').classList.remove('show');
-  g('foto-preview').src='';
-  g('foto-placeholder').style.display='block';
-  g('foto-retake').style.display='none';
-  g('foto-area').classList.remove('done');
-  g('foto-input').value='';
-}
-
-function onFotoSelected(input){
-  const file = input.files[0];
-  if(!file) return;
-  if(file.size > 15*1024*1024){ alert('La imagen es muy grande (máx 15MB)'); return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    const data = e.target.result;
-    g('foto-preview').src = data;
-    g('foto-preview').classList.add('show');
-    g('foto-placeholder').style.display='none';
-    g('foto-retake').style.display='inline-block';
-    g('foto-area').classList.add('done');
-    // Extraer base64
-    state.fotoBase64 = data.split(',')[1];
-    state.fotoMime   = file.type;
+// ── PASO 3 ────────────────────────────────────
+function onFoto(inp){
+  const f=inp.files[0]; if(!f) return;
+  if(f.size>15*1024*1024){ alert('Imagen muy grande (máx 15MB)'); return; }
+  const r=new FileReader();
+  r.onload=e=>{
+    const data=e.target.result;
+    g('foto-prev').src=data; g('foto-prev').classList.add('show');
+    g('foto-ph').style.display='none';
+    g('btn-retake').style.display='inline-block';
+    g('foto-drop').classList.add('done');
+    S.fotoB64=data.split(',')[1]; S.fotoMime=f.type;
   };
-  reader.readAsDataURL(file);
+  r.readAsDataURL(f);
 }
-
-function validateStep3(){
-  if(!state.fotoBase64){
-    g('foto-area').style.borderColor='var(--red)';
-    alert('Debe tomar la foto de los carnets antes de continuar');
-    return false;
-  }
-  g('foto-area').style.borderColor='';
-  return true;
+function retakeFoto(){
+  S.fotoB64=''; S.fotoMime='';
+  g('foto-prev').classList.remove('show'); g('foto-prev').src='';
+  g('foto-ph').style.display='block';
+  g('btn-retake').style.display='none';
+  g('foto-drop').classList.remove('done');
+  g('foto-inp').value='';
+}
+function val3(){
+  if(!S.fotoB64){ g('foto-drop').style.borderColor='var(--red)'; alert('Tome la foto de los carnets'); return false; }
+  g('foto-drop').style.borderColor=''; return true;
 }
 
 // ── RESUMEN ───────────────────────────────────
-function buildResumen(){
-  g('r-movil').textContent   = 'Móvil '+state.movil;
-  g('r-subred').textContent  = state.subred;
-  g('r-tipo').textContent    = state.tipo;
-  g('r-turno').textContent   = state.turno==='Día'?'☀️ Día':'🌙 Noche';
-  g('r-ref').textContent     = state.referente;
-  const hasMed = state.tipo==='Medicalizada'||state.tipo==='MED';
-  g('r-med-row').style.display = hasMed?'flex':'none';
-  g('r-med').textContent     = state.med_n||'-';
-  g('r-con').textContent     = state.con_n||'-';
-  g('r-aux').textContent     = state.aux_n||'-';
-  if(state.fotoBase64){
-    g('r-foto-card').style.display='block';
-    g('r-foto-preview').src='data:'+state.fotoMime+';base64,'+state.fotoBase64;
+function buildRsm(){
+  g('r-movil').textContent='Móvil '+S.movil;
+  g('r-sub').textContent=S.subred;
+  g('r-tipo').textContent=S.tipo;
+  g('r-turno').textContent=S.turno==='Día'?'☀️ Día':'🌙 Noche';
+  g('r-ref').textContent=S.referente;
+  const hasMed=S.tipo==='Medicalizada'||S.tipo==='MED';
+  g('rr-med').style.display=hasMed?'flex':'none';
+  g('r-med').textContent=S.med_n||'-';
+  g('r-con').textContent=S.con_n;
+  g('r-aux').textContent=S.aux_n;
+  if(S.fotoB64){
+    g('rsm-foto').style.display='block';
+    g('r-foto').src='data:'+S.fotoMime+';base64,'+S.fotoB64;
   }
-  if(state.obs){ g('r-obs-card').style.display='block'; g('r-obs').textContent=state.obs; }
+  if(S.obs){ g('rsm-obs').style.display='block'; g('r-obs').textContent=S.obs; }
 }
 
 // ── ENVIAR ────────────────────────────────────
-async function submitForm(){
-  const btn = g('btn-next');
-  btn.innerHTML='<span class="spin"></span>Guardando...';
-  btn.disabled=true;
-
-  state.recordId = 'SCAT-'+Date.now()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
-  const turnoLabel = state.turno==='Día'?'Día (7am-7pm)':'Noche (7pm-7am)';
-
-  const rec = {
-    id:           state.recordId,
-    ts:           new Date().toISOString(),
-    subred:       state.subred,
-    placa:        state.movil,
-    tipo:         state.tipo,
-    turno:        turnoLabel,
-    inicio:       new Date().toISOString(),
-    med_nombre:   state.med_n,
-    med_cedula:   state.med_c,
-    med_foto_url: '',
-    con_nombre:   state.con_n,
-    con_cedula:   state.con_c,
-    con_foto_url: '',
-    aux_nombre:   state.aux_n,
-    aux_cedula:   state.aux_c,
-    aux_foto_url: '',
-    referente:    state.referente,
-    ref_subred:   state.subred,
-    observaciones:state.obs,
-    estado:       'activo',
-    doblado:      g('dob-ok').checked?'si':'no'
+async function submit(){
+  const btn=g('btn-next');
+  btn.innerHTML='<span class="spin"></span>Guardando...'; btn.disabled=true;
+  S.recordId='SCAT-'+Date.now()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  const turnoLabel=S.turno==='Día'?'Día (7am-7pm)':'Noche (7pm-7am)';
+  const rec={
+    id:S.recordId, ts:new Date().toISOString(),
+    subred:S.subred, placa:S.movil, tipo:S.tipo, turno:turnoLabel,
+    inicio:new Date().toISOString(),
+    med_nombre:S.med_n, med_cedula:S.med_c, med_foto_url:'',
+    con_nombre:S.con_n, con_cedula:S.con_c, con_foto_url:'',
+    aux_nombre:S.aux_n, aux_cedula:S.aux_c, aux_foto_url:'',
+    referente:S.referente, ref_subred:S.subred,
+    observaciones:S.obs, estado:'activo',
+    doblado:g('dob-ok').checked?'si':'no'
   };
-
   try{
-    const d = await jsonpCall({action:'register', record:JSON.stringify(rec)}, 12000);
+    const d=await api({action:'register',record:JSON.stringify(rec)},12000);
     if(d.status==='ok'){
-      btn.innerHTML='<span class="spin"></span>Subiendo foto...';
-      // Subir foto en background
-      uploadFoto(state.recordId);
-      showSuccess(rec);
-    } else throw new Error('server error');
-  } catch(e){
+      uploadFoto(S.recordId);
+      showSuccess(rec, turnoLabel);
+    } else throw 0;
+  } catch {
     btn.innerHTML='Enviar turno ✓'; btn.disabled=false;
-    alert('Error al guardar. Verifique su conexión e intente de nuevo.');
+    alert('Error al guardar. Verifique conexión e intente de nuevo.');
   }
 }
 
-async function uploadFoto(recordId){
-  if(!state.fotoBase64) return;
+async function uploadFoto(recId){
+  if(!S.fotoB64) return;
   try{
-    const filename = 'SCAT_'+recordId+'_carnets.jpg';
-    await jsonpCall({
-      action:'uploadPhoto', base64:state.fotoBase64, mimeType:state.fotoMime,
-      filename, recordId, role:'con' // guarda en el campo general
-    }, 30000);
-    g('r-foto-status').textContent='✓ Foto guardada en Drive';
-    g('r-foto-status').style.color='var(--grn)';
-    if(g('suc-sub-foto')) g('suc-sub-foto').textContent='Foto de carnets guardada en Drive ✓';
-  } catch { /* silent — foto se puede subir después */ }
+    await api({action:'uploadPhoto',base64:S.fotoB64,mimeType:S.fotoMime,
+      filename:'SCAT_'+recId+'_carnets.jpg',recordId:recId,role:'con'},30000);
+    const el=g('r-foto-st'); if(el){ el.textContent='✓ Foto guardada en Drive'; }
+    const el2=g('suc-foto'); if(el2){ el2.textContent='Foto de carnets guardada en Drive ✓'; el2.style.color='var(--grn)'; }
+  } catch {}
 }
 
-function showSuccess(rec){
+function showSuccess(rec, turnoLabel){
   g('s4').classList.remove('show');
-  g('btn-bar').style.display='none';
-  const suc = g('success');
-  suc.classList.add('show');
-
-  const turnoLabel = state.turno==='Día'?'☀️ Día (7am-7pm)':'🌙 Noche (7pm-7am)';
-  g('suc-sub').innerHTML='Turno registrado el '+new Date().toLocaleString('es-CO',{hour12:false});
-  g('suc-detail').innerHTML=`
-    <strong>Móvil:</strong> ${state.movil} · ${state.subred}<br>
-    <strong>Tipo:</strong> ${state.tipo} · ${turnoLabel}<br>
-    ${state.med_n?`<strong>Médico:</strong> ${state.med_n}<br>`:''}
-    <strong>Conductor:</strong> ${state.con_n}<br>
-    <strong>Auxiliar:</strong> ${state.aux_n}<br>
-    <strong>Referente:</strong> ${state.referente}<br>
-    <span id="suc-sub-foto" style="color:var(--sub);font-size:.75rem">Subiendo foto de carnets...</span>`;
-
-  // WhatsApp
-  const msg = encodeURIComponent(
+  g('bar').style.display='none';
+  g('suc').classList.add('show');
+  g('suc-sub').textContent='Registrado el '+new Date().toLocaleString('es-CO',{hour12:false});
+  g('suc-det').innerHTML=
+    `<strong>Móvil:</strong> ${S.movil} · ${S.subred}<br>`+
+    `<strong>Tipo:</strong> ${S.tipo} · ${S.turno==='Día'?'☀️ Día':'🌙 Noche'}<br>`+
+    (S.med_n?`<strong>Médico:</strong> ${S.med_n}<br>`:'')+
+    `<strong>Conductor:</strong> ${S.con_n}<br>`+
+    `<strong>Auxiliar:</strong> ${S.aux_n}<br>`+
+    `<strong>Referente:</strong> ${S.referente}<br>`+
+    `<span id="suc-foto" style="font-size:.72rem;color:var(--sub)">Subiendo foto de carnets...</span>`;
+  const msg=encodeURIComponent(
     `✅ SCAT — Turno Registrado\n`+
-    `📍 ${state.subred} · Móvil ${state.movil}\n`+
-    `⏰ ${turnoLabel}\n`+
-    `🚑 ${state.tipo}\n`+
-    (state.med_n?`👨‍⚕️ Médico: ${state.med_n}\n`:'')+
-    `🚗 Conductor: ${state.con_n}\n`+
-    `🏥 Auxiliar: ${state.aux_n}\n`+
-    `📋 Referente: ${state.referente}\n`+
-    (state.obs?`📝 Obs: ${state.obs}\n`:'')+
+    `📍 ${S.subred} · Móvil ${S.movil}\n`+
+    `⏰ ${S.turno==='Día'?'☀️ Día':'🌙 Noche'} · ${S.tipo}\n`+
+    (S.med_n?`👨‍⚕️ Médico: ${S.med_n}\n`:'')+
+    `🚗 Conductor: ${S.con_n}\n`+
+    `🏥 Auxiliar: ${S.aux_n}\n`+
+    `📋 Referente: ${S.referente}\n`+
+    (S.obs?`📝 Obs: ${S.obs}\n`:'')+
     `🕐 ${new Date().toLocaleString('es-CO',{hour12:false})}`
   );
   g('btn-wa').href=`https://wa.me/?text=${msg}`;
 }
 
 function resetAll(){
-  state = {subred:'',turno:'',tipo:'',movil:'',referente:'',obs:'',
-    med_n:'',med_c:'',con_n:'',con_c:'',aux_n:'',aux_c:'',
-    fotoBase64:'',fotoMime:'',fotoUrl:'',recordId:'',
-    catOk:{med:false,con:false,aux:false}};
-  // Reset UI
-  document.querySelectorAll('.sub-opt,.turno-opt').forEach(e=>e.classList.remove('sel'));
+  S={subred:'',turno:'',tipo:'',movil:'',referente:'',obs:'',
+    med_c:'',med_n:'',con_c:'',con_n:'',aux_c:'',aux_n:'',
+    fotoB64:'',fotoMime:'',recordId:'',catOk:{med:false,con:false,aux:false}};
+  document.querySelectorAll('.sp,.tp').forEach(e=>e.classList.remove('sel'));
+  document.querySelectorAll('.crew-card').forEach(e=>e.classList.remove('done'));
   g('tipo').value=''; g('movil').value=''; g('referente').value=''; g('obs').value='';
-  ['med_c','med_n','con_c','con_n','aux_c','aux_n'].forEach(id=>{const el=g(id);if(el){el.value='';el.style.color='';}});
-  ['cat-med','cat-con','cat-aux','movil-st'].forEach(id=>{const el=g(id);if(el)el.className='ibox';});
+  ['med_c','med_n','con_c','con_n','aux_c','aux_n'].forEach(id=>{
+    const el=g(id); if(el){el.value='';el.style.color='';}
+  });
+  ['cat-med','cat-con','cat-aux','movil-st'].forEach(id=>{ const el=g(id);if(el)el.className='ibox'; });
   document.querySelectorAll('.ferr').forEach(e=>e.classList.remove('show'));
-  retakeFoto({stopPropagation:()=>{}});
-  hideDob();
+  retakeFoto(); hideDob();
   g('blk-med').style.display='none';
-  g('success').classList.remove('show');
-  g('btn-bar').style.display='flex';
-  const btn=g('btn-next');
-  btn.innerHTML='Siguiente →'; btn.disabled=false; btn.className='btn-next';
+  g('rsm-foto').style.display='none'; g('rsm-obs').style.display='none';
+  g('suc').classList.remove('show');
+  g('bar').style.display='flex';
+  const btn=g('btn-next'); btn.innerHTML='Siguiente →'; btn.disabled=false; btn.className='btn-next';
   goTo(1);
 }
 
 // ── JSONP ─────────────────────────────────────
-function jsonpCall(params, timeout=8000){
+function api(params, timeout=8000){
   return new Promise((resolve,reject)=>{
     const cb='_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
     const sc=document.createElement('script');
     const tid=setTimeout(()=>{cleanup();reject(new Error('timeout'));},timeout);
     function cleanup(){clearTimeout(tid);delete window[cb];sc.remove();}
     window[cb]=d=>{cleanup();resolve(d);};
-    sc.onerror=()=>{cleanup();reject(new Error('net error'));};
+    sc.onerror=()=>{cleanup();reject();};
     sc.src=SHEET+'?'+new URLSearchParams({...params,callback:cb}).toString();
     document.head.appendChild(sc);
   });

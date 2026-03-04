@@ -992,7 +992,7 @@ async function savePersonal() {
 
   try {
     const rec = { cedula:ced, nombre_oficial:nom.toUpperCase(), subred:sub, cargo, activo:'si' };
-    const d   = await jsonp({ action:'addPersonal', record:JSON.stringify(rec) }, 8000);
+    const d   = await jsonp({ action:'addPersonal', record:JSON.stringify(rec), cedula:ced, nombre_oficial:nom.toUpperCase(), subred:sub, cargo }, 8000);
     if (d.status==='ok') {
       if (d.msg==='ya_existe') { showToast('err','Esa cédula ya está registrada'); }
       else {
@@ -1095,7 +1095,7 @@ async function saveMovil() {
 
   try {
     const rec = {numero:num, tipo, subred:sub, activo:'si'};
-    const d   = await jsonp({action:'addMovil', record:JSON.stringify(rec)}, 8000);
+    const d   = await jsonp({action:'addMovil', record:JSON.stringify(rec), numero:num, tipo, subred:sub}, 8000);
     if (d.status==='ok') {
       if (d.msg==='ya_existe') { showToast('err','Ese número ya está registrado'); }
       else {
