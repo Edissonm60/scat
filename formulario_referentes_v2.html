@@ -480,7 +480,7 @@ function lookupMovil(numero, subred) {
   return _movilesCache.find(m =>
     String(m.numero).trim() === String(numero).trim() &&
     String(m.activo).toLowerCase() === 'si' &&
-    (!subred || !m.subred || m.subred === subred)
+    (!m.subred || !subred || String(m.subred).trim() === String(subred).trim())
   ) || null;
 }
 const g = id => document.getElementById(id);
@@ -562,13 +562,22 @@ async function onMovil(val){
     // Buscar en caché local primero
     const local = lookupMovil(val, S.subred);
     if (_movilesCache !== null) {
-      // Tenemos caché — respuesta instantánea
       if (!local) {
-        st.className='ibox warn show';
-        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no registrada en el catálogo`;
+        // Puede existir pero en otra subred
+        const enOtraSubred = _movilesCache.find(m =>
+          String(m.numero).trim() === val &&
+          String(m.activo).toLowerCase() === 'si' &&
+          m.subred && m.subred !== S.subred
+        );
+        if (enOtraSubred) {
+          st.className='ibox err show';
+          st.innerHTML=`🚫 Móvil <strong>${val}</strong> pertenece a la subred <strong>${enOtraSubred.subred}</strong> — no puede registrarse en <strong>${S.subred}</strong>`;
+        } else {
+          st.className='ibox warn show';
+          st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no está registrada en el catálogo`;
+        }
       } else {
-        st.className='ibox ok show';
-        st.innerHTML=`✓ Móvil <strong>${val}</strong> · ${local.tipo} · ${local.subred||S.subred}`;
+        checkMovilActiva(val, local, st);
       }
       return;
     }
@@ -577,11 +586,11 @@ async function onMovil(val){
     try{
       const d = await api({action:'checkMovil', movil:val, subred:S.subred||''}, 5000);
       if(d.estado==='activo'){
-        st.className='ibox warn show';
-        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno})`;
+        st.className='ibox err show';
+        st.innerHTML=`🔴 Móvil <strong>${val}</strong> ya tiene turno activo — está en servicio (${d.subred||''} · ${d.turno||''})`;
       } else if(d.estado==='no_existe'){
         st.className='ibox warn show';
-        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no registrada — verifique el número`;
+        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no está registrada en el catálogo`;
       } else {
         st.className='ibox ok show';
         st.innerHTML=`✓ Móvil <strong>${val}</strong> disponible`;
@@ -706,6 +715,23 @@ async function checkDoblado(){
     g('dob-ok').checked=false;
   } catch { hideDob(); }
 }
+async function checkMovilActiva(val, catalogEntry, st) {
+  try {
+    const d = await api({action:'checkMovil', movil:val, subred:''}, 5000);
+    if (d.estado === 'activo') {
+      st.className='ibox err show';
+      st.innerHTML=`🔴 Móvil <strong>${val}</strong> ya tiene turno activo — está en servicio ahora (${d.subred||''} · ${d.turno||''})`;
+    } else {
+      st.className='ibox ok show';
+      st.innerHTML=`✓ Móvil <strong>${val}</strong> · ${catalogEntry.tipo||''} · disponible`;
+    }
+  } catch {
+    // Si falla el server, solo mostrar que está en catálogo
+    st.className='ibox ok show';
+    st.innerHTML=`✓ Móvil <strong>${val}</strong> · ${catalogEntry.tipo||''} (verificación online fallida)`;
+  }
+}
+
 function hideDob(){
   g('dob-box').className='dob-box';
   g('dob-ok').style.display='inline-block';
