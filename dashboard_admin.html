@@ -604,24 +604,18 @@ async function loadData(silent=false){
 }
 
 async function closeRecord(id,action,rec){
-  const entry={
-    id:rec.id, ts:rec.ts, subred:rec.subred, placa:rec.placa, tipo:rec.tipo,
-    turno:rec.turno, inicio:rec.inicio, cierre:new Date().toISOString(),
-    accion:action, cerrado_por:'Admin Dashboard', estado:'cerrado',
-    med_nombre:rec.med_nombre||'', med_cedula:rec.med_cedula||'', med_foto_url:rec.med_foto_url||'',
-    con_nombre:rec.con_nombre||'', con_cedula:rec.con_cedula||'', con_foto_url:rec.con_foto_url||'',
-    aux_nombre:rec.aux_nombre||'', aux_cedula:rec.aux_cedula||'', aux_foto_url:rec.aux_foto_url||'',
-    referente:rec.referente||'', observaciones:rec.observaciones||'', doblado:rec.doblado||'no'
-  };
   try{
-    const r=await jsonp({action:'close',id:String(id),entry:JSON.stringify(entry)},10000);
-    if(r&&r.status==='ok'){
+    // Usar closeSimple — solo envía id y accion, el servidor reconstruye el resto
+    const r=await jsonp({action:'close', id:String(id), accion:action, cerrado_por:'Admin Dashboard'},10000);
+    if(r&&(r.status==='ok'||r.msg==='ya_cerrado')){
       active=active.filter(x=>String(x.id)!==String(id));
-      closed.push(entry);
       showToast('ok','Turno cerrado correctamente');
       renderAll(); checkAlerts();
     } else throw 0;
-  } catch {showToast('err','Error al cerrar — reintentando...');setTimeout(()=>loadData(true),2000);}
+  } catch {
+    showToast('err','Error al cerrar');
+    setTimeout(()=>loadData(true),2000);
+  }
 }
 
 function jsonp(params,timeout=8000){

@@ -257,7 +257,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-h
   <div class="field">
     <label>Número de Móvil <span class="req">*</span></label>
     <input type="text" id="movil" placeholder="4 dígitos" inputmode="numeric" maxlength="4"
-      oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);onMovil(this.value)"
+      oninput="this.value=this.value.replace(/\D/g,'').slice(0,4);onMovil(this.value)" onpaste="setTimeout(()=>{this.value=this.value.replace(/\D/g,'').slice(0,4);onMovil(this.value)},0)"
       autocomplete="off">
     <div class="ferr" id="fe-movil">Ingrese el número de móvil</div>
     <div class="ibox" id="movil-st"></div>
@@ -447,6 +447,42 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-h
 
 <script>
 const SHEET = 'https://script.google.com/macros/s/AKfycbwvimLL3DM70rOD1_WvFwgBLeWiPKqaftODpR3U9XAU2aeY45uALX8QOpuTuMkF8QaB/exec';
+
+// ── CACHÉ LOCAL ──────────────────────────────
+// Se carga una sola vez al abrir el formulario
+// Así la verificación de cédulas es instantánea
+let _personalCache = null;  // Array de {cedula, nombre_oficial, cargo, subred, activo}
+let _movilesCache  = null;  // Array de {numero, tipo, subred, activo}
+let _cacheLoading  = false;
+
+async function loadCache() {
+  if (_cacheLoading) return;
+  _cacheLoading = true;
+  try {
+    // Cargar personal y móviles en paralelo
+    const [dp, dm] = await Promise.all([
+      api({action:'getCatalogo'}, 8000).catch(()=>null),
+      api({action:'getMoviles'},  8000).catch(()=>null)
+    ]);
+    if (dp?.status==='ok') _personalCache = dp.personal || [];
+    if (dm?.status==='ok') _movilesCache  = dm.moviles  || [];
+  } catch {}
+  _cacheLoading = false;
+}
+
+function lookupPersonal(cedula) {
+  if (!_personalCache) return null;
+  return _personalCache.find(p => String(p.cedula).trim() === String(cedula).trim()) || null;
+}
+
+function lookupMovil(numero, subred) {
+  if (!_movilesCache) return null;
+  return _movilesCache.find(m =>
+    String(m.numero).trim() === String(numero).trim() &&
+    String(m.activo).toLowerCase() === 'si' &&
+    (!subred || !m.subred || m.subred === subred)
+  ) || null;
+}
 const g = id => document.getElementById(id);
 
 let step = 1;
@@ -459,6 +495,9 @@ let S = {
 
 // Reloj
 setInterval(()=>{ g('clk').textContent = new Date().toLocaleTimeString('es-CO',{hour12:false,hour:'2-digit',minute:'2-digit'}); }, 1000);
+
+// Cargar caché al iniciar (silencioso)
+loadCache();
 
 // ── PROGRESO ─────────────────────────────────
 function goTo(n){
@@ -515,22 +554,40 @@ function onTipo(){
 
 async function onMovil(val){
   const st = g('movil-st');
+  // Esperar a que tenga 4 dígitos (o mínimo 3)
   if(val.length < 3){ st.className='ibox'; return; }
-  st.className='ibox load show'; st.innerHTML='<span class="spin-s"></span>Verificando...';
-  try{
-    const d = await api({action:'checkMovil', movil:val, subred:S.subred||''}, 5000);
-    if(d.estado==='activo'){
-      st.className='ibox warn show';
-      st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno})`;
-    } else if(d.estado==='no_existe'){
-      // Catálogo vacío — solo avisar, no bloquear
-      st.className='ibox warn show';
-      st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no encontrada en el catálogo — verifique el número`;
-    } else {
-      st.className='ibox ok show';
-      st.innerHTML=`✓ Móvil <strong>${val}</strong> disponible`;
+  // Solo disparar cuando el usuario termina de escribir (debounce 600ms)
+  clearTimeout(window._movilTimer);
+  window._movilTimer = setTimeout(async ()=>{
+    // Buscar en caché local primero
+    const local = lookupMovil(val, S.subred);
+    if (_movilesCache !== null) {
+      // Tenemos caché — respuesta instantánea
+      if (!local) {
+        st.className='ibox warn show';
+        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no registrada en el catálogo`;
+      } else {
+        st.className='ibox ok show';
+        st.innerHTML=`✓ Móvil <strong>${val}</strong> · ${local.tipo} · ${local.subred||S.subred}`;
+      }
+      return;
     }
-  } catch { st.className='ibox'; }
+    // Sin caché — consultar servidor
+    st.className='ibox load show'; st.innerHTML='<span class="spin-s"></span>Verificando...';
+    try{
+      const d = await api({action:'checkMovil', movil:val, subred:S.subred||''}, 5000);
+      if(d.estado==='activo'){
+        st.className='ibox warn show';
+        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> ya tiene turno activo (${d.subred} · ${d.turno})`;
+      } else if(d.estado==='no_existe'){
+        st.className='ibox warn show';
+        st.innerHTML=`⚠️ Móvil <strong>${val}</strong> no registrada — verifique el número`;
+      } else {
+        st.className='ibox ok show';
+        st.innerHTML=`✓ Móvil <strong>${val}</strong> disponible`;
+      }
+    } catch { st.className='ibox'; }
+  }, 600);
 }
 
 function val1(){
@@ -553,46 +610,57 @@ async function checkCed(role){
   const ced   = cedEl.value.trim();
   if(!ced){ catEl.className='ibox'; S.catOk[role]=false; return; }
 
+  // ── 1. Buscar en caché local primero (instantáneo) ──
+  const local = lookupPersonal(ced);
+  if (local) {
+    applyPersonal(role, local, nomEl, catEl);
+    return;
+  }
+
+  // ── 2. Si caché no disponible, consultar servidor ──
   catEl.className='ibox load show';
   catEl.innerHTML='<span class="spin-s"></span>Verificando...';
-
   try{
-    // Timeout corto — si falla permite continuar con nombre manual
-    const d = await api({action:'checkCatalogo', cedulas:ced}, 4000);
+    const d = await api({action:'checkCatalogo', cedulas:ced}, 5000);
     const r = d?.resultados?.[0];
-    if(!r){ catEl.className='ibox'; S.catOk[role]=true; return; }
-
-    if(r.estado==='ok'){
-      nomEl.value=r.nombre; nomEl.style.color='var(--txt)';
-      nomEl.removeAttribute('readonly'); nomEl.readOnly=true;
-      catEl.className='ibox ok show';
-      catEl.innerHTML=`✓ <strong>${r.nombre}</strong> · ${r.cargo}${r.subred?' · '+r.subred:''}`;
-      S.catOk[role]=true;
-      g('cc-'+role).classList.add('done');
-      g('fe-'+role).classList.remove('show');
-      checkDoblado();
-    } else if(r.estado==='inactivo'){
+    if (!r) { allowManual(role, nomEl, catEl); return; }
+    if (r.estado==='ok') {
+      applyPersonal(role, {nombre_oficial:r.nombre, cargo:r.cargo, subred:r.subred, activo:'si'}, nomEl, catEl);
+    } else if (r.estado==='inactivo') {
       nomEl.value=''; S.catOk[role]=false;
       catEl.className='ibox err show';
-      catEl.innerHTML=`🚫 <strong>${r.nombre}</strong> está INACTIVO — no puede ingresar`;
+      catEl.innerHTML=`🚫 <strong>${r.nombre}</strong> está INACTIVO`;
       cedEl.value=''; g('cc-'+role).classList.remove('done');
-    } else if(r.estado==='no_existe'){
-      // Catálogo vacío o cédula no registrada — permitir ingreso manual con advertencia
-      nomEl.value=''; nomEl.removeAttribute('readonly'); nomEl.style.color='var(--txt)';
-      nomEl.placeholder='Ingrese el nombre manualmente';
-      catEl.className='ibox warn show';
-      catEl.innerHTML=`⚠️ Cédula no está en el catálogo. Ingrese el nombre manualmente.`;
-      S.catOk[role]=true; // permitir continuar
-      g('cc-'+role).classList.remove('done');
+    } else {
+      allowManual(role, nomEl, catEl);
     }
-  } catch {
-    // Si falla la conexión, permitir ingreso manual del nombre
-    nomEl.removeAttribute('readonly'); nomEl.style.color='var(--txt)';
-    nomEl.placeholder='Ingrese el nombre manualmente';
-    catEl.className='ibox warn show';
-    catEl.innerHTML='⚠️ Sin conexión al catálogo — ingrese el nombre manualmente';
-    S.catOk[role]=true;
+  } catch { allowManual(role, nomEl, catEl); }
+}
+
+function applyPersonal(role, p, nomEl, catEl) {
+  if (String(p.activo).toLowerCase() === 'no') {
+    nomEl.value=''; S.catOk[role]=false;
+    catEl.className='ibox err show';
+    catEl.innerHTML=`🚫 <strong>${p.nombre_oficial}</strong> está INACTIVO`;
+    g(role+'_c').value=''; g('cc-'+role).classList.remove('done');
+    return;
   }
+  nomEl.value = p.nombre_oficial; nomEl.style.color='var(--txt)'; nomEl.readOnly=true;
+  catEl.className='ibox ok show';
+  catEl.innerHTML=`✓ <strong>${p.nombre_oficial}</strong> · ${p.cargo||''}${p.subred?' · '+p.subred:''}`;
+  S.catOk[role]=true;
+  g('cc-'+role).classList.add('done');
+  g('fe-'+role).classList.remove('show');
+  checkDoblado();
+}
+
+function allowManual(role, nomEl, catEl) {
+  nomEl.readOnly=false; nomEl.style.color='var(--txt)';
+  nomEl.placeholder='Ingrese el nombre manualmente';
+  catEl.className='ibox warn show';
+  catEl.innerHTML='⚠️ Cédula no encontrada — escriba el nombre manualmente';
+  S.catOk[role]=true;
+  g('cc-'+role).classList.remove('done');
 }
 
 async function checkDoblado(){
