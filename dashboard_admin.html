@@ -871,11 +871,15 @@ function openModal(id,action){
 }
 async function confirmModal(){
   if(!pending)return;
+  // Guardar referencias ANTES de cerrar el modal (closeModal pone pending=null)
+  const {id,action,rec} = pending;
   const btn=document.getElementById('m-ok');
-  btn.innerHTML='<span class="spin"></span>Guardando...';
+  btn.innerHTML='<span class="spin"></span>Cerrando...';
   btn.disabled=true;
-  closeModal();
-  await closeRecord(pending.id,pending.action,pending.rec);
+  document.getElementById('modal').classList.remove('open');
+  pending=null;
+  await closeRecord(id,action,rec);
+  btn.innerHTML='Confirmar cierre';
   btn.disabled=false;
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');pending=null;}
