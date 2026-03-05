@@ -591,6 +591,8 @@ async function onMovil(val){
 }
 
 function val1(){
+  // Limpiar todos los errores del paso 1
+  ['fe-sub','fe-turno','fe-tipo','fe-movil','fe-ref'].forEach(id=>g(id)?.classList.remove('show'));
   let ok=true;
   if(!S.subred){ g('fe-sub').classList.add('show'); ok=false; }
   if(!S.turno){ g('fe-turno').classList.add('show'); ok=false; }
@@ -638,16 +640,19 @@ async function checkCed(role){
 }
 
 function applyPersonal(role, p, nomEl, catEl) {
+  // Bloqueado — inactivo
   if (String(p.activo).toLowerCase() === 'no') {
     nomEl.value=''; S.catOk[role]=false;
     catEl.className='ibox err show';
-    catEl.innerHTML=`🚫 <strong>${p.nombre_oficial}</strong> está INACTIVO`;
+    catEl.innerHTML=`🚫 <strong>${p.nombre_oficial}</strong> está INACTIVO — no puede ingresar`;
     g(role+'_c').value=''; g('cc-'+role).classList.remove('done');
     return;
   }
+  // OK — verificar si ya está en turno activo (se chequea en checkDoblado)
+  const persSubred = (p.subred||'').trim();
   nomEl.value = p.nombre_oficial; nomEl.style.color='var(--txt)'; nomEl.readOnly=true;
   catEl.className='ibox ok show';
-  catEl.innerHTML=`✓ <strong>${p.nombre_oficial}</strong> · ${p.cargo||''}${p.subred?' · '+p.subred:''}`;
+  catEl.innerHTML=`✓ <strong>${p.nombre_oficial}</strong> · ${p.cargo||''}${persSubred?' · '+persSubred:''}`;
   S.catOk[role]=true;
   g('cc-'+role).classList.add('done');
   g('fe-'+role).classList.remove('show');
@@ -670,24 +675,42 @@ async function checkDoblado(){
     const d=await api({action:'checkPersonal',cedulas:ceds.join(',')},8000);
     if(!d?.resultados?.length){ hideDob(); return; }
     let alertas=[],maxC=0;
+    let tieneActivo=false;
     d.resultados.forEach(res=>res.encontrados.forEach(e=>{
-      if(e.tipo==='activo') alertas.push(`🔴 <strong>${e.rol} ${e.nombre}</strong> — TURNO ACTIVO en móvil ${e.placa}`);
-      else if(e.consecutivos>=2){
-        alertas.push(`${e.consecutivos>=3?'🔴 TRIPLICADO':'🟠 DOBLADO'} — <strong>${e.rol} ${e.nombre}</strong> — ${e.consecutivos} turnos seguidos`);
+      if(e.tipo==='activo'){
+        tieneActivo=true;
+        alertas.push(`🔴 <strong>${e.nombre}</strong> — ya está en turno activo en móvil <strong>${e.placa}</strong> (${e.subred}). No puede trabajar en dos ambulancias al mismo tiempo.`);
+      } else if(e.consecutivos>=2){
+        alertas.push(`${e.consecutivos>=3?'🔴 TRIPLICADO':'🟠 DOBLADO'} — <strong>${e.nombre}</strong> — ${e.consecutivos} turnos seguidos`);
         if(e.consecutivos>maxC) maxC=e.consecutivos;
       }
     }));
     if(!alertas.length){ hideDob(); return; }
-    const isCrit=maxC>=3;
+    const isCrit=tieneActivo||maxC>=3;
     const box=g('dob-box');
     box.className='dob-box show '+(isCrit?'crit':'warn');
-    g('dob-ttl').textContent=isCrit?'⛔ PERSONAL EN TERCER TURNO — PARAR MÓVIL':'⚠️ Personal doblando turno';
-    g('dob-items').innerHTML=alertas.join('<br>');
-    g('dob-lbl').textContent=isCrit?'Confirmo que el supervisor autorizó el tercer turno':'Confirmo que el personal está autorizado para doblar';
+    // Si hay activo — bloquear completamente (no hay checkbox de confirmación)
+    if(tieneActivo){
+      g('dob-ttl').textContent='🚫 PERSONAL YA EN TURNO ACTIVO — NO SE PUEDE REGISTRAR';
+      g('dob-items').innerHTML=alertas.join('<br>');
+      g('dob-lbl').textContent='Este personal ya está trabajando en otra ambulancia ahora mismo';
+      g('dob-ok').style.display='none'; // ocultar checkbox — no hay forma de override
+      window._tieneActivo=true;
+    } else {
+      window._tieneActivo=false;
+      g('dob-ok').style.display='inline-block';
+      g('dob-ttl').textContent=isCrit?'⛔ PERSONAL EN TERCER TURNO — PARAR MÓVIL':'⚠️ Personal doblando turno';
+      g('dob-items').innerHTML=alertas.join('<br>');
+      g('dob-lbl').textContent=isCrit?'Confirmo que el supervisor autorizó el tercer turno':'Confirmo que el personal está autorizado para doblar';
+    }
     g('dob-ok').checked=false;
   } catch { hideDob(); }
 }
-function hideDob(){ g('dob-box').className='dob-box'; }
+function hideDob(){
+  g('dob-box').className='dob-box';
+  g('dob-ok').style.display='inline-block';
+  window._tieneActivo=false;
+}
 
 async function val2(){
   let ok=true;
@@ -704,9 +727,18 @@ async function val2(){
   if(!S.aux_c||!S.aux_n||!S.catOk.aux){ g('fe-aux').classList.add('show'); ok=false; }
   else g('fe-aux').classList.remove('show');
   const dob=g('dob-box');
-  if(dob.classList.contains('show')&&!g('dob-ok').checked){
-    dob.style.outline='2px solid var(--red)';
-    dob.scrollIntoView({behavior:'smooth',block:'center'}); return false;
+  if(dob.classList.contains('show')){
+    if(window._tieneActivo){
+      // Bloqueo total — no hay override posible
+      dob.style.outline='2px solid var(--red)';
+      dob.scrollIntoView({behavior:'smooth',block:'center'});
+      return false;
+    }
+    if(!g('dob-ok').checked){
+      dob.style.outline='2px solid var(--red)';
+      dob.scrollIntoView({behavior:'smooth',block:'center'});
+      return false;
+    }
   }
   dob.style.outline='';
   return ok;
@@ -779,8 +811,16 @@ async function submit(){
   try{
     const d=await api({action:'register',record:JSON.stringify(rec)},12000);
     if(d.status==='ok'){
+      if(d.msg==='movil_activa'){
+        btn.innerHTML='Enviar turno ✓'; btn.disabled=false;
+        alert('⚠️ La móvil '+S.movil+' ya tiene un turno activo. Cierre el turno anterior desde el dashboard antes de registrar uno nuevo.');
+        return;
+      }
       uploadFoto(S.recordId);
       showSuccess(rec, turnoLabel);
+    } else if(d.msg==='movil_activa'){
+      btn.innerHTML='Enviar turno ✓'; btn.disabled=false;
+      alert('⚠️ La móvil '+S.movil+' ya tiene un turno activo. Cierre el turno anterior primero.');
     } else throw 0;
   } catch {
     btn.innerHTML='Enviar turno ✓'; btn.disabled=false;
@@ -844,6 +884,9 @@ function resetAll(){
   g('bar').style.display='flex';
   const btn=g('btn-next'); btn.innerHTML='Siguiente →'; btn.disabled=false; btn.className='btn-next';
   goTo(1);
+  // Recargar caché para el próximo formulario
+  _personalCache=null; _movilesCache=null; _cacheLoading=false;
+  setTimeout(loadCache, 800);
 }
 
 // ── JSONP ─────────────────────────────────────
