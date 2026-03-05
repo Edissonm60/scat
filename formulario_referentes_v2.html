@@ -851,16 +851,32 @@ function showSuccess(rec, turnoLabel){
     `<strong>Auxiliar:</strong> ${S.aux_n}<br>`+
     `<strong>Referente:</strong> ${S.referente}<br>`+
     `<span id="suc-foto" style="font-size:.72rem;color:var(--sub)">Subiendo foto de carnets...</span>`;
+  // Determinar estado/novedad para el mensaje
+  const esDoblado  = g('dob-ok').checked && !window._tieneActivo;
+  const dobItems   = g('dob-items')?.innerText||'';
+  const esCritico  = esDoblado && (dobItems.includes('TRIPLICADO') || dobItems.includes('TERCER'));
+
+  let estadoLinea = '';
+  if(esCritico)       estadoLinea = `⛔ CRÍTICO — 3er turno consecutivo — PARAR MÓVIL\n`;
+  else if(esDoblado)  estadoLinea = `🟠 NOVEDAD — Personal doblando turno\n`;
+
   const msg=encodeURIComponent(
-    `✅ SCAT — Turno Registrado\n`+
-    `📍 ${S.subred} · Móvil ${S.movil}\n`+
-    `⏰ ${S.turno==='Día'?'☀️ Día':'🌙 Noche'} · ${S.tipo}\n`+
-    (S.med_n?`👨‍⚕️ Médico: ${S.med_n}\n`:'')+
-    `🚗 Conductor: ${S.con_n}\n`+
-    `🏥 Auxiliar: ${S.aux_n}\n`+
+    `✅ SCAT — Inicio de Turno\n`+
+    `━━━━━━━━━━━━━━━━━━━━━━\n`+
+    `📍 Subred: ${S.subred}\n`+
+    `🚑 Móvil: ${S.movil} · ${S.tipo}\n`+
+    `⏰ Turno: ${S.turno==='Día'?'☀️ Día':'🌙 Noche'}\n`+
+    `🕐 Inicio: ${new Date().toLocaleString('es-CO',{hour12:false})}\n`+
+    `━━━━━━━━━━━━━━━━━━━━━━\n`+
+    `👥 Tripulación:\n`+
+    (S.med_n?`   👨‍⚕️ Médico: ${S.med_n}\n`:'')+
+    `   🚗 Conductor: ${S.con_n}\n`+
+    `   🏥 Auxiliar: ${S.aux_n}\n`+
+    `━━━━━━━━━━━━━━━━━━━━━━\n`+
+    estadoLinea+
     `📋 Referente: ${S.referente}\n`+
     (S.obs?`📝 Obs: ${S.obs}\n`:'')+
-    `🕐 ${new Date().toLocaleString('es-CO',{hour12:false})}`
+    `\n_Sistema SCAT · Sec. Salud Bogotá_`
   );
   g('btn-wa').href=`https://wa.me/?text=${msg}`;
 }
