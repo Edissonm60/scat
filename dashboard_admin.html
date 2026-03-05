@@ -604,17 +604,51 @@ async function loadData(silent=false){
 }
 
 async function closeRecord(id,action,rec){
+  const btn=document.getElementById('m-ok');
+  
+  // Estrategia 1: handleCloseSimple (Code.gs nuevo)
   try{
-    // Usar closeSimple — solo envía id y accion, el servidor reconstruye el resto
-    const r=await jsonp({action:'close', id:String(id), accion:action, cerrado_por:'Admin Dashboard'},10000);
+    const r=await jsonp({action:'close', id:String(id), accion:action, cerrado_por:'Admin Dashboard'},12000);
     if(r&&(r.status==='ok'||r.msg==='ya_cerrado')){
       active=active.filter(x=>String(x.id)!==String(id));
       showToast('ok','Turno cerrado correctamente');
-      renderAll(); checkAlerts();
-    } else throw 0;
-  } catch {
-    showToast('err','Error al cerrar');
-    setTimeout(()=>loadData(true),2000);
+      renderAll(); checkAlerts(); return;
+    }
+    // Si respondió pero con error — puede ser Code.gs viejo
+    if(r&&r.status==='error') throw new Error('server_error: '+r.msg);
+    throw new Error('no_ok');
+  } catch(e1){
+    console.warn('closeSimple falló:',e1.message,', intentando fallback...');
+    
+    // Estrategia 2: enviar entry completo (Code.gs viejo — compatibilidad)
+    try{
+      const entry={
+        id:String(id), ts:rec.ts||'', subred:rec.subred||'', placa:rec.placa||'',
+        tipo:rec.tipo||'', turno:rec.turno||'', inicio:rec.inicio||'',
+        cierre:new Date().toISOString(), accion:action,
+        cerrado_por:'Admin Dashboard', estado:'cerrado',
+        med_nombre:rec.med_nombre||'', med_cedula:rec.med_cedula||'', med_foto_url:rec.med_foto_url||'',
+        con_nombre:rec.con_nombre||'', con_cedula:rec.con_cedula||'', con_foto_url:rec.con_foto_url||'',
+        aux_nombre:rec.aux_nombre||'', aux_cedula:rec.aux_cedula||'', aux_foto_url:rec.aux_foto_url||'',
+        referente:rec.referente||'', observaciones:rec.observaciones||'', doblado:rec.doblado||'no'
+      };
+      const entryStr=JSON.stringify(entry);
+      // Solo intentar si el JSON no es muy largo (< 1500 chars)
+      if(entryStr.length < 1500){
+        const r2=await jsonp({action:'close', id:String(id), entry:entryStr},12000);
+        if(r2&&r2.status==='ok'){
+          active=active.filter(x=>String(x.id)!==String(id));
+          showToast('ok','Turno cerrado');
+          renderAll(); checkAlerts(); return;
+        }
+      }
+      throw new Error('fallback_failed');
+    } catch(e2){
+      console.error('Ambas estrategias fallaron:',e2.message);
+      showToast('err','⚠️ Error de conexión. ¿Republico el Code.gs? Ver consola.');
+      // Recargar datos del servidor para reflejar estado real
+      setTimeout(()=>loadData(true),3000);
+    }
   }
 }
 
